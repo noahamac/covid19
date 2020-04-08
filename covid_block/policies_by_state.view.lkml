@@ -4,7 +4,6 @@ view: policies_by_state {
   derived_table: {
     datagroup_trigger: covid_data
     sql:
-
 SELECT
     state
   , CASE WHEN Bar__Restaurant_Limits = '-' THEN 'None' ELSE Bar__Restaurant_Limits END as Bar__Restaurant_Limits

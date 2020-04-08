@@ -1,72 +1,94 @@
-view: jhu_sample_county_level_final {
+#### The county level data shows NYT + JHU, NYT is used for US county level data and JHU is used for international data
+
+view: covid_combined {
   derived_table: {
     datagroup_trigger: covid_data
     sql:
+    --figure out the what the latest date should be, we only want to use data that is included in both datasets
+    declare max_date as default (SELECT min(max_date) as max_date
+        FROM
+        (
+          SELECT max(cast(date as date)) as max_date FROM  ${nyt_data.SQL_TABLE_NAME}
+          UNION ALL
+          SELECT max(cast(date as date)) as max_date FROM  `bigquery-public-data.covid19_jhu_csse.summary`
+        ) a);
 
+    --use the NYT data for all US data, but join with JHU to get lat/lon for the fips
     SELECT
-        'Real Data' as real_vs_forecasted,
-        cast(fips as string) as fips,
-        county,
+        a.fips,
+        a.county,
+        a.state as province_state,
+        'US' as country_region,
+        b.lat,
+        b.long,
+        case
+          when a.state is null then 'US'
+          when a.state is not null AND a.county is null then concat(a.state,', US')
+          when a.county is not null then concat(a.county, ', ', a.state, ', US')
+        end as combined_key,
+        a.date as measurement_date,
+        a.cases as confirmed_cumulative,
+        a.confirmed - coalesce(
+          LAG(a.confirmed, 1) OVER (
+          PARTITION BY concat(coalesce(a.county,''), coalesce(a.province_state,''), coalesce(a.country_region,'')
+          ) ORDER BY a.date ASC),0) as confirmed_new_cases,
+        a.deaths as deaths_cumulative,
+        a.deaths - coalesce(
+          LAG(deaths, 1) OVER (
+          PARTITION BY concat(coalesce(a.county,''), coalesce(a.province_state,''), coalesce(a.country_region,'')
+          )  ORDER BY date ASC),0) as deaths_new_cases
+      FROM ${nyt_data.SQL_TABLE_NAME}
+      LEFT JOIN (SELECT fips, lat, long, count(*) as count FROM `bigquery-public-data.covid19_jhu_csse.summary` WHERE fips is not null GROUP BY 1,2,3) b
+        ON a.fips = b.fips
+      WHERE cast(a.date as date) <= max_date
+
+      UNION ALL
+
+      --use the JHU data for non US
+       SELECT
+        NULL as fips,
+        NULL as county,
         province_state,
         country_region,
-        lat,
-        long,
-        combined_key,
-        measurement_date,
-
+        latitude,
+        longitude,
+        case
+          when province_state is null then case when country_region = 'Mainland China' then 'China' else country_region end
+          when province_state is not null AND country_region is null then concat(province_state,
+                            ', ',case when country_region = 'Mainland China' then 'China' else country_region end)
+          end as combined_key,
+        cast(date as date) as measurement_date,
         confirmed as confirmed_cumulative,
-        confirmed - coalesce(LAG(confirmed, 1) OVER (PARTITION BY concat(coalesce(county,''), coalesce(province_state,''), coalesce(country_region,'')) ORDER BY measurement_date ASC),0) as confirmed_new_cases,
-
+        confirmed - coalesce(
+          LAG(confirmed, 1) OVER (
+          PARTITION BY concat(coalesce(county,''), coalesce(province_state,''), coalesce(country_region,'')
+          ) ORDER BY date ASC),0) as confirmed_new_cases,
         deaths as deaths_cumulative,
-        deaths - coalesce(LAG(deaths, 1) OVER (PARTITION BY concat(coalesce(county,''), coalesce(province_state,''), coalesce(country_region,''))  ORDER BY measurement_date ASC),0) as deaths_new_cases
+        deaths - coalesce(
+          LAG(deaths, 1) OVER (
+          PARTITION BY concat(coalesce(county,''), coalesce(province_state,''), coalesce(country_region,'')
+          )  ORDER BY date ASC),0) as deaths_new_cases
+        FROM ${jhu_data.SQL_TABLE_NAME}
+        WHERE country_region <> 'US'
+        AND cast(date as date) <= max_date ;;
+    }
 
-    FROM `lookerdata.covid19.combined_covid_data`
-
-    UNION ALL
-
-        SELECT
-        'Forecasted' as real_vs_forecasted,
-        cast(fips as string) as fips,
-        county,
-        province_state,
-        country_region,
-        lat,
-        long,
-        combined_key,
-        cast(forecast_date as date) as measurement_date,
-
-        round(confirmed_running_total + SUM(forecasted_new_confirmed_cases) OVER (PARTITION BY concat(coalesce(county,''), coalesce(province_state,''), coalesce(country_region,'')) ORDER BY forecast_date ASC ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW),0) as confirmed_cumulative,
-        round(forecasted_new_confirmed_cases,0) as confirmed_new_cases,
-
-        round(deaths_running_total + SUM(forecasted_new_deaths) OVER (PARTITION BY concat(coalesce(county,''), coalesce(province_state,''), coalesce(country_region,'')) ORDER BY forecast_date ASC ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW),0) as deaths_cumulative,
-        round(forecasted_new_deaths,0) as deaths_new_cases
-
-    FROM `lookerdata.looker_scratch.TL_covid_covid_forecasting_results`
-    WHERE cast(forecast_date as date) > (SELECT max(measurement_date) FROM `lookerdata.covid19.combined_covid_data`)
-
-    ;;
-  }
 
 ####################
 #### Original Dimensions ####
 ####################
+
+  dimension: pre_pk {
+    hidden: yes
+    type: string
+    sql: concat(coalesce(${county},''), coalesce(${province_state},''), coalesce(${country_region},'')) ;;
+  }
 
   dimension: pk {
     primary_key: yes
     hidden: yes
     type: string
     sql: concat(${pre_pk},${measurement_raw}) ;;
-  }
-
-  dimension: real_vs_forecasted {
-    type: string
-    sql: ${TABLE}.real_vs_forecasted ;;
-  }
-
-  dimension: pre_pk {
-    hidden: yes
-    type: string
-    sql: concat(coalesce(${county},''), coalesce(${province_state},''), coalesce(${country_region},'')) ;;
   }
 
   dimension: combined_key {
@@ -123,6 +145,7 @@ view: jhu_sample_county_level_final {
     sql: ${TABLE}.long ;;
   }
 
+  #this dimension uses the lat/lon from the JHU data
   dimension: location {
     group_label: "Location"
     type: location
@@ -220,7 +243,6 @@ view: jhu_sample_county_level_final {
         when ${TABLE}.country_region = 'US' then 'United States of America'
         when ${TABLE}.country_region = 'UK' then 'United Kingdom'
         else ${TABLE}.country_region
-        -- when ${TABLE}.Country = 'Cote d'Ivoire' then 'Ivory Coast'
       end ;;
     drill_fields: [province_state]
 #     link: {
@@ -267,10 +289,6 @@ view: jhu_sample_county_level_final {
       ELSE cast(${fips} as string) END;;
   }
 
-#   dimension: distance {
-#     type: distance
-#     sql: ${} ;;
-#   }
 
 #### Location Rank ####
 
@@ -296,6 +314,7 @@ view: jhu_sample_county_level_final {
   }
 
   parameter: show_top_x_values {
+    description: "Use this filter with the country, state and county top X dimensions"
     type: number
     default_value: "10"
   }
@@ -303,21 +322,18 @@ view: jhu_sample_county_level_final {
   dimension: country_top_x {
     group_label: "Location"
     label: "Country (Show Top X Values)"
+    description: "Use this field with the Show Top X Values parameter"
     sql: case when ${country_rank.rank} <= {% parameter show_top_x_values %} then ${country_region} else ' Other' end ;;
     link: {
       label: "{{ value }} - Country Deep Dive"
       url: "/dashboards/FLiQf6bJUQ5mxvHNyocYYz?Country={{ value }}"
       icon_url: "https://looker.com/favicon.ico"
     }
-#     link: {
-#       label: "{{ value }} - COVID19 Website"
-#       url: "{{ country_url_code_final.url._value }}"
-#       icon_url: "http://google.com/favicon.ico"
-#     }
   }
 
   dimension: state_top_x {
     group_label: "Location"
+    description: "Use this field with the Show Top X Values parameter"
     label: "State (Show Top X Values)"
     sql: case when ${state_rank.rank} <= {% parameter show_top_x_values %} then ${province_state} else ' Other' end ;;
     link: {
@@ -325,15 +341,11 @@ view: jhu_sample_county_level_final {
       url: "/dashboards/TVGnurIXhJVNS6iMrojazJ?State={{ value }}"
       icon_url: "https://looker.com/favicon.ico"
     }
-#     link: {
-#       label: "{{ value }} - COVID19 Website"
-#       url: "{{ state_url_code_final.url._value }}"
-#       icon_url: "http://google.com/favicon.ico"
-#     }
   }
 
   dimension: county_top_x {
     group_label: "Location"
+    description: "Use this field with the Show Top X Values parameter"
     label: "County (Show Top X Values)"
     sql: case when ${fips_rank.rank} <= {% parameter show_top_x_values %} then ${county} else ' Other' end ;;
     link: {
@@ -343,25 +355,12 @@ view: jhu_sample_county_level_final {
     }
   }
 
-#### Forecasted ####
-
-  parameter: allow_forecasted_values {
-    type: unquoted
-    default_value: "no"
-    allowed_value: {
-      label: "No"
-      value: "no"
-    }
-    allowed_value: {
-      label: "Yes"
-      value: "yes"
-    }
-  }
 
 #### Max Date ####
 
   dimension: is_max_date {
-    # hidden: yes
+    description: "Is this record from the most recent day in the dataset? The most recent day is the minimum of the most recent measurement date for both JHU and NYT data"
+    #hidden: yes
     type: yesno
     sql: ${measurement_raw} = ${max_date_covid.max_date_raw} ;;
   }
@@ -380,32 +379,35 @@ view: jhu_sample_county_level_final {
     default_value: "1"
   }
 
+  #this filed is calculated by taking the first day that the county hit the minimum number of cases
   dimension_group: county_outbreak_start {
     hidden: yes
     type: time
     timeframes: [raw, date]
     sql: (SELECT CAST(MIN(foobar.measurement_date) AS TIMESTAMP)
-      FROM ${jhu_sample_county_level_final.SQL_TABLE_NAME} as foobar
+      FROM ${covid_combined.SQL_TABLE_NAME} as foobar
       WHERE foobar.confirmed_cumulative >= {% parameter minimum_number_cases %}
       AND coalesce(${TABLE}.county, ${TABLE}.province_state, ${TABLE}.country_region) = coalesce(foobar.county,foobar.province_state,foobar.country_region )  )  ;;
   }
 
+  #this filed is calculated by taking the first day that the state hit the minimum number of cases
   dimension_group: state_outbreak_start {
     hidden: yes
     type: time
     timeframes: [raw, date]
     sql: (SELECT CAST(MIN(foobar.measurement_date) AS TIMESTAMP)
-      FROM ${jhu_sample_county_level_final.SQL_TABLE_NAME} as foobar
+      FROM ${covid_combined.SQL_TABLE_NAME} as foobar
       WHERE foobar.confirmed_cumulative >= {% parameter minimum_number_cases %}
       AND coalesce(${TABLE}.province_state, ${TABLE}.country_region) = coalesce(foobar.province_state,foobar.country_region ) )  ;;
   }
 
+  #this filed is calculated by taking the first day that the country hit the minimum number of cases
   dimension_group: country_outbreak_start {
     hidden: yes
     type: time
     timeframes: [raw, date]
     sql: (SELECT CAST(MIN(foobar.measurement_date) AS TIMESTAMP)
-      FROM ${jhu_sample_county_level_final.SQL_TABLE_NAME} as foobar
+      FROM ${covid_combined.SQL_TABLE_NAME} as foobar
       WHERE foobar.confirmed_cumulative >= {% parameter minimum_number_cases %}
       AND ${TABLE}.country_region = foobar.country_region ) ;;
   }
@@ -415,7 +417,7 @@ view: jhu_sample_county_level_final {
     type: time
     timeframes: [raw, date]
     sql: (SELECT CAST(MIN(foobar.measurement_date) AS TIMESTAMP)
-      FROM ${jhu_sample_county_level_final.SQL_TABLE_NAME} as foobar
+      FROM ${covid_combined.SQL_TABLE_NAME} as foobar
       WHERE foobar.confirmed_cumulative >= {% parameter minimum_number_cases %} );;
   }
 
@@ -459,6 +461,7 @@ view: jhu_sample_county_level_final {
 ####################
 
   parameter: new_vs_running_total {
+    description: "Filter to either see just new cases, or the running total"
     type: unquoted
     default_value: "new_cases"
     allowed_value: {
@@ -531,12 +534,14 @@ view: jhu_sample_county_level_final {
     }
   }
 
+  #this field displays the new cases if a date filter has been applied, or else is gives the numbers from the most recent record
   measure: confirmed_new {
     group_label: " New Cases"
     label: "Confirmed Cases (New)"
     type: number
     sql:
-      {% if jhu_sample_county_level_final.measurement_date._in_query or jhu_sample_county_level_final.days_since_first_outbreak._in_query or jhu_sample_county_level_final.days_since_max_date._in_query %} ${confirmed_new_option_1}
+      {% if covid_combined.measurement_date._in_query or covid_combined.days_since_first_outbreak._in_query or
+        covid_combined.days_since_max_date._in_query %} ${confirmed_new_option_1}
       {% else %}  ${confirmed_new_option_2}
       {% endif %} ;;
     drill_fields: [drill*]
@@ -975,7 +980,6 @@ view: jhu_sample_county_level_final {
   ## deaths ##
 
 
-
 ##############
 ### Drills ###
 ##############
@@ -990,393 +994,3 @@ view: jhu_sample_county_level_final {
     ]
   }
 }
-
-
-#         case
-#           when (coalesce(lag(confirmed,17) OVER (PARTITION BY combined_key  ORDER BY measurement_date ASC),0) - deaths) < 0 then 0
-#           else (coalesce(lag(confirmed,17) OVER (PARTITION BY combined_key  ORDER BY measurement_date ASC),0) - deaths)
-#         end
-#           as recovered_cumulative,
-#         case
-#           when
-#               (coalesce(lag(confirmed,17) OVER (PARTITION BY combined_key  ORDER BY measurement_date ASC),0) - deaths) -
-#               (coalesce(LAG(confirmed, 18) OVER (PARTITION BY combined_key  ORDER BY measurement_date ASC),0) - coalesce(LAG(deaths, 1) OVER (PARTITION BY combined_key  ORDER BY measurement_date ASC),0))
-#             < 0 then 0
-#           else
-#               (coalesce(lag(confirmed,17) OVER (PARTITION BY combined_key  ORDER BY measurement_date ASC),0) - deaths) -
-#               (coalesce(LAG(confirmed, 18) OVER (PARTITION BY combined_key  ORDER BY measurement_date ASC),0) - coalesce(LAG(deaths, 1) OVER (PARTITION BY combined_key  ORDER BY measurement_date ASC),0))
-#           end
-#             as recovered_new_cases
-
-
-# Note: if you take confirmed cases 17 days ago - deaths today, you can approxiamate recoveries; https://github.com/CSSEGISandData/COVID-19/issues/1250#issuecomment-604485405
-
-# sql_table_name: `lookerdata.covid19.jhu_sample_county_level_final` ;;
-
-
-#   dimension: recovered_cumulative {
-#     hidden: yes
-#     type: number
-#     sql: ${TABLE}.recovered_cumulative ;;
-#   }
-#
-#   dimension: recovered_new_cases {
-#     hidden: yes
-#     type: number
-#     sql: ${TABLE}.recovered_new_cases ;;
-#   }
-
-
-#   dimension: active_cumulative {
-#     hidden: yes
-#     type: number
-#     sql: ${confirmed_cumulative} - ${recovered_cumulative} - ${deaths_cumulative} ;;
-#   }
-#
-#   dimension: active_new_cases {
-#     hidden: yes
-#     type: number
-#     sql: ${confirmed_new_cases} - ${recovered_new_cases} - ${deaths_new_cases} ;;
-#   }
-#
-#   dimension: closed_cumulative {
-#     hidden: yes
-#     type: number
-#     sql: ${recovered_cumulative} + ${deaths_cumulative} ;;
-#   }
-#
-#   dimension: closed_new_cases {
-#     hidden: yes
-#     type: number
-#     sql: ${recovered_new_cases} + ${deaths_new_cases} ;;
-#   }
-
-# measure: recoveries {
-#   group_label: " Dynamic"
-#   label: "Recoveries"
-#   type: number
-#   sql:
-#         {% if new_vs_running_total._parameter_value == 'new_cases' %} ${recovery_new}
-#         {% elsif new_vs_running_total._parameter_value == 'running_total' %} ${recovery_running_total}
-#         {% endif %} ;;
-#   drill_fields: [drill*]
-# }
-#
-# measure: active_cases {
-#   group_label: " Dynamic"
-#   label: "Active Cases"
-#   type: number
-#   sql:
-#         {% if new_vs_running_total._parameter_value == 'new_cases' %} ${active_new}
-#         {% elsif new_vs_running_total._parameter_value == 'running_total' %} ${active_running_total}
-#         {% endif %} ;;
-#   drill_fields: [drill*]
-# }
-#
-# measure: closed_cases {
-#   group_label: " Dynamic"
-#   label: "Closed Cases"
-#   type: number
-#   sql:
-#         {% if new_vs_running_total._parameter_value == 'new_cases' %} ${closed_new}
-#         {% elsif new_vs_running_total._parameter_value == 'running_total' %} ${closed_running_total}
-#         {% endif %} ;;
-#   drill_fields: [drill*]
-# }
-
-# measure: recovery_new {
-#   group_label: " New Cases"
-#   label: "Recoveries (New)"
-#   type: sum
-#   sql: ${recovered_new_cases} ;;
-# }
-#
-# measure: recovered_option_1 {
-#   hidden: yes
-#   type: sum
-#   sql: ${recovered_cumulative} ;;
-# }
-#
-# measure: recovered_option_2 {
-#   hidden: yes
-#   type: sum
-#   sql: ${recovered_cumulative} ;;
-#   filters: {
-#     field: is_max_date
-#     value: "Yes"
-#   }
-# }
-#
-# measure: recovery_running_total {
-#   group_label: " Running Total"
-#   label: "Recoveries (Running Total)"
-#   type: number
-#   sql:
-#           {% if jhu_sample_county_level_final.measurement_date._in_query or jhu_sample_county_level_final.days_since_first_outbreak._in_query %} ${recovered_option_1}
-#           {% else %}  ${recovered_option_2}
-#           {% endif %} ;;
-# }
-#
-# measure: active_new {
-#   group_label: " New Cases"
-#   label: "Active Cases (New)"
-#   type: sum
-#   sql: ${active_new_cases} ;;
-# }
-#
-# measure: active_option_1 {
-#   hidden: yes
-#   type: sum
-#   sql: ${active_cumulative} ;;
-# }
-#
-# measure: active_option_2 {
-#   hidden: yes
-#   type: sum
-#   sql: ${active_cumulative} ;;
-#   filters: {
-#     field: is_max_date
-#     value: "Yes"
-#   }
-# }
-#
-# measure: active_running_total {
-#   group_label: " Running Total"
-#   label: "Active Cases (Running Total)"
-#   type: number
-#   sql:
-#           {% if jhu_sample_county_level_final.measurement_date._in_query or jhu_sample_county_level_final.days_since_first_outbreak._in_query %} ${active_option_1}
-#           {% else %}  ${active_option_2}
-#           {% endif %} ;;
-# }
-#
-# measure: closed_new {
-#   group_label: " New Cases"
-#   label: "Closed Cases (New)"
-#   type: sum
-#   sql: ${closed_new_cases} ;;
-# }
-#
-# measure: closed_option_1 {
-#   hidden: yes
-#   type: sum
-#   sql: ${closed_cumulative} ;;
-# }
-#
-# measure: closed_option_2 {
-#   hidden: yes
-#   type: sum
-#   sql: ${closed_cumulative} ;;
-#   filters: {
-#     field: is_max_date
-#     value: "Yes"
-#   }
-# }
-#
-# measure: closed_running_total {
-#   group_label: " Running Total"
-#   label: "Closed Cases (Running Total)"
-#   type: number
-#   sql:
-#           {% if jhu_sample_county_level_final.measurement_date._in_query or jhu_sample_county_level_final.days_since_first_outbreak._in_query %} ${closed_option_1}
-#           {% else %}  ${closed_option_2}
-#           {% endif %} ;;
-# }
-
-# measure: active_rate {
-#   group_label: " Rates"
-#   description: "Of all cases, how many are active?"
-#   type: number
-#   sql: 1.0 * ${active_running_total} / nullif((${confirmed_running_total}),0);;
-#   value_format_name: percent_1
-# }
-#
-# measure: recovery_rate {
-#   group_label: " Rates"
-#   description: "Of closed cases, how many recovered (vs. died)?"
-#   type: number
-#   sql: 1.0 * ${recovery_running_total} / NULLIF(${confirmed_running_total}, 0);;
-#   value_format_name: percent_1
-# }
-
-
-# view: max_date {
-#   derived_table: {
-#     datagroup_trigger: covid_data
-#     sql:
-#         SELECT min(max_date) as max_date
-#         FROM
-#         (
-#           SELECT max(cast(date as date)) as max_date FROM `lookerdata.covid19.nyt_covid_data`
-#           UNION ALL
-#           SELECT max(cast(date as date)) as max_date FROM `bigquery-public-data.covid19_jhu_csse.summary`
-#         ) a
-#       ;;
-#   }
-# }
-
-# view: pre_table {
-#   derived_table: {
-#     datagroup_trigger: covid_data
-#     sql:
-#       SELECT
-#         a.fips,
-#         a.county,
-#         a.state as province_state,
-#         'US' as country_region,
-#         b.lat,
-#         b.long,
-#         case
-#           when a.state is null then 'US'
-#           when a.state is not null AND a.county is null then concat(a.state,', US')
-#           when a.county is not null then concat(a.county, ', ', a.state, ', US')
-#         end as combined_key,
-#         date as measurement_date,
-#         a.cases as confirmed,
-#         a.deaths
-#       FROM `lookerdata.covid19.nyt_by_county_data` a
-#       LEFT JOIN (SELECT fips, lat, long, count(*) as count FROM `lookerdata.covid19.jhu_sample_county_level_final` WHERE fips is not null GROUP BY 1,2,3) b
-#         ON a.fips = b.fips
-#       LEFT JOIN ${max_date.SQL_TABLE_NAME} c
-#         ON 1 = 1
-#       WHERE cast(a.date as date) <= cast(c.max_date as date)
-#
-#       UNION ALL
-#
-#       SELECT
-#         NULL as fips,
-#         NULL as county,
-#         province_state,
-#         country_region,
-#         latitude,
-#         longitude,
-#         case
-#           when province_state is null then country_region
-#           when province_state is not null AND country_region is null then concat(province_state,', ',country_region)
-#         end as combined_key,
-#         cast(date as date) as measurement_date,
-#         confirmed,
-#         deaths
-#       FROM `bigquery-public-data.covid19_jhu_csse.summary` a
-#       LEFT JOIN ${max_date.SQL_TABLE_NAME} c
-#         ON 1 = 1
-#       WHERE country_region <> 'US'
-#       AND cast(a.date as date) <= cast(c.max_date as date)
-#     ;;
-#   }
-# }
-
-
-# view: nyc_correction {
-#   derived_table: {
-#     datagroup_trigger: covid_data
-#     sql:
-#
-#       SELECT
-#         fips,
-#         county,
-#         province_state,
-#         country_region,
-#         lat,
-#         long,
-#         combined_key,
-#         measurement_date,
-#         confirmed,
-#         deaths
-#
-#     FROM `lookerdata.covid19.combined_covid_data`
-#     WHERE NOT (province_state = 'New York' AND country_region = 'US' AND fips = 123456789)
-#
-#     UNION ALL
-#
-#     SELECT
-#     36005 as fips,
-#     'Bronx' as county,
-#     'New York' as province_state,
-#     'US' as country_region,
-#     40.860208 as lat,
-#     -73.857072 as long,
-#     'Bronx, New York, US' as combined_key,
-#     measurement_date,
-#     round(confirmed * 0.17,0) as confirmed,
-#     round(deaths * 0.17,0) as deaths
-#     FROM `lookerdata.covid19.combined_covid_data`
-#     WHERE province_state = 'New York'
-#     AND country_region = 'US'
-#     AND fips = 123456789
-#
-#     UNION ALL
-#
-#     SELECT
-#       36081 as fips,
-#       'Queens' as county,
-#       'New York' as province_state,
-#       'US' as country_region,
-#       40.724358 as lat,
-#       -73.798797 as long,
-#       'Queens, New York, US' as combined_key,
-#       measurement_date,
-#       round(confirmed * 0.27,0) as confirmed,
-#       round(deaths * 0.27,0) as deaths
-#     FROM `lookerdata.covid19.combined_covid_data`
-#     WHERE province_state = 'New York'
-#     AND country_region = 'US'
-#     AND fips = 123456789
-#
-#     UNION ALL
-#
-#     SELECT
-#       36061 as fips,
-#       'New York County' as county,
-#       'New York' as province_state,
-#       'US' as country_region,
-#       40.774242 as lat,
-#       -73.975842 as long,
-#       'New York County, New York, US' as combined_key,
-#       measurement_date,
-#       round(confirmed * 0.19,0) as confirmed,
-#       round(deaths * 0.19,0) as deaths
-#     FROM `lookerdata.covid19.combined_covid_data`
-#     WHERE province_state = 'New York'
-#     AND country_region = 'US'
-#     AND fips = 123456789
-#
-#     UNION ALL
-#
-#     SELECT
-#       36047 as fips,
-#       'Brooklyn' as county,
-#       'New York' as province_state,
-#       'US' as country_region,
-#       40.682217 as lat,
-#       -73.937122 as long,
-#       'Brooklyn, New York, US' as combined_key,
-#       measurement_date,
-#       round(confirmed * 0.31,0) as confirmed,
-#       round(deaths * 0.31,0) as deaths
-#     FROM `lookerdata.covid19.combined_covid_data`
-#     WHERE province_state = 'New York'
-#     AND country_region = 'US'
-#     AND fips = 123456789
-#
-#     UNION ALL
-#
-#     SELECT
-#       36085 as fips,
-#       'Richmond' as county,
-#       'New York' as province_state,
-#       'US' as country_region,
-#       40.585763 as lat,
-#       -74.135702 as long,
-#       'Richmond, New York, US' as combined_key,
-#       measurement_date,
-#       round(confirmed * 0.06,0) as confirmed,
-#       round(deaths * 0.06,0) as deaths
-#     FROM `lookerdata.covid19.combined_covid_data`
-#     WHERE province_state = 'New York'
-#     AND country_region = 'US'
-#     AND fips = 123456789
-#
-#     ;;
-#   }
-# }

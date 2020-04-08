@@ -1,7 +1,6 @@
 connection: "lookerdata"
 
-
-include: "/covid_combined/*.view.lkml"
+include: "/covid_block/*.view.lkml"
 include: "/census_data/*.view.lkml"
 include: "/intl_covid_data/*.view.lkml"
 include: "/us_covid_data/*.view.lkml"
@@ -11,31 +10,25 @@ include: "/us_covid_data/*.view.lkml"
 
 ############ New COVID ############
 
-explore: jhu_sample_county_level_final {
+explore: covid_combined {
   group_label: "*COVID 19"
   label: "COVID - Main"
   view_label: " COVID19"
 
-  sql_always_where:
-        {% if jhu_sample_county_level_final.allow_forecasted_values._parameter_value == 'no' %} ${real_vs_forecasted} = 'Real Data'
-        {% elsif jhu_sample_county_level_final.allow_forecasted_values._parameter_value == 'yes' %} 1 = 1
-        {% endif %}
-  ;;
-
 ## Testing Data by State (US Only) ##
 
-  join: covid_tracking_project_sample_final {
+  join: covid_tracking_project {
     view_label: " COVID19"
     relationship: many_to_one
     sql_on:
-          ${jhu_sample_county_level_final.province_state} = ${covid_tracking_project_sample_final.state}
-      AND ${jhu_sample_county_level_final.measurement_raw} = ${covid_tracking_project_sample_final.measurement_raw}
+          ${covid_combined.province_state} = ${covid_tracking_project.state}
+      AND ${covid_combined.measurement_raw} = ${covid_tracking_project.measurement_raw}
     ;;
   }
 
 ## Hospital Bed Data ##
 
-  join: hospital_bed_summary_final {
+  join: hospital_bed_summary {
     view_label: " COVID19"
     relationship: many_to_many
     sql_on: ${jhu_sample_county_level_final.fips} = ${hospital_bed_summary_final.fips} ;;
@@ -60,18 +53,6 @@ explore: jhu_sample_county_level_final {
     relationship: one_to_one
     sql_on: 1 = 1  ;;
   }
-
-## URL Links to country / state websites ##
-
-  join: country_url_code_final {
-    relationship: many_to_one
-    sql_on: ${jhu_sample_county_level_final.country_region} = ${country_url_code_final.country} ;;
-  }
-
- join: state_url_code_final {
-  relationship: many_to_one
-  sql_on: ${jhu_sample_county_level_final.province_state} = ${state_url_code_final.state} ;;
- }
 
 ## Rank ##
 
@@ -135,39 +116,6 @@ explore: jhu_sample_county_level_final {
     relationship: many_to_one
     sql_on: ${puma_to_county_mapping_nyc_combined.puma_fips} = ${acs_puma_facts.puma} ;;
   }
-
-## ARCHIVED GEO MAPPING LOGIC ##
-
-#   join: zip_to_county {
-#     relationship: many_to_many
-#     sql_on: ${jhu_sample_county_level_final.fips_as_string} =  ${zip_to_county.county} ;;
-#   }
-#
-#   join: zip_to_puma_v2 {
-#     relationship: many_to_many
-#     sql_on: ${zip_to_county.zip} =  ${zip_to_puma_v2.zip} ;;
-#   }
-
-#   join: acs_zip_codes_2017_5yr {
-#     view_label: "Vulnerable Populations"
-#     # fields: [acs_zip_codes_2017_5yr.population_density]
-#     relationship: many_to_one
-#     sql_on: ${zip_to_puma_v2.zip}=${acs_zip_codes_2017_5yr.geo_id} ;;
-#   }
-
-#   join: us_zipcode_boundaries {
-#     fields: []
-#     relationship: one_to_one
-#     sql_on: ${acs_zip_codes_2017_5yr.geo_id} = ${us_zipcode_boundaries.zip_code} ;;
-#   }
-
-## Animation ##
-
-#   join: animation {
-#     relationship: many_to_many
-#     sql_on: ${zip_to_puma_v2.puma} = ${animation.puma} ;;
-#   }
-
 
 }
 
@@ -269,8 +217,6 @@ explore: covid_data {
     ;;
   }
 }
-
-
 
 explore: italy {
   from: italy_regions

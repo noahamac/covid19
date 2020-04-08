@@ -1,69 +1,35 @@
-# explore: covid_tracking_project_sample_final {}
-view: covid_tracking_project_sample_final {
-  # sql_table_name: `lookerdata.covid19.covid_tracking_project_sample_final` ;;
+#This data was brought in to show testing data from the COVID19 Tracing project - https://covidtracking.com/
+
+view: covid_tracking_project {
   derived_table: {
     datagroup_trigger: covid_data
     sql:
       SELECT
         a.state,
         date as measurement_date,
-
         total as total_cumulative,
         total - coalesce(LAG(total, 1) OVER (PARTITION BY a.state  ORDER BY date ASC),0) as total_new_cases,
-
         death as death_cumulative,
         death - coalesce(LAG(death, 1) OVER (PARTITION BY a.state  ORDER BY date ASC),0) as death_new_cases,
-
         recovered as recovered_cumulative,
         recovered - coalesce(LAG(recovered, 1) OVER (PARTITION BY a.state  ORDER BY date ASC),0) as recovered_new_cases,
-
         hospitalizedCumulative as hospitalized_cumulative,
         hospitalizedCumulative - coalesce(LAG(hospitalizedCumulative, 1) OVER (PARTITION BY a.state  ORDER BY date ASC),0) as hospitalized_new_cases,
         hospitalizedCurrently,
-
         inIcuCumulative as inIcu_Cumulative,
         inIcuCumulative - coalesce(LAG(inIcuCumulative, 1) OVER (PARTITION BY a.state  ORDER BY date ASC),0) as inIcu_new_cases,
         inIcuCurrently,
-
         onVentilatorCumulative as onVentilator_Cumulative,
         onVentilatorCumulative - coalesce(LAG(onVentilatorCumulative, 1) OVER (PARTITION BY a.state  ORDER BY date ASC),0) as onVentilator_new_cases,
         onVentilatorCurrently,
-
         positive as positive_cumulative,
         positive - coalesce(LAG(positive, 1) OVER (PARTITION BY a.state  ORDER BY date ASC),0) as positive_new_cases,
-
         pending as pending_cumulative,
         pending - coalesce(LAG(pending, 1) OVER (PARTITION BY a.state  ORDER BY date ASC),0) as pending_new_cases,
-
         negative as negative_cumulative,
         negative - coalesce(LAG(negative, 1) OVER (PARTITION BY a.state  ORDER BY date ASC),0) as negative_new_cases,
 
-      FROM
-      (
-        SELECT
-          b.state
-        , a.fips
-        , a.date
-        , a.positive
-        , a.negative
-        , a.pending
-        , a.hospitalizedCurrently
-        , a.hospitalizedCumulative
-        , a.inIcuCurrently
-        , a.inIcuCumulative
-        , a.onVentilatorCurrently
-        , a.onVentilatorCumulative
-        , a.recovered
-        , a.death
-        , a.hospitalized
-        , a.total
-        , a.totalTestResults
-        , a.posNeg
-      FROM `lookerdata.covid19.covidtrackingproject_attempt2` a
-      LEFT JOIN `lookerdata.covid19.state_region` b
-              ON a.state = b.state_code
-      ) a
-    ;;
+      FROM `lookerdata.covid19.covidtrackingproject_attempt2`;;
   }
 
 ####################
@@ -84,7 +50,7 @@ view: covid_tracking_project_sample_final {
     hidden: yes
     map_layer_name: us_states
     type: string
-    sql: ${TABLE}.state ;;
+    sql: ${state_region.state} ;;
     link: {
       label: "{{ value }} Drill Down"
       url: "/dashboards-next/4?State={{ value }}"
@@ -104,10 +70,6 @@ view: covid_tracking_project_sample_final {
       raw,
       date
     ]
-#       week,
-#       month,
-#       quarter,
-#       year
     convert_tz: no
     datatype: date
     sql: ${TABLE}.measurement_date ;;
@@ -229,8 +191,8 @@ view: covid_tracking_project_sample_final {
     label: "Negative Test Results"
     type: number
     sql:
-        {% if jhu_sample_county_level_final.new_vs_running_total._parameter_value == 'new_cases' %} ${negative_new}
-        {% elsif jhu_sample_county_level_final.new_vs_running_total._parameter_value == 'running_total' %} ${negative_running_total}
+        {% if covid_combined.new_vs_running_total._parameter_value == 'new_cases' %} ${negative_new}
+        {% elsif covid_combined.new_vs_running_total._parameter_value == 'running_total' %} ${negative_running_total}
         {% endif %} ;;
     drill_fields: [drill*]
   }
@@ -240,8 +202,8 @@ view: covid_tracking_project_sample_final {
     label: "Pending Test Results"
     type: number
     sql:
-        {% if jhu_sample_county_level_final.new_vs_running_total._parameter_value == 'new_cases' %} ${pending_new}
-        {% elsif jhu_sample_county_level_final.new_vs_running_total._parameter_value == 'running_total' %} ${pending_running_total}
+        {% if covid_combined.new_vs_running_total._parameter_value == 'new_cases' %} ${pending_new}
+        {% elsif covid_combined.new_vs_running_total._parameter_value == 'running_total' %} ${pending_running_total}
         {% endif %} ;;
     drill_fields: [drill*]
   }
@@ -251,8 +213,8 @@ view: covid_tracking_project_sample_final {
     label: "Positive Test Results"
     type: number
     sql:
-        {% if jhu_sample_county_level_final.new_vs_running_total._parameter_value == 'new_cases' %} ${positive_new}
-        {% elsif jhu_sample_county_level_final.new_vs_running_total._parameter_value == 'running_total' %} ${positive_running_total}
+        {% if covid_combined.new_vs_running_total._parameter_value == 'new_cases' %} ${positive_new}
+        {% elsif covid_combined.new_vs_running_total._parameter_value == 'running_total' %} ${positive_running_total}
         {% endif %} ;;
     drill_fields: [drill*]
   }
@@ -262,20 +224,11 @@ view: covid_tracking_project_sample_final {
     label: "Total Tests"
     type: number
     sql:
-        {% if jhu_sample_county_level_final.new_vs_running_total._parameter_value == 'new_cases' %} ${total_new}
-        {% elsif jhu_sample_county_level_final.new_vs_running_total._parameter_value == 'running_total' %} ${total_running_total}
+        {% if covid_combined.new_vs_running_total._parameter_value == 'new_cases' %} ${total_new}
+        {% elsif covid_combined.new_vs_running_total._parameter_value == 'running_total' %} ${total_running_total}
         {% endif %} ;;
     drill_fields: [drill*]
   }
-
-#   measure: total_tests_per_capita {
-#     group_label: "Dynamic (Testing - US Only)"
-#     description: "Tests Per 1K People"
-#     type: number
-#     sql: 1000*${total} / nullif(${acs_puma_state_facts.population},0) ;;
-#     value_format_name: decimal_3
-#     drill_fields: [drill*, total_tests_per_capita]
-#   }
 
   measure: hospitalized_new {
     group_label: "New Cases (Testing - US Only)"
@@ -305,7 +258,7 @@ view: covid_tracking_project_sample_final {
     label: "Hospitalizations (Running Total)"
     type: number
     sql:
-    {% if covid_tracking_project_sample_final.measurement_date._in_query %} ${hospitalized_option_1}
+    {% if covid_tracking_project.measurement_date._in_query %} ${hospitalized_option_1}
     {% else %}  ${hospitalized_option_2}
     {% endif %} ;;
   }

@@ -1,6 +1,5 @@
 view: state_region {
-  sql_table_name: `lookerdata.covid19.state_region`
-    ;;
+  sql_table_name: `lookerdata.covid19.state_region`;;
 
   dimension: division {
     hidden: yes
@@ -27,11 +26,5 @@ view: state_region {
     hidden: yes
     type: string
     sql: ${TABLE}.state_code ;;
-  }
-
-  measure: count {
-    hidden: yes
-    type: count
-    drill_fields: []
   }
 }
