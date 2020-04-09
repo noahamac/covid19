@@ -10,7 +10,7 @@ view: covid_combined {
     --use the NYT data for all US data, but join with JHU to get lat/lon for the fips
    SELECT * FROM
     (SELECT
-        cast(a.fips as int64),
+        cast(a.fips as int64) as fips,
         a.county,
         a.state as province_state,
         'US' as country_region,
@@ -82,7 +82,8 @@ view: covid_combined {
   dimension: pre_pk {
     hidden: yes
     type: string
-    sql: concat(coalesce(${county},''), coalesce(${province_state},''), coalesce(${country_region},'')) ;;
+    sql: concat(coalesce(${county},''), coalesce(${province_state},''), coalesce(case when ${TABLE}.country_region in ('US','UK')
+        then ${TABLE}.country_region else ${country_region} end,'')) ;;
   }
 
   dimension: pk {
