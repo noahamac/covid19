@@ -29,7 +29,7 @@ view: covid_tracking_project {
         negative as negative_cumulative,
         negative - coalesce(LAG(negative, 1) OVER (PARTITION BY a.state  ORDER BY date ASC),0) as negative_new_cases,
 
-      FROM `lookerdata.covid19.covidtrackingproject_attempt2`;;
+      FROM `lookerdata.covid19_block.covid_tracking_project`;;
   }
 
 ####################

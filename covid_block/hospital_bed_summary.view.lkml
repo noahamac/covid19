@@ -1,11 +1,12 @@
-#this data is brought in from....
+#This view calculates thing like how many beds are available in different geopgrahies and estimates how many beds are being utilized
+
 
 view: hospital_bed_summary {
   derived_table: {
     datagroup_trigger: covid_data
     #combining NYC fips codes to match other data
     sql:  SELECT *, case when fips in ( 36005, 36081, 36061, 36047, 36085 ) then 36125 else fips end as fipd
-            FROM `lookerdata.covid19.hospital_bed_summary_final`
+            FROM `lookerdata.covid19_block.hospital_bed_summary`
             WHERE hospital_type not in ('Rehabilitation Hospital', 'Psychiatric Hospital', 'Religious Non-Medical Health Care Institution') ;;
   }
 

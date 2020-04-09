@@ -1,3 +1,6 @@
+### This view file has several different PDTs that calculate metrics like ranks and comparisons of geographies
+
+
 ####################
 ### Max Dates
 ####################
@@ -44,7 +47,7 @@ view: max_date_tracking_project {
 
 view: country_rank {
   derived_table: {
-    explore_source: jhu_sample_county_level_final {
+    explore_source: covid_combined {
       bind_all_filters: yes
       column: country_raw {}
       column: confirmed_running_total {}
@@ -59,7 +62,7 @@ view: country_rank {
 
 view: state_rank {
   derived_table: {
-    explore_source: jhu_sample_county_level_final {
+    explore_source: covid_combined {
       bind_all_filters: yes
       column: province_state {}
       column: confirmed_running_total {}
@@ -67,7 +70,7 @@ view: state_rank {
         sql: row_number() OVER (PARTITION BY 'X' ORDER BY confirmed_running_total desc) ;;
       }
       filters: {
-        field: jhu_sample_county_level_final.country_raw
+        field: covid_combined.country_raw
         value: "US"
       }
     }
@@ -78,7 +81,7 @@ view: state_rank {
 
 view: fips_rank {
   derived_table: {
-    explore_source: jhu_sample_county_level_final {
+    explore_source: covid_combined {
       bind_all_filters: yes
       column: fips {}
       column: confirmed_running_total {}
@@ -86,7 +89,7 @@ view: fips_rank {
         sql: row_number() OVER (PARTITION BY 'X' ORDER BY confirmed_running_total desc) ;;
       }
       filters: {
-        field: jhu_sample_county_level_final.country_raw
+        field: covid_combined.country_raw
         value: "US"
       }
     }
@@ -103,7 +106,7 @@ view: prior_days_cases_covid {
   view_label: "Trends"
   derived_table: {
     datagroup_trigger: covid_data
-    explore_source: jhu_sample_county_level_final {
+    explore_source: covid_combined {
       column: measurement_date {}
       column: pre_pk {}
       column: confirmed_running_total {}
@@ -332,7 +335,7 @@ view: prior_days_cases_covid {
     value_format_name: percent_1
     sql:
         (
-            ((${jhu_sample_county_level_final.confirmed_running_total}    - ${sum_prior_1_days_confirmed_running_total}) / NULLIF(${sum_prior_1_days_confirmed_running_total},0))*7.0
+            ((${covid_combined.confirmed_running_total}    - ${sum_prior_1_days_confirmed_running_total}) / NULLIF(${sum_prior_1_days_confirmed_running_total},0))*7.0
           + ((${sum_prior_1_days_confirmed_running_total}                 - ${sum_prior_2_days_confirmed_running_total}) / NULLIF(${sum_prior_2_days_confirmed_running_total},0))*6.0
           + ((${sum_prior_2_days_confirmed_running_total}                 - ${sum_prior_3_days_confirmed_running_total}) / NULLIF(${sum_prior_3_days_confirmed_running_total},0))*5.0
           + ((${sum_prior_3_days_confirmed_running_total}                 - ${sum_prior_4_days_confirmed_running_total}) / NULLIF(${sum_prior_4_days_confirmed_running_total},0))*4.0
@@ -359,7 +362,7 @@ view: prior_days_cases_covid {
     value_format_name: percent_1
     sql:
         (
-            ((${jhu_sample_county_level_final.deaths_running_total}   - ${sum_prior_1_days_deaths_running_total}) / NULLIF(${sum_prior_1_days_deaths_running_total},0))*7.0
+            ((${covid_combined.deaths_running_total}   - ${sum_prior_1_days_deaths_running_total}) / NULLIF(${sum_prior_1_days_deaths_running_total},0))*7.0
           + ((${sum_prior_1_days_deaths_running_total}                - ${sum_prior_2_days_deaths_running_total}) / NULLIF(${sum_prior_2_days_deaths_running_total},0))*6.0
           + ((${sum_prior_2_days_deaths_running_total}                - ${sum_prior_3_days_deaths_running_total}) / NULLIF(${sum_prior_3_days_deaths_running_total},0))*5.0
           + ((${sum_prior_3_days_deaths_running_total}                - ${sum_prior_4_days_deaths_running_total}) / NULLIF(${sum_prior_4_days_deaths_running_total},0))*4.0
@@ -386,7 +389,7 @@ view: prior_days_cases_covid {
     value_format_name: percent_1
     sql:
         (
-            ((${jhu_sample_county_level_final.confirmed_new}    - ${sum_prior_1_days_confirmed_new}) / NULLIF(${sum_prior_1_days_confirmed_new},0))*7.0
+            ((${covid_combined.confirmed_new}    - ${sum_prior_1_days_confirmed_new}) / NULLIF(${sum_prior_1_days_confirmed_new},0))*7.0
           + ((${sum_prior_1_days_confirmed_new}                 - ${sum_prior_2_days_confirmed_new}) / NULLIF(${sum_prior_2_days_confirmed_new},0))*6.0
           + ((${sum_prior_2_days_confirmed_new}                 - ${sum_prior_3_days_confirmed_new}) / NULLIF(${sum_prior_3_days_confirmed_new},0))*5.0
           + ((${sum_prior_3_days_confirmed_new}                 - ${sum_prior_4_days_confirmed_new}) / NULLIF(${sum_prior_4_days_confirmed_new},0))*4.0
@@ -413,7 +416,7 @@ view: prior_days_cases_covid {
     value_format_name: percent_1
     sql:
         (
-            ((${jhu_sample_county_level_final.deaths_new}   - ${sum_prior_1_days_deaths_new}) / NULLIF(${sum_prior_1_days_deaths_new},0))*7.0
+            ((${covid_combined.deaths_new}   - ${sum_prior_1_days_deaths_new}) / NULLIF(${sum_prior_1_days_deaths_new},0))*7.0
           + ((${sum_prior_1_days_deaths_new}                - ${sum_prior_2_days_deaths_new}) / NULLIF(${sum_prior_2_days_deaths_new},0))*6.0
           + ((${sum_prior_2_days_deaths_new}                - ${sum_prior_3_days_deaths_new}) / NULLIF(${sum_prior_3_days_deaths_new},0))*5.0
           + ((${sum_prior_3_days_deaths_new}                - ${sum_prior_4_days_deaths_new}) / NULLIF(${sum_prior_4_days_deaths_new},0))*4.0
@@ -440,7 +443,7 @@ view: prior_days_cases_covid {
     value_format_name: percent_1
     sql:
         (
-            ((${jhu_sample_county_level_final.confirmed_running_total_per_million}    - ${sum_prior_1_days_confirmed_running_total_per_million}) / NULLIF(${sum_prior_1_days_confirmed_running_total_per_million},0))*7.0
+            ((${covid_combined.confirmed_running_total_per_million}    - ${sum_prior_1_days_confirmed_running_total_per_million}) / NULLIF(${sum_prior_1_days_confirmed_running_total_per_million},0))*7.0
           + ((${sum_prior_1_days_confirmed_running_total_per_million}                 - ${sum_prior_2_days_confirmed_running_total_per_million}) / NULLIF(${sum_prior_2_days_confirmed_running_total_per_million},0))*6.0
           + ((${sum_prior_2_days_confirmed_running_total_per_million}                 - ${sum_prior_3_days_confirmed_running_total_per_million}) / NULLIF(${sum_prior_3_days_confirmed_running_total_per_million},0))*5.0
           + ((${sum_prior_3_days_confirmed_running_total_per_million}                 - ${sum_prior_4_days_confirmed_running_total_per_million}) / NULLIF(${sum_prior_4_days_confirmed_running_total_per_million},0))*4.0
@@ -467,7 +470,7 @@ view: prior_days_cases_covid {
     value_format_name: percent_1
     sql:
         (
-            ((${jhu_sample_county_level_final.deaths_running_total_per_million}   - ${sum_prior_1_days_deaths_running_total_per_million}) / NULLIF(${sum_prior_1_days_deaths_running_total_per_million},0))*7.0
+            ((${covid_combined.deaths_running_total_per_million}   - ${sum_prior_1_days_deaths_running_total_per_million}) / NULLIF(${sum_prior_1_days_deaths_running_total_per_million},0))*7.0
           + ((${sum_prior_1_days_deaths_running_total_per_million}                - ${sum_prior_2_days_deaths_running_total_per_million}) / NULLIF(${sum_prior_2_days_deaths_running_total_per_million},0))*6.0
           + ((${sum_prior_2_days_deaths_running_total_per_million}                - ${sum_prior_3_days_deaths_running_total_per_million}) / NULLIF(${sum_prior_3_days_deaths_running_total_per_million},0))*5.0
           + ((${sum_prior_3_days_deaths_running_total_per_million}                - ${sum_prior_4_days_deaths_running_total_per_million}) / NULLIF(${sum_prior_4_days_deaths_running_total_per_million},0))*4.0
@@ -494,7 +497,7 @@ view: prior_days_cases_covid {
     value_format_name: percent_1
     sql:
         (
-            ((${jhu_sample_county_level_final.confirmed_new_per_million}    - ${sum_prior_1_days_confirmed_new_per_million}) / NULLIF(${sum_prior_1_days_confirmed_new_per_million},0))*7.0
+            ((${covid_combined.confirmed_new_per_million}    - ${sum_prior_1_days_confirmed_new_per_million}) / NULLIF(${sum_prior_1_days_confirmed_new_per_million},0))*7.0
           + ((${sum_prior_1_days_confirmed_new_per_million}                 - ${sum_prior_2_days_confirmed_new_per_million}) / NULLIF(${sum_prior_2_days_confirmed_new_per_million},0))*6.0
           + ((${sum_prior_2_days_confirmed_new_per_million}                 - ${sum_prior_3_days_confirmed_new_per_million}) / NULLIF(${sum_prior_3_days_confirmed_new_per_million},0))*5.0
           + ((${sum_prior_3_days_confirmed_new_per_million}                 - ${sum_prior_4_days_confirmed_new_per_million}) / NULLIF(${sum_prior_4_days_confirmed_new_per_million},0))*4.0
@@ -521,7 +524,7 @@ view: prior_days_cases_covid {
     value_format_name: percent_1
     sql:
         (
-            ((${jhu_sample_county_level_final.deaths_new_per_million}   - ${sum_prior_1_days_deaths_new_per_million}) / NULLIF(${sum_prior_1_days_deaths_new_per_million},0))*7.0
+            ((${covid_combined.deaths_new_per_million}   - ${sum_prior_1_days_deaths_new_per_million}) / NULLIF(${sum_prior_1_days_deaths_new_per_million},0))*7.0
           + ((${sum_prior_1_days_deaths_new_per_million}                - ${sum_prior_2_days_deaths_new_per_million}) / NULLIF(${sum_prior_2_days_deaths_new_per_million},0))*6.0
           + ((${sum_prior_2_days_deaths_new_per_million}                - ${sum_prior_3_days_deaths_new_per_million}) / NULLIF(${sum_prior_3_days_deaths_new_per_million},0))*5.0
           + ((${sum_prior_3_days_deaths_new_per_million}                - ${sum_prior_4_days_deaths_new_per_million}) / NULLIF(${sum_prior_4_days_deaths_new_per_million},0))*4.0
@@ -702,7 +705,7 @@ view: prior_days_cases_covid {
 view: kpis_by_county_by_date {
   derived_table: {
     datagroup_trigger: covid_data
-    explore_source: jhu_sample_county_level_final {
+    explore_source: covid_combined {
       column: county_full {}
       column: measurement_date {}
       column: days_since_first_outbreak {}
@@ -719,7 +722,7 @@ view: kpis_by_county_by_date {
       column: doubling_time_deaths_new_per_million { field: prior_days_cases_covid.doubling_time_deaths_new_per_million }
       column: doubling_time_deaths_rolling_total_per_million { field: prior_days_cases_covid.doubling_time_deaths_rolling_total_per_million }
       filters: {
-        field: jhu_sample_county_level_final.fips
+        field: covid_combined.fips
         value: "NOT NULL"
       }
     }
@@ -729,7 +732,7 @@ view: kpis_by_county_by_date {
 view: kpis_by_state_by_date {
   derived_table: {
     datagroup_trigger: covid_data
-    explore_source: jhu_sample_county_level_final {
+    explore_source: covid_combined {
       column: state_full {}
       column: measurement_date {}
       column: days_since_first_outbreak {}
@@ -746,7 +749,7 @@ view: kpis_by_state_by_date {
       column: doubling_time_deaths_new_per_million { field: prior_days_cases_covid.doubling_time_deaths_new_per_million }
       column: doubling_time_deaths_rolling_total_per_million { field: prior_days_cases_covid.doubling_time_deaths_rolling_total_per_million }
       filters: {
-        field: jhu_sample_county_level_final.province_state
+        field: covid_combined.province_state
         value: "-NULL"
       }
     }
@@ -756,7 +759,7 @@ view: kpis_by_state_by_date {
 view: kpis_by_country_by_date {
   derived_table: {
     datagroup_trigger: covid_data
-    explore_source: jhu_sample_county_level_final {
+    explore_source: covid_combined {
       column: country_region {}
       column: measurement_date {}
       column: days_since_first_outbreak {}
@@ -773,7 +776,7 @@ view: kpis_by_country_by_date {
       column: doubling_time_deaths_new_per_million { field: prior_days_cases_covid.doubling_time_deaths_new_per_million }
       column: doubling_time_deaths_rolling_total_per_million { field: prior_days_cases_covid.doubling_time_deaths_rolling_total_per_million }
       filters: {
-        field: jhu_sample_county_level_final.country_region
+        field: covid_combined.country_region
         value: "-NULL"
       }
     }

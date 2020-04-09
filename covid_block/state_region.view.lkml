@@ -1,5 +1,5 @@
 view: state_region {
-  sql_table_name: `lookerdata.covid19.state_region`;;
+  sql_table_name: `lookerdata.covid19_block.state_region`;;
 
   dimension: division {
     hidden: yes

@@ -1,7 +1,7 @@
 #This view pulls data from a static table that maps a country to its global region
 
 view: country_region {
-  sql_table_name: `lookerdata.covid19.country_region`;;
+  sql_table_name: `lookerdata.covid19_block.country_region`;;
 
   dimension: country {
     hidden: yes

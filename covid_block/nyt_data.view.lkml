@@ -2,8 +2,8 @@
 
 view: nyt_data {
   derived_table: {
-    sql: select * from `lookerdata.covid19.nyt_covid_staging`;;
-    sql_trigger_value: SELECT COUNT(*) FROM `lookerdata.covid19.nyt_covid_staging`;;
+    sql: select * from `lookerdata.covid19_block.nyt_data`;;
+    sql_trigger_value: SELECT COUNT(*) FROM `lookerdata.covid19_block.nyt_data`;;
   }
 
   #number of confirmed cases in the county
