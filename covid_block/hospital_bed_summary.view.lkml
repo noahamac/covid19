@@ -5,7 +5,7 @@ view: hospital_bed_summary {
   derived_table: {
     datagroup_trigger: covid_data
     #combining NYC fips codes to match other data
-    sql:  SELECT *, case when fips in ( 36005, 36081, 36061, 36047, 36085 ) then 36125 else fips end as fipd
+    sql:  SELECT *, case when fips in ( 36005, 36081, 36061, 36047, 36085 ) then 36125 else fips end as fips
             FROM `lookerdata.covid19_block.hospital_bed_summary`
             WHERE hospital_type not in ('Rehabilitation Hospital', 'Psychiatric Hospital', 'Religious Non-Medical Health Care Institution') ;;
   }
@@ -69,36 +69,6 @@ view: hospital_bed_summary {
     group_label: "Hospital"
     type: string
     sql: ${TABLE}.HOSPITAL_NAME ;;
-    link: {
-      label: "{{ value }} - Hospital Deep Dive"
-      url: "/dashboards/25?Hospital%20Name={{ value }}"
-      icon_url: "https://looker.com/favicon.ico"
-    }
-    action: {
-      label: "Move ventilators over"
-      url: "https://desolate-refuge-53336.herokuapp.com/posts"
-      icon_url: "https://sendgrid.com/favicon.ico"
-      param: {
-        name: "some_auth_code"
-        value: "abc123456"
-      }
-      form_param: {
-        name: "Subject"
-        required: yes
-        default: "Move ventailors from {{ value }}"
-      }
-      form_param: {
-        name: "To Mailing List"
-        required: yes
-      }
-      form_param: {
-        name: "Body"
-        type: textarea
-        required: yes
-        default:
-        "Given the high amount of risk seen in {{ value }}, we strongly recommend moving ventilators in."
-      }
-    }
   }
 
   dimension: hospital_type {
@@ -272,6 +242,7 @@ view: hospital_bed_summary {
   }
 
   measure: estimated_percent_of_covid_cases_of_county {
+    description: "The total number of licensed bed for the hospital, hospital type or location (if none is selected 100% will be returned), divided by the total sum of all licensed beds in the dataset"
     hidden: yes
     type: number
     sql:

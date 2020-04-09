@@ -176,11 +176,6 @@ view: covid_combined {
       icon_url: "https://looker.com/favicon.ico"
     }
     link: {
-      label: "{{ value }} - COVID19 Website"
-      url: "{{ state_url_code_final.url._value }}"
-      icon_url: "http://google.com/favicon.ico"
-    }
-    link: {
       label: "{{ value }} - News Search"
       url: "https://news.google.com/search?q={{ value }}%20covid"
       icon_url: "http://www.google.com/s2/favicons?domain_url=http://www.news.google.com"
@@ -251,11 +246,6 @@ view: covid_combined {
 #       url: "/dashboards/FLiQf6bJUQ5mxvHNyocYYz?Country={{ value }}"
 #       icon_url: "https://looker.com/favicon.ico"
 #     }
-    link: {
-      label: "{{ value }} - COVID19 Website"
-      url: "{{ country_url_code_final.url._value }}"
-      icon_url: "http://google.com/favicon.ico"
-    }
     link: {
       label: "{{ value }} - News Search"
       url: "https://news.google.com/search?q={{ value }}%20covid"
