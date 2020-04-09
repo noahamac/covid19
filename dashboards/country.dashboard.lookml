@@ -5,17 +5,17 @@
   - title: Confirmed Cases
     name: Confirmed Cases
     model: covid
-    explore: jhu_sample_county_level_final
+    explore: covid_combined
     type: single_value
-    fields: [jhu_sample_county_level_final.confirmed_running_total, jhu_sample_county_level_final.measurement_date]
-    fill_fields: [jhu_sample_county_level_final.measurement_date]
-    sorts: [jhu_sample_county_level_final.measurement_date desc]
+    fields: [covid_combined.confirmed_running_total, covid_combined.measurement_date]
+    fill_fields: [covid_combined.measurement_date]
+    sorts: [covid_combined.measurement_date desc]
     limit: 500
     column_limit: 50
-    dynamic_fields: [{table_calculation: yesterday, label: Yesterday, expression: 'offset(${jhu_sample_county_level_final.confirmed_running_total},1)',
+    dynamic_fields: [{table_calculation: yesterday, label: Yesterday, expression: 'offset(${covid_combined.confirmed_running_total},1)',
         value_format: !!null '', value_format_name: !!null '', _kind_hint: measure,
         _type_hint: number}, {table_calculation: vs_yesterday, label: vs. Yesterday,
-        expression: "${jhu_sample_county_level_final.confirmed_running_total}-${yesterday}",
+        expression: "${covid_combined.confirmed_running_total}-${yesterday}",
         value_format: !!null '', value_format_name: decimal_0, _kind_hint: measure,
         _type_hint: number}]
     custom_color_enabled: true
@@ -55,7 +55,7 @@
     hidden_fields: [last_week, yesterday]
     series_types: {}
     listen:
-      Country: jhu_sample_county_level_final.country_region
+      Country: covid_combined.country_region
     row: 0
     col: 0
     width: 6
@@ -63,17 +63,17 @@
   - title: Deaths
     name: Deaths
     model: covid
-    explore: jhu_sample_county_level_final
+    explore: covid_combined
     type: single_value
-    fields: [jhu_sample_county_level_final.measurement_date, jhu_sample_county_level_final.deaths_running_total]
-    fill_fields: [jhu_sample_county_level_final.measurement_date]
-    sorts: [jhu_sample_county_level_final.measurement_date desc]
+    fields: [covid_combined.measurement_date, covid_combined.deaths_running_total]
+    fill_fields: [covid_combined.measurement_date]
+    sorts: [covid_combined.measurement_date desc]
     limit: 500
     column_limit: 50
-    dynamic_fields: [{table_calculation: yesterday, label: Yesterday, expression: 'offset(${jhu_sample_county_level_final.deaths_running_total},1)',
+    dynamic_fields: [{table_calculation: yesterday, label: Yesterday, expression: 'offset(${covid_combined.deaths_running_total},1)',
         value_format: !!null '', value_format_name: !!null '', _kind_hint: measure,
         _type_hint: number}, {table_calculation: vs_yesterday, label: vs. Yesterday,
-        expression: "${jhu_sample_county_level_final.deaths_running_total}-${yesterday}",
+        expression: "${covid_combined.deaths_running_total}-${yesterday}",
         value_format: !!null '', value_format_name: decimal_0, _kind_hint: measure,
         _type_hint: number}]
     custom_color_enabled: true
@@ -113,7 +113,7 @@
     hidden_fields: [last_week, yesterday]
     series_types: {}
     listen:
-      Country: jhu_sample_county_level_final.country_region
+      Country: covid_combined.country_region
     row: 0
     col: 6
     width: 6
@@ -121,17 +121,17 @@
   - title: New Cases
     name: New Cases
     model: covid
-    explore: jhu_sample_county_level_final
+    explore: covid_combined
     type: single_value
-    fields: [jhu_sample_county_level_final.measurement_date, jhu_sample_county_level_final.confirmed_new]
-    fill_fields: [jhu_sample_county_level_final.measurement_date]
-    sorts: [jhu_sample_county_level_final.measurement_date desc]
+    fields: [covid_combined.measurement_date, covid_combined.confirmed_new]
+    fill_fields: [covid_combined.measurement_date]
+    sorts: [covid_combined.measurement_date desc]
     limit: 500
     column_limit: 50
-    dynamic_fields: [{table_calculation: yesterday, label: Yesterday, expression: 'offset(${jhu_sample_county_level_final.confirmed_new},1)',
+    dynamic_fields: [{table_calculation: yesterday, label: Yesterday, expression: 'offset(${covid_combined.confirmed_new},1)',
         value_format: !!null '', value_format_name: !!null '', _kind_hint: measure,
         _type_hint: number}, {table_calculation: vs_yesterday, label: vs. Yesterday,
-        expression: "${jhu_sample_county_level_final.confirmed_new}-${yesterday}",
+        expression: "${covid_combined.confirmed_new}-${yesterday}",
         value_format: !!null '', value_format_name: decimal_0, _kind_hint: measure,
         _type_hint: number}]
     custom_color_enabled: true
@@ -171,7 +171,7 @@
     hidden_fields: [last_week, yesterday]
     series_types: {}
     listen:
-      Country: jhu_sample_county_level_final.country_region
+      Country: covid_combined.country_region
     row: 0
     col: 12
     width: 6
@@ -179,11 +179,11 @@
   - title: Daily Growth Rate
     name: Daily Growth Rate
     model: covid
-    explore: jhu_sample_county_level_final
+    explore: covid_combined
     type: single_value
-    fields: [jhu_sample_county_level_final.measurement_date, prior_days_cases_covid.seven_day_average_change_rate_confirmed_cases_running_total]
-    fill_fields: [jhu_sample_county_level_final.measurement_date]
-    sorts: [jhu_sample_county_level_final.measurement_date desc]
+    fields: [covid_combined.measurement_date, prior_days_cases_covid.seven_day_average_change_rate_confirmed_cases_running_total]
+    fill_fields: [covid_combined.measurement_date]
+    sorts: [covid_combined.measurement_date desc]
     limit: 500
     column_limit: 50
     dynamic_fields: [{table_calculation: yesterday, label: Yesterday, expression: 'offset(${prior_days_cases_covid.seven_day_average_change_rate_confirmed_cases_running_total},1)',
@@ -229,7 +229,7 @@
     hidden_fields: [last_week, yesterday]
     series_types: {}
     listen:
-      Country: jhu_sample_county_level_final.country_region
+      Country: covid_combined.country_region
     row: 0
     col: 18
     width: 6
@@ -237,23 +237,23 @@
   - title: Confirmed Cases (Forecast)
     name: Confirmed Cases (Forecast)
     model: covid
-    explore: jhu_sample_county_level_final
+    explore: covid_combined
     type: looker_column
-    fields: [jhu_sample_county_level_final.measurement_date, jhu_sample_county_level_final.confirmed_running_total,
-      jhu_sample_county_level_final.real_vs_forecasted]
-    pivots: [jhu_sample_county_level_final.real_vs_forecasted]
-    fill_fields: [jhu_sample_county_level_final.measurement_date]
+    fields: [covid_combined.measurement_date, covid_combined.confirmed_running_total,
+      covid_combined.real_vs_forecasted]
+    pivots: [covid_combined.real_vs_forecasted]
+    fill_fields: [covid_combined.measurement_date]
     filters:
-      jhu_sample_county_level_final.days_since_max_date: "[-20, 7]"
-      jhu_sample_county_level_final.allow_forecasted_values: 'yes'
-    sorts: [jhu_sample_county_level_final.measurement_date desc, jhu_sample_county_level_final.real_vs_forecasted
+      covid_combined.days_since_max_date: "[-20, 7]"
+      covid_combined.allow_forecasted_values: 'yes'
+    sorts: [covid_combined.measurement_date desc, covid_combined.real_vs_forecasted
         desc]
     limit: 500
     column_limit: 50
-    dynamic_fields: [{table_calculation: yesterday, label: Yesterday, expression: 'offset(${jhu_sample_county_level_final.confirmed_new},1)',
+    dynamic_fields: [{table_calculation: yesterday, label: Yesterday, expression: 'offset(${covid_combined.confirmed_new},1)',
         value_format: !!null '', value_format_name: !!null '', _kind_hint: measure,
         _type_hint: number, is_disabled: true}, {table_calculation: vs_yesterday,
-        label: vs. Yesterday, expression: "${jhu_sample_county_level_final.confirmed_new}-${yesterday}",
+        label: vs. Yesterday, expression: "${covid_combined.confirmed_new}-${yesterday}",
         value_format: !!null '', value_format_name: decimal_0, _kind_hint: measure,
         _type_hint: number, is_disabled: true}]
     x_axis_gridlines: false
@@ -328,7 +328,7 @@
     quantize_map_value_colors: false
     reverse_map_value_colors: false
     listen:
-      Country: jhu_sample_county_level_final.country_region
+      Country: covid_combined.country_region
     row: 5
     col: 0
     width: 24
@@ -341,6 +341,6 @@
     allow_multiple_values: true
     required: false
     model: covid
-    explore: jhu_sample_county_level_final
+    explore: covid_combined
     listens_to_filters: [Region]
-    field: jhu_sample_county_level_final.country_region
+    field: covid_combined.country_region

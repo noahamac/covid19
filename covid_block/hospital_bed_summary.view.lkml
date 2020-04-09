@@ -1,38 +1,14 @@
-explore: patient_detail {}
-view: patient_detail {
-  derived_table: {
-    sql:
+#This view calculates thing like how many beds are available in different geopgrahies and estimates how many beds are being utilized
 
-          SELECT 'Aaron Test' as patient_name, 'Asthma' as condition, 'Recovering' as status, 2 as bed_days_needed
-UNION ALL SELECT 'Bob Test' as patient_name, 'Heart Disease' as condition, 'Recovering' as status, 3 as bed_days_needed
-UNION ALL SELECT 'Connor Test' as patient_name, 'Asthma' as condition, 'Worsening' as status, 20 as bed_days_needed
-UNION ALL SELECT 'David Test' as patient_name, 'Heart Disease' as condition, 'Worsening' as status, 31 as bed_days_needed
-UNION ALL SELECT 'Eric Test' as patient_name, 'Asthma' as condition, 'New Patient' as status, 10 as bed_days_needed
-UNION ALL SELECT 'Franklin Test' as patient_name, 'Heart Disease' as condition, 'New Patient' as status, 5 as bed_days_needed
-UNION ALL SELECT 'George Test' as patient_name, 'Asthma' as condition, 'Recovered' as status, 0 as bed_days_needed
-    ;;
-  }
-    dimension: patient_name {}
-    dimension: condition {}
-    dimension: status {}
-    dimension: bed_days_needed {type:number }
-}
 
-view: hospital_bed_summary_final {
+view: hospital_bed_summary {
   derived_table: {
     datagroup_trigger: covid_data
-    sql:
-  SELECT *, case when fips in ( 36005, 36081, 36061, 36047, 36085 ) then 36125 else fips end as fips_nyc_corrected
-  FROM `lookerdata.covid19.hospital_bed_summary_final`
-  WHERE hospital_type not in (
-    'Rehabilitation Hospital'
-   , 'Psychiatric Hospital'
-   , 'Religious Non-Medical Health Care Institution'
-  )
-    ;;
+    #combining NYC fips codes to match other data
+    sql:  SELECT *, case when fips in ( 36005, 36081, 36061, 36047, 36085 ) then 36125 else fips end as fipd
+            FROM `lookerdata.covid19_block.hospital_bed_summary`
+            WHERE hospital_type not in ('Rehabilitation Hospital', 'Psychiatric Hospital', 'Religious Non-Medical Health Care Institution') ;;
   }
-
-  # sql_table_name: `lookerdata.covid19.hospital_bed_summary_final` ;;
 
 
 ####################
@@ -86,7 +62,7 @@ view: hospital_bed_summary_final {
   dimension: fips {
     hidden: yes
     type: number
-    sql: SUBSTR('00000' || IFNULL(SAFE_CAST(${TABLE}.fips_nyc_corrected AS STRING), ''), -5) ;;
+    sql: SUBSTR('00000' || IFNULL(SAFE_CAST(${TABLE}.fips AS STRING), ''), -5) ;;
   }
 
   dimension: hospital_name {
@@ -300,20 +276,13 @@ view: hospital_bed_summary_final {
     type: number
     sql:
       {% if
-                hospital_bed_summary_final.hospital_name._in_query
-            or  hospital_bed_summary_final.hospital_type._in_query
-            or  hospital_bed_summary_final.hospital_location._in_query
+                hospital_bed_summary.hospital_name._in_query
+            or  hospital_bed_summary.hospital_type._in_query
+            or  hospital_bed_summary.hospital_location._in_query
       %} 1.0*${sum_num_licensed_beds}/nullif(${sum_county_num_licensed_beds},0)
       {% else %}  ${force_1}
       {% endif %} ;;
     value_format_name: percent_1
   }
 
-
-
-  measure: count {
-    hidden: yes
-    type: count
-    drill_fields: [hospital_name, state_name, county_name]
-  }
 }

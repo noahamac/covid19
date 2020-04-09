@@ -2,51 +2,50 @@
 
 view: policies_by_state {
   derived_table: {
-    datagroup_trigger: covid_data
+    sql_trigger_value: SELECT MAX(MAX(a.Last_Update_Date),MAX(b.Last_Update_Date)) FROM
+                          `lookerdata.covid19_block.state_mitigations` a
+                            LEFT JOIN `lookerdata.covid19_block.state_policies` b
+                            ON a.Location = b.Location;;
     sql:
-
-SELECT
-    state
-  , CASE WHEN Bar__Restaurant_Limits = '-' THEN 'None' ELSE Bar__Restaurant_Limits END as Bar__Restaurant_Limits
-  , CASE WHEN Mandatory_Quarantine IS NULL THEN 'None' ELSE Mandatory_Quarantine END as Mandatory_Quarantine
-  , CASE WHEN Non_Essential_Business_Closures = '-' THEN 'None' ELSE Non_Essential_Business_Closures END as Non_Essential_Business_Closures
-  , Emergency_Declaration
-  , Primary_Election_Postponement
-  , CASE WHEN State_Mandated_School_Closures = '-' THEN 'None' ELSE State_Mandated_School_Closures END as State_Mandated_School_Closures
-  , CASE WHEN Large_Gatherings_Ban = '-' THEN 'None' ELSE Large_Gatherings_Ban END as Large_Gatherings_Ban
-  , CASE WHEN Waive_Cost_Sharing_for_COVID_19_Treatment = '-' THEN 'No policy' ELSE Waive_Cost_Sharing_for_COVID_19_Treatment END as Waive_Cost_Sharing_for_COVID_19_Treatment
-  , CASE WHEN Free_Cost_Vaccine_When_Available = '-' THEN 'No policy' ELSE Free_Cost_Vaccine_When_Available END as Free_Cost_Vaccine_When_Available
-  , CASE WHEN State_Requires_Waiver_of_Prior_Authorization_Requirements = '-' THEN 'No policy' ELSE State_Requires_Waiver_of_Prior_Authorization_Requirements END as State_Requires_Waiver_of_Prior_Authorization_Requirements
-  , CASE WHEN Early_Prescription_Refills = '-' THEN 'No policy' ELSE Early_Prescription_Refills END as Early_Prescription_Refills
-  , CASE WHEN Marketplace_Special_Enrollment_Period__SEP_ = '-' THEN 'No policy' ELSE Marketplace_Special_Enrollment_Period__SEP_ END as Marketplace_Special_Enrollment_Period__SEP_
-  , CASE WHEN Section_1135_Waiver = '-' THEN 'Not approved' ELSE Section_1135_Waiver END as Section_1135_Waiver
-  , CASE WHEN Paid_Sick_Leave = '-' THEN 'No policy' ELSE Paid_Sick_Leave END as Paid_Sick_Leave
-FROM
-(
-  SELECT
-      coalesce(a.Location,b.Location)  as state
-    , a.Bar__Restaurant_Limits
-    , a.Mandatory_Quarantine
-    , a.Non_Essential_Business_Closures
-    , a.Emergency_Declaration
-    , a.Primary_Election_Postponement
-    , a.State_Mandated_School_Closures
-    , a.Large_Gatherings_Ban
-    , b.Waive_Cost_Sharing_for_COVID_19_Treatment
-    , b.Free_Cost_Vaccine_When_Available
-    , b.State_Requires_Waiver_of_Prior_Authorization_Requirements
-    , b.Early_Prescription_Refills
-    , b.Marketplace_Special_Enrollment_Period__SEP_
-    , b.Section_1135_Waiver
-    , b.Paid_Sick_Leave
-  FROM `lookerdata.covid19.state_mitigations_staging` a
-  LEFT JOIN `lookerdata.covid19.state_policy_attempt2` b
-    ON a.Location = b.Location
-) a
-
-    ;;
+    SELECT
+        state
+      , CASE WHEN Bar__Restaurant_Limits = '-' THEN 'None' ELSE Bar__Restaurant_Limits END as Bar__Restaurant_Limits
+      , CASE WHEN Mandatory_Quarantine IS NULL THEN 'None' ELSE Mandatory_Quarantine END as Mandatory_Quarantine
+      , CASE WHEN Non_Essential_Business_Closures = '-' THEN 'None' ELSE Non_Essential_Business_Closures END as Non_Essential_Business_Closures
+      , Emergency_Declaration
+      , Primary_Election_Postponement
+      , CASE WHEN State_Mandated_School_Closures = '-' THEN 'None' ELSE State_Mandated_School_Closures END as State_Mandated_School_Closures
+      , CASE WHEN Large_Gatherings_Ban = '-' THEN 'None' ELSE Large_Gatherings_Ban END as Large_Gatherings_Ban
+      , CASE WHEN Waive_Cost_Sharing_for_COVID_19_Treatment = '-' THEN 'No policy' ELSE Waive_Cost_Sharing_for_COVID_19_Treatment END as Waive_Cost_Sharing_for_COVID_19_Treatment
+      , CASE WHEN Free_Cost_Vaccine_When_Available = '-' THEN 'No policy' ELSE Free_Cost_Vaccine_When_Available END as Free_Cost_Vaccine_When_Available
+      , CASE WHEN State_Requires_Waiver_of_Prior_Authorization_Requirements = '-' THEN 'No policy' ELSE State_Requires_Waiver_of_Prior_Authorization_Requirements END as State_Requires_Waiver_of_Prior_Authorization_Requirements
+      , CASE WHEN Early_Prescription_Refills = '-' THEN 'No policy' ELSE Early_Prescription_Refills END as Early_Prescription_Refills
+      , CASE WHEN Marketplace_Special_Enrollment_Period__SEP_ = '-' THEN 'No policy' ELSE Marketplace_Special_Enrollment_Period__SEP_ END as Marketplace_Special_Enrollment_Period__SEP_
+      , CASE WHEN Section_1135_Waiver = '-' THEN 'Not approved' ELSE Section_1135_Waiver END as Section_1135_Waiver
+      , CASE WHEN Paid_Sick_Leave = '-' THEN 'No policy' ELSE Paid_Sick_Leave END as Paid_Sick_Leave
+    FROM
+    (
+      SELECT
+          coalesce(a.Location,b.Location)  as state
+        , a.Bar__Restaurant_Limits
+        , a.Mandatory_Quarantine
+        , a.Non_Essential_Business_Closures
+        , a.Emergency_Declaration
+        , a.Primary_Election_Postponement
+        , a.State_Mandated_School_Closures
+        , a.Large_Gatherings_Ban
+        , b.Waive_Cost_Sharing_for_COVID_19_Treatment
+        , b.Free_Cost_Vaccine_When_Available
+        , b.State_Requires_Waiver_of_Prior_Authorization_Requirements
+        , b.Early_Prescription_Refills
+        , b.Marketplace_Special_Enrollment_Period__SEP_
+        , b.Section_1135_Waiver
+        , b.Paid_Sick_Leave
+      FROM `lookerdata.covid19_block.state_mitigations` a
+      LEFT JOIN `lookerdata.covid19_block.state_policies`  b
+        ON a.Location = b.Location
+    ) a ;;
   }
-  # sql_table_name: `lookerdata.covid19.state_policy_combined_final`
 
 ### PK
 

@@ -1,4 +1,4 @@
-explore: population_by_county_state_country {}
+#this data was pulled in from bigquery public datasets and shows populations by geographic regions
 
 view: population_by_county_state_country {
   derived_table: {
@@ -7,8 +7,8 @@ view: population_by_county_state_country {
       SELECT a.*, b.area_land_meters
       FROM
       (
-         SELECT * FROM `lookerdata.covid19.population_by_county_state_country` WHERE county <> 'New York City' UNION ALL
-         SELECT * FROM `lookerdata.covid19.population_by_county_state_country` WHERE country_region <> 'US' UNION ALL
+         SELECT * FROM `lookerdata.covid19_block.population_by_county_state_country` WHERE county <> 'New York City' UNION ALL
+         SELECT * FROM `lookerdata.covid19_block.population_by_county_state_country` WHERE country_region <> 'US' UNION ALL
          SELECT 36125 as fips,'New York City' as county,'New York' as province_state,'US' as country_region,8343000 as population, 1 as count
       ) a
       LEFT JOIN
@@ -18,14 +18,7 @@ view: population_by_county_state_country {
       )  b
         ON cast(a.fips as string) = cast(b.geo_id as string)
     ;;
-
-      #   SELECT 36005 as fips,'Bronx' as county,'New York' as province_state,'US' as country_region,1432000 as population, 1 as count UNION ALL
-      #   SELECT 36081 as fips,'Queens' as county,'New York' as province_state,'US' as country_region,2273000 as population, 1 as count UNION ALL
-      #   SELECT 36061 as fips,'New York County' as county,'New York' as province_state,'US' as country_region,1629000 as population, 1 as count UNION ALL
-      #   SELECT 36047 as fips,'Brooklyn' as county,'New York' as province_state,'US' as country_region,2533000 as population, 1 as count UNION ALL
-      #   SELECT 36085 as fips,'Richmond' as county,'New York' as province_state,'US' as country_region,476000 as population, 1 as count
   }
-  # sql_table_name: `lookerdata.covid19.population_by_county_state_country` ;;
 
   dimension: pre_pk {
     primary_key: yes
@@ -110,13 +103,8 @@ view: population_by_county_state_country {
     }
   }
 
-  measure: count {
-    # hidden: yes
-    type: count
-    drill_fields: []
-  }
   measure: count_pk {
-    # hidden: yes
+    hidden: yes
     type: count_distinct
     sql: ${pre_pk} ;;
     drill_fields: []
