@@ -6,7 +6,6 @@ view: nyt_data {
     sql_trigger_value: SELECT COUNT(*) FROM `lookerdata.covid19_block.nyt_data`;;
   }
 
-  #number of confirmed cases in the county
   dimension: cases {
     type: number
     sql: ${TABLE}.cases ;;
