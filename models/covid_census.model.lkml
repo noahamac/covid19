@@ -6,6 +6,8 @@ include: "covid.model.lkml"
 
 ## Logic to map county data to PUMA level ##
 
+#### We cant extend an explore with NDTs, so should we bring it into the block?
+
 # explore: covid_combined_puma {
 #   extends: [covid_combined]
 #   join: puma_to_county_mapping_nyc_combined {
