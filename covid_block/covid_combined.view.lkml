@@ -6,17 +6,10 @@
 view: covid_combined {
   derived_table: {
     datagroup_trigger: covid_data
-    create_process: {
-    sql_step: with max_date as (SELECT min(max_date) as max_date
-        FROM
-        (
-          SELECT max(cast(date as date)) as max_date FROM ${nyt_data.SQL_TABLE_NAME}
-          UNION ALL
-          SELECT max(cast(date as date)) as max_date FROM  `bigquery-public-data.covid19_jhu_csse.summary`
-        ) a);;
-    sql_step:
+    sql:
     --use the NYT data for all US data, but join with JHU to get lat/lon for the fips
-    SELECT
+   SELECT * FROM
+    (SELECT
         cast(a.fips as int64),
         a.county,
         a.state as province_state,
@@ -42,9 +35,6 @@ view: covid_combined {
       FROM ${nyt_data.SQL_TABLE_NAME} as a
       LEFT JOIN (SELECT fips, latitude, longitude, count(*) as count FROM `bigquery-public-data.covid19_jhu_csse.summary` WHERE fips is not null GROUP BY 1,2,3) as b
         ON cast(a.fips as int64) = cast(b.fips as int64)
-       LEFT JOIN max_date c
-        ON 1 = 1
-      WHERE cast(a.date as date) <= cast(c.max_date as date)
 
       UNION ALL
 
@@ -73,11 +63,14 @@ view: covid_combined {
           PARTITION BY concat(coalesce(NULL,''), coalesce(NULL,''), coalesce(country_region,'')
           )  ORDER BY date ASC),0) as deaths_new_cases
         FROM `bigquery-public-data.covid19_jhu_csse.summary`
-         LEFT JOIN max_date c
-           ON 1 = 1
         WHERE country_region <> 'US'
-        AND cast(date as date) <= cast(c.max_date as date);;
-    }
+      )
+        WHERE cast(measurement_date as date) <= (SELECT min(max_date) as max_date FROM
+        (
+          SELECT max(cast(date as date)) as max_date FROM ${nyt_data.SQL_TABLE_NAME}
+          UNION ALL
+          SELECT max(cast(date as date)) as max_date FROM  `bigquery-public-data.covid19_jhu_csse.summary`
+        ) a);;
   }
 
 
