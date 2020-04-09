@@ -27,7 +27,7 @@ view: max_date_tracking_project {
   derived_table: {
     datagroup_trigger: covid_data
     explore_source: covid_combined {
-      column: max_date { field: covid_tracking_project_sample_final.max_date }
+      column: max_date { field: covid_tracking_project.max_date }
     }
   }
   dimension_group: max_date {

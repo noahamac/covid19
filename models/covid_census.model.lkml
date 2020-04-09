@@ -1,8 +1,24 @@
-connection: "lookerdata"
-
-include: "/covid_block/*.view.lkml"
 include: "/census_data/*.view.lkml"
+include: "/covid_block/*.view.lkml"
+include: "covid.model.lkml"
 
+
+
+## Logic to map county data to PUMA level ##
+
+# explore: covid_combined_puma {
+#   extends: [covid_combined]
+#   join: puma_to_county_mapping_nyc_combined {
+#     relationship: many_to_many
+#     sql_on: ${covid_combined.fips_as_string} =  ${puma_to_county_mapping_nyc_combined.county_fips} ;;
+#   }
+#
+#   join: acs_puma_facts {
+#     view_label: "Vulnerable Populations"
+#     relationship: many_to_one
+#     sql_on: ${puma_to_county_mapping_nyc_combined.puma_fips} = ${acs_puma_facts.puma} ;;
+#   }
+# }
 
 
 ############ Census ############

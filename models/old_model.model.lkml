@@ -1,4 +1,4 @@
-# connection: "lookerdata"
+connection: "lookerdata"
 #
 # include: "/covid_block/*.view.lkml"
 # include: "/census_data/*.view.lkml"

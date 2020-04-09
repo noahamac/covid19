@@ -180,8 +180,8 @@ view: covid_tracking_project {
     label: "Hospitalizations"
     type: number
     sql:
-        {% if jhu_sample_county_level_final.new_vs_running_total._parameter_value == 'new_cases' %} ${hospitalized_new}
-        {% elsif jhu_sample_county_level_final.new_vs_running_total._parameter_value == 'running_total' %} ${hospitalized_running_total}
+        {% if covid_combined.new_vs_running_total._parameter_value == 'new_cases' %} ${hospitalized_new}
+        {% elsif covid_combined.new_vs_running_total._parameter_value == 'running_total' %} ${hospitalized_running_total}
         {% endif %} ;;
     drill_fields: [drill*]
   }
@@ -291,7 +291,7 @@ view: covid_tracking_project {
     label: "Negative Test Results (Running Total)"
     type: number
     sql:
-    {% if covid_tracking_project_sample_final.measurement_date._in_query %} ${negative_option_1}
+    {% if covid_tracking_project.measurement_date._in_query %} ${negative_option_1}
     {% else %}  ${negative_option_2}
     {% endif %} ;;
   }
@@ -324,7 +324,7 @@ view: covid_tracking_project {
     label: "Pending Test Results (Running Total)"
     type: number
     sql:
-    {% if covid_tracking_project_sample_final.measurement_date._in_query %} ${pending_option_1}
+    {% if covid_tracking_project.measurement_date._in_query %} ${pending_option_1}
     {% else %}  ${pending_option_2}
     {% endif %} ;;
   }
@@ -357,7 +357,7 @@ view: covid_tracking_project {
     label: "Positive Test Results (Running Total)"
     type: number
     sql:
-    {% if covid_tracking_project_sample_final.measurement_date._in_query %} ${positive_option_1}
+    {% if covid_tracking_project.measurement_date._in_query %} ${positive_option_1}
     {% else %}  ${positive_option_2}
     {% endif %} ;;
   }
@@ -390,7 +390,7 @@ view: covid_tracking_project {
     label: "Total Tests (Running Total)"
     type: number
     sql:
-    {% if covid_tracking_project_sample_final.measurement_date._in_query %} ${total_option_1}
+    {% if covid_tracking_project.measurement_date._in_query %} ${total_option_1}
     {% else %}  ${total_option_2}
     {% endif %} ;;
   }
@@ -447,8 +447,8 @@ view: covid_tracking_project {
     label: "Deaths"
     type: number
     sql:
-        {% if jhu_sample_county_level_final.new_vs_running_total._parameter_value == 'new_cases' %} ${death_new}
-        {% elsif jhu_sample_county_level_final.new_vs_running_total._parameter_value == 'running_total' %} ${death_running_total}
+        {% if covid_combined.new_vs_running_total._parameter_value == 'new_cases' %} ${death_new}
+        {% elsif covid_combined.new_vs_running_total._parameter_value == 'running_total' %} ${death_running_total}
         {% endif %} ;;
     drill_fields: [drill*]
   }
@@ -483,7 +483,7 @@ view: covid_tracking_project {
     label: "Deaths (Running Total)"
     type: number
     sql:
-    {% if covid_tracking_project_sample_final.measurement_date._in_query %} ${death_option_1}
+    {% if covid_tracking_project.measurement_date._in_query %} ${death_option_1}
     {% else %}  ${death_option_2}
     {% endif %} ;;
   }

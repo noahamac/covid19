@@ -71,7 +71,7 @@ view: covid_combined {
           LAG(deaths, 1) OVER (
           PARTITION BY concat(coalesce(county,''), coalesce(province_state,''), coalesce(country_region,'')
           )  ORDER BY date ASC),0) as deaths_new_cases
-        FROM ${jhu_data.SQL_TABLE_NAME}
+        FROM `bigquery-public-data.covid19_jhu_csse.summary`
         WHERE country_region <> 'US'
         AND cast(date as date) <= max_date ;;
     }
@@ -452,9 +452,9 @@ view: covid_combined {
     label: "Days Since Oubreak of X cases"
     type:  number
     sql:
-          {% if jhu_sample_county_level_final.fips._in_query %} ${days_since_first_outbreak_county}
-          {% elsif jhu_sample_county_level_final.province_state._in_query %} ${days_since_first_outbreak_state}
-          {% elsif jhu_sample_county_level_final.country_region._in_query %} ${days_since_first_outbreak_country}
+          {% if covid_combined.fips._in_query %} ${days_since_first_outbreak_county}
+          {% elsif covid_combined.province_state._in_query %} ${days_since_first_outbreak_state}
+          {% elsif covid_combined.country_region._in_query %} ${days_since_first_outbreak_country}
           {% else %}  ${days_since_first_outbreak_system}
           {% endif %} ;;
   }
@@ -602,7 +602,7 @@ view: covid_combined {
     label: "Confirmed Cases (Running Total)"
     type: number
     sql:
-          {% if jhu_sample_county_level_final.measurement_date._in_query or jhu_sample_county_level_final.days_since_first_outbreak._in_query or jhu_sample_county_level_final.days_since_max_date._in_query %} ${confirmed_option_1}
+          {% if covid_combined.measurement_date._in_query or covid_combined.days_since_first_outbreak._in_query or covid_combined.days_since_max_date._in_query %} ${confirmed_option_1}
           {% else %}  ${confirmed_option_2}
           {% endif %} ;;
     drill_fields: [drill*]
@@ -623,7 +623,7 @@ view: covid_combined {
     label: "Confirmed Cases (Running Total) [No Drill]"
     type: number
     sql:
-          {% if jhu_sample_county_level_final.measurement_date._in_query or jhu_sample_county_level_final.days_since_first_outbreak._in_query or jhu_sample_county_level_final.days_since_max_date._in_query %} ${confirmed_option_1}
+          {% if covid_combined.measurement_date._in_query or covid_combined.days_since_first_outbreak._in_query or covid_combined.days_since_max_date._in_query %} ${confirmed_option_1}
           {% else %}  ${confirmed_option_2}
           {% endif %} ;;
     # drill_fields: [drill*]
@@ -662,7 +662,7 @@ view: covid_combined {
     group_label: "Hospital Capacity"
     label: "Confirmed Cases per ICU Beds"
     type: number
-    sql: 1.0*${confirmed_running_total}*${hospital_bed_summary_final.estimated_percent_of_covid_cases_of_county}/nullif(${hospital_bed_summary_final.sum_num_icu_beds},0) ;;
+    sql: 1.0*${confirmed_running_total}*${hospital_bed_summary.estimated_percent_of_covid_cases_of_county}/nullif(${hospital_bed_summary.sum_num_icu_beds},0) ;;
     value_format_name: decimal_2
     drill_fields: [drill*]
     link: {
@@ -681,7 +681,7 @@ view: covid_combined {
     group_label: "Hospital Capacity"
     label: "Confirmed Cases per Staffed Beds"
     type: number
-    sql: 1.0*${confirmed_running_total}*${hospital_bed_summary_final.estimated_percent_of_covid_cases_of_county}/nullif(${hospital_bed_summary_final.sum_num_staffed_beds},0) ;;
+    sql: 1.0*${confirmed_running_total}*${hospital_bed_summary.estimated_percent_of_covid_cases_of_county}/nullif(${hospital_bed_summary.sum_num_staffed_beds},0) ;;
     value_format_name: decimal_2
     drill_fields: [drill*]
     link: {
@@ -700,7 +700,7 @@ view: covid_combined {
     group_label: "Hospital Capacity"
     label: "Confirmed Cases per Licensed Beds"
     type: number
-    sql: 1.0*${confirmed_running_total}*${hospital_bed_summary_final.estimated_percent_of_covid_cases_of_county}/nullif(${hospital_bed_summary_final.sum_num_licensed_beds},0) ;;
+    sql: 1.0*${confirmed_running_total}*${hospital_bed_summary.estimated_percent_of_covid_cases_of_county}/nullif(${hospital_bed_summary.sum_num_licensed_beds},0) ;;
     value_format_name: decimal_2
     drill_fields: [drill*]
     link: {
@@ -736,7 +736,7 @@ view: covid_combined {
     label: "Deaths (New)"
     type: number
     sql:
-      {% if jhu_sample_county_level_final.measurement_date._in_query or jhu_sample_county_level_final.days_since_first_outbreak._in_query or jhu_sample_county_level_final.days_since_max_date._in_query %} ${deaths_new_option_1}
+      {% if covid_combined.measurement_date._in_query or covid_combined.days_since_first_outbreak._in_query or covid_combined.days_since_max_date._in_query %} ${deaths_new_option_1}
       {% else %}  ${deaths_new_option_2}
       {% endif %} ;;
     drill_fields: [drill*]
@@ -792,7 +792,7 @@ view: covid_combined {
     label: "Deaths (Running Total)"
     type: number
     sql:
-          {% if jhu_sample_county_level_final.measurement_date._in_query or jhu_sample_county_level_final.days_since_first_outbreak._in_query or jhu_sample_county_level_final.days_since_max_date._in_query %} ${deaths_option_1}
+          {% if covid_combined.measurement_date._in_query or covid_combined.days_since_first_outbreak._in_query or covid_combined.days_since_max_date._in_query %} ${deaths_option_1}
           {% else %}  ${deaths_option_2}
           {% endif %} ;;
     drill_fields: [drill*]
@@ -864,123 +864,6 @@ view: covid_combined {
     drill_fields: []
   }
 
-########################################
-## County to PUMA Measure Conversion ###
-########################################
-
-  dimension: puma_conversion_factor {
-    hidden: yes
-    description: "Convert county to PUMA by population distribution"
-    type: number
-    sql: {% if puma_to_county_mapping_nyc_combined.puma_fips._in_query %}
-          ${puma_to_county_mapping_nyc_combined.pct_of_county_pop_in_puma}
-      {% else %} 1.0 {% endif %};;
-  }
-
-#   dimension: dymnamic_sql_distinct_key {
-#     type: string
-#     hidden: yes
-#     description: "Dynamically detect if PUMA mapping table is used in query"
-#     sql: ({% if puma_to_county_mapping_nyc_combined.puma_fips._in_query %}
-#           concat(${pk},${puma_to_county_mapping_nyc_combined.puma_fips_raw})
-#       {% else %} ${pk} {% endif %})  ;;
-#   }
-
-  ## confirmed cases ##
-
-  measure: puma_confirmed_new_option_1 {
-    description: "For zip to PUMA or County weighting"
-    hidden: yes
-    type: sum
-    sql: ${confirmed_new_cases}*${puma_conversion_factor} ;;
-    value_format_name: decimal_0
-  }
-
-  measure: puma_confirmed_new_option_2 {
-    description: "For zip to PUMA or County weighting"
-    hidden: yes
-    type: sum
-    sql: ${confirmed_new_cases}*${puma_conversion_factor} ;;
-    filters: {
-      field: is_max_date
-      value: "Yes"
-    }
-    value_format_name: decimal_0
-  }
-
-  measure: puma_confirmed_new {
-    group_label: "Measures by Public Use Microdata Area (PUMA)"
-    label: "PUMA - Confirmed Cases (New)"
-    value_format_name: decimal_0
-    type: number
-    sql:
-          {% if jhu_sample_county_level_final.measurement_date._in_query or jhu_sample_county_level_final.days_since_first_outbreak._in_query or jhu_sample_county_level_final.days_since_max_date._in_query %} ${puma_confirmed_new_option_1}
-          {% else %}  ${puma_confirmed_new_option_2}
-          {% endif %} ;;
-    drill_fields: [drill*]
-    link: {
-      label: "Data Source - NYT County Data"
-      url: "https://github.com/nytimes/covid-19-data"
-      icon_url: "http://www.google.com/s2/favicons?domain_url=http://www.nytimes.com"
-    }
-    link: {
-      label: "Data Source - Johns Hopkins State & Country Data"
-      url: "https://github.com/CSSEGISandData/COVID-19"
-      icon_url: "http://www.google.com/s2/favicons?domain_url=http://www.jhu.edu"
-    }
-    link: {
-      label: "Data Source - Census to PUMA Crosswalk"
-      url: "https://www2.census.gov/geo/docs/maps-data/data/rel/zcta_county_rel_10.txt"
-      icon_url: "http://www.google.com/s2/favicons?domain_url=https://www2.census.gov"
-    }
-  }
-
-  measure: puma_confirmed_option_1 {
-    hidden: yes
-    type: sum
-    sql: ${confirmed_cumulative}*${puma_conversion_factor} ;;
-    value_format_name: decimal_0
-  }
-
-  measure: puma_confirmed_option_2 {
-    hidden: yes
-    type: sum
-    sql: ${confirmed_cumulative}*${puma_conversion_factor} ;;
-    filters: {
-      field: is_max_date
-      value: "Yes"
-    }
-    value_format_name: decimal_0
-  }
-
-  measure: puma_confirmed_running_total {
-    group_label: "Measures by Public Use Microdata Area (PUMA)"
-    label: "PUMA - Confirmed Cases (Running Total)"
-    value_format_name: decimal_0
-    type: number
-    sql:
-          {% if jhu_sample_county_level_final.measurement_date._in_query or jhu_sample_county_level_final.days_since_first_outbreak._in_query or jhu_sample_county_level_final.days_since_max_date._in_query %} ${puma_confirmed_option_1}
-          {% else %}  ${puma_confirmed_option_2}
-          {% endif %} ;;
-    drill_fields: [drill*]
-    link: {
-      label: "Data Source - NYT County Data"
-      url: "https://github.com/nytimes/covid-19-data"
-      icon_url: "http://www.google.com/s2/favicons?domain_url=http://www.nytimes.com"
-    }
-    link: {
-      label: "Data Source - Johns Hopkins State & Country Data"
-      url: "https://github.com/CSSEGISandData/COVID-19"
-      icon_url: "http://www.google.com/s2/favicons?domain_url=http://www.jhu.edu"
-    }
-    link: {
-      label: "Data Source - Census to PUMA Crosswalk"
-      url: "https://www2.census.gov/geo/docs/maps-data/data/rel/zcta_county_rel_10.txt"
-      icon_url: "http://www.google.com/s2/favicons?domain_url=https://www2.census.gov"
-    }
-  }
-
-  ## deaths ##
 
 
 ##############

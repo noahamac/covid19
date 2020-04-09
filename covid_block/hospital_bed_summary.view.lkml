@@ -276,9 +276,9 @@ view: hospital_bed_summary {
     type: number
     sql:
       {% if
-                hospital_bed_summary_final.hospital_name._in_query
-            or  hospital_bed_summary_final.hospital_type._in_query
-            or  hospital_bed_summary_final.hospital_location._in_query
+                hospital_bed_summary.hospital_name._in_query
+            or  hospital_bed_summary.hospital_type._in_query
+            or  hospital_bed_summary.hospital_location._in_query
       %} 1.0*${sum_num_licensed_beds}/nullif(${sum_county_num_licensed_beds},0)
       {% else %}  ${force_1}
       {% endif %} ;;

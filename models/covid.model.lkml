@@ -105,20 +105,6 @@ explore: covid_combined {
     relationship: many_to_one
     sql_on: ${covid_combined.country_region} = ${country_region.country} ;;
   }
-
-## Logic to map county data to PUMA level ##
-
-  join: puma_to_county_mapping_nyc_combined {
-    relationship: many_to_many
-    sql_on: ${covid_combined.fips_as_string} =  ${puma_to_county_mapping_nyc_combined.county_fips} ;;
-  }
-
-  join: acs_puma_facts {
-    view_label: "Vulnerable Populations"
-    relationship: many_to_one
-    sql_on: ${puma_to_county_mapping_nyc_combined.puma_fips} = ${acs_puma_facts.puma} ;;
-  }
-
 }
 
 #### Compare Geographies ####
@@ -161,4 +147,23 @@ explore: italy {
     relationship: many_to_one
     sql_on: ${italy_province.sigla_provincia} = ${italy_province_stats.sigla_provincia} ;;
   }
+}
+
+############ Caching Logic ############
+
+persist_with: covid_data
+
+### PDT Timeframes
+
+datagroup: covid_data {
+  max_cache_age: "12 hours"
+  sql_trigger:
+    SELECT min(max_date) as max_date
+    FROM
+    (
+      SELECT max(cast(date as date)) as max_date FROM `lookerdata.covid19.nyt_covid_data`
+      UNION ALL
+      SELECT max(cast(date as date)) as max_date FROM `bigquery-public-data.covid19_jhu_csse.summary`
+    ) a
+  ;;
 }

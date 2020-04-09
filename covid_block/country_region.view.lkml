@@ -16,6 +16,6 @@ view: country_region {
     label: "Region (World)"
     type: string
     sql: ${TABLE}.Region ;;
-    drill_fields: [jhu_sample_county_level_final.country_region]
+    drill_fields: [covid_combined.country_region]
   }
 }
