@@ -5,7 +5,7 @@ view: hospital_bed_summary {
   derived_table: {
     datagroup_trigger: covid_data
     #combining NYC fips codes to match other data
-    sql:  SELECT *, case when fips in ( 36005, 36081, 36061, 36047, 36085 ) then 36125 else fips end as fips
+    sql:  SELECT * except(fips), case when fips in ( 36005, 36081, 36061, 36047, 36085 ) then 36125 else fips end as fips
             FROM `lookerdata.covid19_block.hospital_bed_summary`
             WHERE hospital_type not in ('Rehabilitation Hospital', 'Psychiatric Hospital', 'Religious Non-Medical Health Care Institution') ;;
   }
