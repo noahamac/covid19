@@ -124,8 +124,8 @@ view: covid_combined {
     type: string
     sql: ${TABLE}.county ;;
     link: {
-      label: "{{ value }} - County Deep Dive"
-      url: "/dashboards/tu0YSgAWPwAu7ipyMyHh8b?County={{ value }}&State={{ province_state._value }}"
+      label: "Filter on County - {{ value }}"
+      url: "/dashboards/39?County={{ value }}&State={{ province_state._value }}"
       icon_url: "https://looker.com/favicon.ico"
     }
     link: {
@@ -173,7 +173,7 @@ view: covid_combined {
     drill_fields: [fips]
     link: {
       label: "{{ value }} - State Deep Dive"
-      url: "/dashboards/TVGnurIXhJVNS6iMrojazJ?State={{ value }}"
+      url: "/dashboards/39?State={{ value }}"
       icon_url: "https://looker.com/favicon.ico"
     }
     link: {
@@ -242,11 +242,6 @@ view: covid_combined {
         else ${TABLE}.country_region
       end ;;
     drill_fields: [province_state]
-#     link: {
-#       label: "{{ value }} - Country Deep Dive"
-#       url: "/dashboards/FLiQf6bJUQ5mxvHNyocYYz?Country={{ value }}"
-#       icon_url: "https://looker.com/favicon.ico"
-#     }
     link: {
       label: "{{ value }} - News Search"
       url: "https://news.google.com/search?q={{ value }}%20covid"
@@ -316,11 +311,6 @@ view: covid_combined {
     label: "Country (Show Top X Values)"
     description: "Use this field with the Show Top X Values parameter"
     sql: case when ${country_rank.rank} <= {% parameter show_top_x_values %} then ${country_region} else ' Other' end ;;
-    link: {
-      label: "{{ value }} - Country Deep Dive"
-      url: "/dashboards/FLiQf6bJUQ5mxvHNyocYYz?Country={{ value }}"
-      icon_url: "https://looker.com/favicon.ico"
-    }
   }
 
   dimension: state_top_x {
@@ -330,7 +320,7 @@ view: covid_combined {
     sql: case when ${state_rank.rank} <= {% parameter show_top_x_values %} then ${province_state} else ' Other' end ;;
     link: {
       label: "{{ value }} - State Deep Dive"
-      url: "/dashboards/TVGnurIXhJVNS6iMrojazJ?State={{ value }}"
+      url: "/dashboards/39?State={{ value }}"
       icon_url: "https://looker.com/favicon.ico"
     }
   }

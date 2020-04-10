@@ -1,8 +1,8 @@
-include: "/census_data/*.view.lkml"
-include: "/covid_block/*.view.lkml"
-include: "covid.model.lkml"
+# include: "/census_data/*.view.lkml"
+# include: "/covid_block/*.view.lkml"
+# include: "covid.model.lkml"
 
-
+connection: "lookerdata"
 
 ## Logic to map county data to PUMA level ##
 
