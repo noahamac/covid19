@@ -242,7 +242,7 @@ view: hospital_bed_summary {
   }
 
   measure: estimated_percent_of_covid_cases_of_county {
-    hidden: no
+    hidden: yes
     type: number
     sql:
       {% if

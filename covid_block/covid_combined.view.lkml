@@ -355,7 +355,7 @@ view: covid_combined {
 #### Days since X Case ####
 
   parameter: minimum_number_cases {
-    label: "Minimum Number of cases (X)"
+    label: "Minimum Number of Cases (X)"
     description: "Modify your analysis to start counting days since outbreak to start with a minumum of X cases."
     type: number
     default_value: "1"
