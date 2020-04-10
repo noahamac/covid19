@@ -124,8 +124,8 @@ view: covid_combined {
     type: string
     sql: ${TABLE}.county ;;
     link: {
-      label: "{{ value }} - County Deep Dive"
-      url: "/dashboards/tu0YSgAWPwAu7ipyMyHh8b?County={{ value }}&State={{ province_state._value }}"
+      label: "Filter on County - {{ value }}"
+      url: "/dashboards/39?County={{ value }}&State={{ province_state._value }}"
       icon_url: "https://looker.com/favicon.ico"
     }
     link: {
@@ -161,7 +161,7 @@ view: covid_combined {
     map_layer_name: us_counties_fips_nyc
     type: string
     sql: SUBSTR('00000' || IFNULL(SAFE_CAST(${TABLE}.fips AS STRING), ''), -5) ;;
-    html: {{ county._value }} ;;
+#     html: {{ county._value }} ;;
   }
 
   dimension: province_state {
@@ -173,7 +173,7 @@ view: covid_combined {
     drill_fields: [fips]
     link: {
       label: "{{ value }} - State Deep Dive"
-      url: "/dashboards/TVGnurIXhJVNS6iMrojazJ?State={{ value }}"
+      url: "/dashboards/39?State={{ value }}"
       icon_url: "https://looker.com/favicon.ico"
     }
     link: {
@@ -242,11 +242,6 @@ view: covid_combined {
         else ${TABLE}.country_region
       end ;;
     drill_fields: [province_state]
-#     link: {
-#       label: "{{ value }} - Country Deep Dive"
-#       url: "/dashboards/FLiQf6bJUQ5mxvHNyocYYz?Country={{ value }}"
-#       icon_url: "https://looker.com/favicon.ico"
-#     }
     link: {
       label: "{{ value }} - News Search"
       url: "https://news.google.com/search?q={{ value }}%20covid"
@@ -316,11 +311,6 @@ view: covid_combined {
     label: "Country (Show Top X Values)"
     description: "Use this field with the Show Top X Values parameter"
     sql: case when ${country_rank.rank} <= {% parameter show_top_x_values %} then ${country_region} else ' Other' end ;;
-    link: {
-      label: "{{ value }} - Country Deep Dive"
-      url: "/dashboards/FLiQf6bJUQ5mxvHNyocYYz?Country={{ value }}"
-      icon_url: "https://looker.com/favicon.ico"
-    }
   }
 
   dimension: state_top_x {
@@ -330,7 +320,7 @@ view: covid_combined {
     sql: case when ${state_rank.rank} <= {% parameter show_top_x_values %} then ${province_state} else ' Other' end ;;
     link: {
       label: "{{ value }} - State Deep Dive"
-      url: "/dashboards/TVGnurIXhJVNS6iMrojazJ?State={{ value }}"
+      url: "/dashboards/39?State={{ value }}"
       icon_url: "https://looker.com/favicon.ico"
     }
   }
@@ -341,8 +331,8 @@ view: covid_combined {
     label: "County (Show Top X Values)"
     sql: case when ${fips_rank.rank} <= {% parameter show_top_x_values %} then ${county} else ' Other' end ;;
     link: {
-      label: "{{ value }} - County Deep Dive"
-      url: "/dashboards/tu0YSgAWPwAu7ipyMyHh8b?County={{ value }}&State={{ state_top_x._value }}"
+      label: "Filter to County - {{ value }}"
+      url: "/dashboards/TVGnurIXhJVNS6iMrojazJ?County={{ value }}&State={{ state_top_x._value }}"
       icon_url: "https://looker.com/favicon.ico"
     }
   }
@@ -365,7 +355,7 @@ view: covid_combined {
 #### Days since X Case ####
 
   parameter: minimum_number_cases {
-    label: "Minimum Number of cases (X)"
+    label: "Minimum Number of Cases (X)"
     description: "Modify your analysis to start counting days since outbreak to start with a minumum of X cases."
     type: number
     default_value: "1"
