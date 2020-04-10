@@ -341,8 +341,8 @@ view: covid_combined {
     label: "County (Show Top X Values)"
     sql: case when ${fips_rank.rank} <= {% parameter show_top_x_values %} then ${county} else ' Other' end ;;
     link: {
-      label: "{{ value }} - County Deep Dive"
-      url: "/dashboards/tu0YSgAWPwAu7ipyMyHh8b?County={{ value }}&State={{ state_top_x._value }}"
+      label: "Filter to County - {{ value }}"
+      url: "/dashboards/TVGnurIXhJVNS6iMrojazJ?County={{ value }}&State={{ state_top_x._value }}"
       icon_url: "https://looker.com/favicon.ico"
     }
   }
