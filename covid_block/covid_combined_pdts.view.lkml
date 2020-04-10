@@ -544,6 +544,7 @@ view: prior_days_cases_covid {
     }
   }
 
+## Using the rule of 70 to calculate doubling time
   measure: doubling_time_confirmed_cases_rolling_total {
     group_label: "Advanced Analytics"
     label: "Confirmed Cases Running Total (Days to Double)"

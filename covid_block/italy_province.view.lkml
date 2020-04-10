@@ -1,3 +1,5 @@
+#This view pulls in data about cases for italian provinces
+
 view: italy_province {
   derived_table: {
     sql:
@@ -161,6 +163,8 @@ view: italy_province {
 
 ######## NEW MEASURES ########
 
+## If date selected, report on total cases (running total) for the given date(s)
+## Otherwise report on total cases (running total) for most recent date
   measure: total_cases {
     type: sum
     sql:  {% if italy.reporting_date._is_selected %}

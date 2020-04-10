@@ -282,30 +282,32 @@ view: covid_combined {
   dimension: country_ordered {
     group_label: "Location"
     label: "Country (Ordered)"
-    sql: concat(cast(${country_rank.rank} as string),'-',${country_raw} ;;
+    sql: concat(cast(${country_rank.rank} as string),'-',${country_raw}) ;;
     html: {{ country_region._value }} ;;
   }
 
   dimension: state_ordered {
     group_label: "Location"
     label: "State (Ordered)"
-    sql: concat(cast(${state_rank.rank} as string),'-',${province_state} ;;
+    sql: concat(cast(${state_rank.rank} as string),'-',${province_state}) ;;
     html: {{ province_state._value }} ;;
   }
 
   dimension: fips_ordered {
     group_label: "Location"
     label: "County (Ordered)"
-    sql: concat(cast(${fips_rank.rank} as string),'-',${fips} ;;
+    sql: concat(cast(${fips_rank.rank} as string),'-',${fips}) ;;
     html: {{ county._value }} ;;
   }
 
+## Parameter allowing users to filter on top X countries, state, or counties - e.g. Top 5 countries based on total cases
   parameter: show_top_x_values {
     description: "Use this filter with the country, state and county top X dimensions"
     type: number
     default_value: "10"
   }
 
+## Only show countries where rank is less than or equal to show_top_x_values parameter chosen by users
   dimension: country_top_x {
     group_label: "Location"
     label: "Country (Show Top X Values)"
@@ -313,6 +315,7 @@ view: covid_combined {
     sql: case when ${country_rank.rank} <= {% parameter show_top_x_values %} then ${country_region} else ' Other' end ;;
   }
 
+## Only show states where rank is less than or equal to show_top_x_values parameter chosen by users
   dimension: state_top_x {
     group_label: "Location"
     description: "Use this field with the Show Top X Values parameter"
@@ -325,7 +328,8 @@ view: covid_combined {
     }
   }
 
-  dimension: county_top_x {
+ ## Only show counties where rank is less than or equal to show_top_x_values parameter chosen by users
+ dimension: county_top_x {
     group_label: "Location"
     description: "Use this field with the Show Top X Values parameter"
     label: "County (Show Top X Values)"
@@ -442,6 +446,7 @@ view: covid_combined {
 #### Measures ####
 ####################
 
+## Let user choose between looking at new cases (active, confirmed, deaths, etc) or running total
   parameter: new_vs_running_total {
     description: "Filter to either see just new cases, or the running total"
     type: unquoted
@@ -456,6 +461,7 @@ view: covid_combined {
     }
   }
 
+## Based on new_vs_running_total parameter chosen, return new or running total confirmed cases
   measure: confirmed_cases {
     group_label: " Dynamic"
     label: "Confirmed Cases"
@@ -477,6 +483,7 @@ view: covid_combined {
     }
   }
 
+## Based on new_vs_running_total parameter chosen, return new or running total deaths
   measure: deaths {
     group_label: " Dynamic"
     label: "Deaths"
@@ -576,6 +583,7 @@ view: covid_combined {
     }
   }
 
+  #this field displays the running total of cases if a date filter has been applied, or else is gives the numbers from the most recent record
   measure: confirmed_running_total {
     group_label: " Running Total"
     label: "Confirmed Cases (Running Total)"
@@ -597,6 +605,7 @@ view: covid_combined {
     }
   }
 
+  #this field displays the running total of cases if a date filter has been applied, or else is gives the numbers from the most recent record but is DOES not have a drill path
   measure: confirmed_running_total_no_drill {
     group_label: " Running Total"
     label: "Confirmed Cases (Running Total) [No Drill]"
@@ -710,6 +719,7 @@ view: covid_combined {
     }
   }
 
+  #this field displays the new deaths if a date filter has been applied, or else is gives the numbers from the most recent record
   measure: deaths_new {
     group_label: " New Cases"
     label: "Deaths (New)"
@@ -766,6 +776,7 @@ view: covid_combined {
     }
   }
 
+  #this field displays the running total of deaths if a date filter has been applied, or else is gives the numbers from the most recent record
   measure: deaths_running_total {
     group_label: " Running Total"
     label: "Deaths (Running Total)"

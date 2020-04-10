@@ -89,6 +89,7 @@ view: population_by_county_state_country {
       url: "https://www2.census.gov/programs-surveys/acs/summary_file/2017/data/?#"
       icon_url: "http://www.google.com/s2/favicons?domain_url=http://www.census.gov"
     }
+    value_format_name: decimal_0
   }
 
   measure: population_density {

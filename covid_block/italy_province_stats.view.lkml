@@ -1,3 +1,4 @@
+#This view has population and area stats for Italian provinces
 view: italy_province_stats {
   derived_table: {
     sql: SELECT * FROM `lookerdata.covid19.italy_province_stats` ;;

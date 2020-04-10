@@ -1,3 +1,6 @@
+#This view pulls in COVID policies and mitigation efforts by date
+
+
 # explore:  policies_by_state {}
 
 view: policies_by_state {
@@ -57,6 +60,7 @@ view: policies_by_state {
   }
 
 ### Social Gatherings
+## The html below renders the results different colors depending on the level of limits (green if things are closed, gatherings banned)
 
   dimension: bar_restaurant_limits {
     group_label: "Social Gatherings"
@@ -203,6 +207,7 @@ view: policies_by_state {
 
   dimension: section_1135_waiver {
     group_label: "Policy"
+    description: "Are certain Medicare, Medicaid and Children’s Health Insurance Program (CHIP) requirements waived?"
     type: string
     sql: ${TABLE}.Section_1135_Waiver ;;
     html:
@@ -340,6 +345,7 @@ view: policies_by_state {
 
   measure: average_policy_score {
     label: "Policy Score"
+    description: "The policy score combines inputs from seven major policies including Stay at Home Order or whether there are state-mandated school closures."
     type: average
     sql: ${policy_score} ;;
     value_format_name: percent_0
