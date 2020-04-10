@@ -161,7 +161,7 @@ view: covid_combined {
     map_layer_name: us_counties_fips_nyc
     type: string
     sql: SUBSTR('00000' || IFNULL(SAFE_CAST(${TABLE}.fips AS STRING), ''), -5) ;;
-    html: {{ county._value }} ;;
+#     html: {{ county._value }} ;;
   }
 
   dimension: province_state {
