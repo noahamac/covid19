@@ -161,7 +161,7 @@ datagroup: covid_data {
     SELECT min(max_date) as max_date
     FROM
     (
-      SELECT max(cast(date as date)) as max_date FROM `lookerdata.covid19.nyt_covid_data`
+      SELECT max(cast(date as date)) as max_date FROM `lookerdata.covid19_block.nyt_data`
       UNION ALL
       SELECT max(cast(date as date)) as max_date FROM `bigquery-public-data.covid19_jhu_csse.summary`
     ) a
