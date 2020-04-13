@@ -183,7 +183,7 @@ view: covid_tracking_project {
 ## Based on new_vs_running_total parameter chosen, return new or running total hospitalizations
   measure: hospitalizations {
     group_label: "Dynamic (Testing - US Only)"
-    description: "Use with New vs Running Total Filter"
+    description: "Use with New vs Running Total Filter, can be useful for creating a Look or Dashboard where you toggle between the two"
     label: "Hospitalizations"
     type: number
     sql:
@@ -196,7 +196,7 @@ view: covid_tracking_project {
 ## Based on new_vs_running_total parameter chosen, return new or running total negative test results
   measure: negative_test {
     group_label: "Dynamic (Testing - US Only)"
-    description: "Use with New vs Running Total Filter"
+    description: "Use with New vs Running Total Filter, can be useful for creating a Look or Dashboard where you toggle between the two"
     label: "Negative Test Results"
     type: number
     sql:
@@ -209,7 +209,7 @@ view: covid_tracking_project {
 ## Based on new_vs_running_total parameter chosen, return new or running total pending test results
   measure: pending_test {
     group_label: "Dynamic (Testing - US Only)"
-    description: "Use with New vs Running Total Filter"
+    description: "Use with New vs Running Total Filter, can be useful for creating a Look or Dashboard where you toggle between the two"
     label: "Pending Test Results"
     type: number
     sql:
@@ -222,7 +222,7 @@ view: covid_tracking_project {
 ## Based on new_vs_running_total parameter chosen, return new or running total positive test results
   measure: positive_test {
     group_label: "Dynamic (Testing - US Only)"
-    description: "Use with New vs Running Total Filter"
+    description: "Use with New vs Running Total Filter, can be useful for creating a Look or Dashboard where you toggle between the two"
     label: "Positive Test Results"
     type: number
     sql:
@@ -235,7 +235,7 @@ view: covid_tracking_project {
 ## Based on new_vs_running_total parameter chosen, return new or running total of tests
   measure: total {
     group_label: "Dynamic (Testing - US Only)"
-    description: "Use with New vs Running Total Filter"
+    description: "Use with New vs Running Total Filter, can be useful for creating a Look or Dashboard where you toggle between the two"
     label: "Total Tests"
     type: number
     sql:
@@ -247,7 +247,8 @@ view: covid_tracking_project {
 
   measure: hospitalized_new {
     group_label: "New Cases (Testing - US Only)"
-    label: "Hospitalizations (New)"
+    description: "Filter on Measurement Date or Days Since First Outbreak to see the new cases during the selected timeframe, otherwise the most recent record will be used"
+    label: "Hospitalizations"
     type: sum
     sql: ${hospitalized_new_cases} ;;
   }
@@ -272,6 +273,7 @@ view: covid_tracking_project {
   measure: hospitalized_running_total {
     group_label: "Running Total (Testing - US Only)"
     label: "Hospitalizations (Running Total)"
+    description: "Filter on Measurement Date or Days Since First Outbreak to see the running total on a specific date, don't use with a range of dates or else the results will show the sum of the running totals for each day in that timeframe. If no dates are selected the most recent record will be used."
     type: number
     sql:
     {% if covid_tracking_project.measurement_date._in_query %} ${hospitalized_option_1}
@@ -282,6 +284,7 @@ view: covid_tracking_project {
   measure: negative_new {
     group_label: "New Cases (Testing - US Only)"
     label: "Negative Test Results (New)"
+    description: "Filter on Measurement Date or Days Since First Outbreak to see the new cases during the selected timeframe, otherwise the most recent record will be used"
     type: sum
     sql: ${negative_new_cases} ;;
   }
@@ -307,6 +310,7 @@ view: covid_tracking_project {
     group_label: "Running Total (Testing - US Only)"
     label: "Negative Test Results (Running Total)"
     type: number
+    description: "Filter on Measurement Date or Days Since First Outbreak to see the running total on a specific date, don't use with a range of dates or else the results will show the sum of the running totals for each day in that timeframe. If no dates are selected the most recent record will be used."
     sql:
     {% if covid_tracking_project.measurement_date._in_query %} ${negative_option_1}
     {% else %}  ${negative_option_2}
@@ -316,6 +320,7 @@ view: covid_tracking_project {
   measure: pending_new {
     group_label: "New Cases (Testing - US Only)"
     label: "Pending Test Results (New)"
+    description: "Filter on Measurement Date or Days Since First Outbreak to see the new cases during the selected timeframe, otherwise the most recent record will be used"
     type: sum
     sql: ${pending_new_cases} ;;
   }
@@ -340,6 +345,7 @@ view: covid_tracking_project {
   measure: pending_running_total {
     group_label: "Running Total (Testing - US Only)"
     label: "Pending Test Results (Running Total)"
+    description: "Filter on Measurement Date or Days Since First Outbreak to see the running total on a specific date, don't use with a range of dates or else the results will show the sum of the running totals for each day in that timeframe. If no dates are selected the most recent record will be used."
     type: number
     sql:
     {% if covid_tracking_project.measurement_date._in_query %} ${pending_option_1}
@@ -350,6 +356,8 @@ view: covid_tracking_project {
   measure: positive_new {
     group_label: "New Cases (Testing - US Only)"
     label: "Positive Test Results (New)"
+    description: "Filter on Measurement Date or Days Since First Outbreak to see the new cases during the selected timeframe, otherwise the most recent record will be used"
+
     type: sum
     sql: ${positive_new_cases} ;;
   }
@@ -373,6 +381,7 @@ view: covid_tracking_project {
 ## If date in query, show running total of positive test results for given date(s), otherwise show running total of positive test results for most recent dat
   measure: positive_running_total {
     group_label: "Running Total (Testing - US Only)"
+    description: "Filter on Measurement Date or Days Since First Outbreak to see the running total on a specific date, don't use with a range of dates or else the results will show the sum of the running totals for each day in that timeframe. If no dates are selected the most recent record will be used."
     label: "Positive Test Results (Running Total)"
     type: number
     sql:
@@ -384,6 +393,7 @@ view: covid_tracking_project {
   measure: total_new {
     group_label: "New Cases (Testing - US Only)"
     label: "Total Tests (New)"
+    description: "Filter on Measurement Date or Days Since First Outbreak to see the new cases during the selected timeframe, otherwise the most recent record will be used"
     type: sum
     sql: ${total_new_cases} ;;
   }
@@ -407,6 +417,7 @@ view: covid_tracking_project {
 ## If date in query, show running total of total tests for given date(s), otherwise show running total of total test results for most recent date
   measure: total_running_total {
     group_label: "Running Total (Testing - US Only)"
+    description: "Filter on Measurement Date or Days Since First Outbreak to see the running total on a specific date, don't use with a range of dates or else the results will show the sum of the running totals for each day in that timeframe. If no dates are selected the most recent record will be used."
     label: "Total Tests (Running Total)"
     type: number
     sql:
@@ -478,6 +489,7 @@ view: covid_tracking_project {
     hidden: yes
     group_label: "New Cases (Testing - US Only)"
     label: "Deaths (New)"
+    description: "Filter on Measurement Date or Days Since First Outbreak to see the new cases during the selected timeframe, otherwise the most recent record will be used"
     type: sum
     sql: ${death_new_cases} ;;
   }
@@ -502,6 +514,8 @@ view: covid_tracking_project {
   measure: death_running_total {
     hidden: yes
     group_label: "Running Total (Testing - US Only)"
+    description: "Filter on Measurement Date or Days Since First Outbreak to see the running total on a specific date, don't use with a range of dates or else the results will show the sum of the running totals for each day in that timeframe. If no dates are selected the most recent record will be used."
+
     label: "Deaths (Running Total)"
     type: number
     sql:

@@ -454,6 +454,7 @@ view: covid_combined {
           {% endif %} ;;
   }
 
+
 ####################
 #### Measures ####
 ####################
@@ -476,7 +477,7 @@ view: covid_combined {
 
 ## Based on new_vs_running_total parameter chosen, return new or running total confirmed cases
   measure: confirmed_cases {
-    group_label: " Dynamic"
+    group_label: "  Dynamic"
     description: "Use with New vs Running Total Filter, can be useful for creating a Look or Dashboard where you toggle between the two"
     label: "Confirmed Cases"
     type: number
@@ -499,7 +500,7 @@ view: covid_combined {
 
 ## Based on new_vs_running_total parameter chosen, return new or running total deaths
   measure: deaths {
-    group_label: " Dynamic"
+    group_label: "  Dynamic"
     description: "Use with New vs Running Total Filter, can be useful for creating a Look or Dashboard where you toggle between the two"
     label: "Deaths"
     type: number
@@ -540,8 +541,8 @@ view: covid_combined {
 
   #this field displays the new cases if a date filter has been applied, or else is gives the numbers from the most recent record
   measure: confirmed_new {
-    group_label: " New Cases"
-    label: "Confirmed Cases"
+    group_label: "  New Cases"
+    label: "Confirmed Cases (New)"
     description: "Filter on Measurement Date or Days Since First Outbreak to see the new cases during the selected timeframe, otherwise the most recent record will be used"
     type: number
     sql:
@@ -563,9 +564,9 @@ view: covid_combined {
   }
 
   measure: confirmed_new_per_million {
-    group_label: " New Cases"
+    group_label: "  New Cases"
     description: "Filter on Measurement Date or Days Since First Outbreak to see the new cases during the selected timeframe, otherwise the most recent record will be used"
-    label: "Confirmed Cases per Million"
+    label: "Confirmed Cases per Million (New)"
     type: number
     sql: 1000000*${confirmed_new} / nullif(${population_by_county_state_country.sum_population},0) ;;
     value_format_name: decimal_0
@@ -600,11 +601,12 @@ view: covid_combined {
     }
   }
 
+
   #this field displays the running total of cases if a date filter has been applied, or else is gives the numbers from the most recent record
   measure: confirmed_running_total {
-    group_label: " Running Total"
-    description: "Filter on Measurement Date or Days Since First Outbreak to see the running total for a specific timeframe, otherwise the most recent record will be used"
-    label: "Confirmed Cases"
+    group_label: "  Running Total"
+    description: "Filter on Measurement Date or Days Since First Outbreak to see the running total on a specific date, don't use with a range of dates or else the results will show the sum of the running totals for each day in that timeframe. If no dates are selected the most recent record will be used."
+    label: "Confirmed Cases (Running Total)"
     type: number
     sql:
           {% if covid_combined.measurement_date._in_query or covid_combined.days_since_first_outbreak._in_query or covid_combined.days_since_max_date._in_query %} ${confirmed_option_1}
@@ -626,7 +628,8 @@ view: covid_combined {
   #this field displays the running total of cases if a date filter has been applied, or else is gives the numbers from the most recent record but is does not have a drill path
   measure: confirmed_running_total_no_drill {
     hidden: yes
-    group_label: " Running Total"
+    group_label: "  Running Total "
+    description: "Filter on Measurement Date or Days Since First Outbreak to see the running total on a specific date, don't use with a range of dates or else the results will show the sum of the running totals for each day in that timeframe. If no dates are selected the most recent record will be used."
     label: "Confirmed Cases  [No Drill]"
     type: number
     sql:
@@ -647,8 +650,9 @@ view: covid_combined {
   }
 
   measure: confirmed_running_total_per_million {
-    group_label: " Running Total"
-    label: "Confirmed Cases per Million"
+    group_label: "  Running Total"
+    label: "Confirmed Cases per Million (Running Total)"
+    description: "Filter on Measurement Date or Days Since First Outbreak to see the running total on a specific date, don't use with a range of dates or else the results will show the sum of the running totals for each day in that timeframe. If no dates are selected the most recent record will be used."
     type: number
     sql: 1000000*${confirmed_running_total} / nullif(${population_by_county_state_country.sum_population},0) ;;
     value_format_name: decimal_0
@@ -666,7 +670,7 @@ view: covid_combined {
   }
 
   measure: confirmed_cases_per_icu_beds {
-    group_label: "Hospital Capacity"
+    group_label: " Hospital Capacity (US Only)"
     label: "Confirmed Cases per ICU Beds"
     type: number
     sql: 1.0*${confirmed_running_total}*${hospital_bed_summary.estimated_percent_of_covid_cases_of_county}/nullif(${hospital_bed_summary.sum_num_icu_beds},0) ;;
@@ -685,7 +689,7 @@ view: covid_combined {
   }
 
   measure: confirmed_cases_per_staffed_beds {
-    group_label: "Hospital Capacity"
+    group_label: " Hospital Capacity (US Only)"
     label: "Confirmed Cases per Staffed Beds"
     type: number
     sql: 1.0*${confirmed_running_total}*${hospital_bed_summary.estimated_percent_of_covid_cases_of_county}/nullif(${hospital_bed_summary.sum_num_staffed_beds},0) ;;
@@ -704,7 +708,7 @@ view: covid_combined {
   }
 
   measure: confirmed_cases_per_licensed_beds {
-    group_label: "Hospital Capacity"
+    group_label: " Hospital Capacity (US Only)"
     label: "Confirmed Cases per Licensed Beds"
     type: number
     sql: 1.0*${confirmed_running_total}*${hospital_bed_summary.estimated_percent_of_covid_cases_of_county}/nullif(${hospital_bed_summary.sum_num_licensed_beds},0) ;;
@@ -738,10 +742,12 @@ view: covid_combined {
     }
   }
 
+
   #this field displays the new deaths if a date filter has been applied, or else is gives the numbers from the most recent record
   measure: deaths_new {
-    group_label: " New Cases"
-    label: "Deaths"
+    group_label: "  New Cases"
+    description: "Filter on Measurement Date or Days Since First Outbreak to see the new cases during the selected timeframe, otherwise the most recent record will be used"
+    label: "Deaths (New)"
     type: number
     sql:
       {% if covid_combined.measurement_date._in_query or covid_combined.days_since_first_outbreak._in_query or covid_combined.days_since_max_date._in_query %} ${deaths_new_option_1}
@@ -761,8 +767,9 @@ view: covid_combined {
   }
 
   measure: deaths_new_per_million {
-    group_label: " New Cases"
-    label: "Deaths per Million"
+    group_label: "  New Cases"
+    description: "Filter on Measurement Date or Days Since First Outbreak to see the new cases during the selected timeframe, otherwise the most recent record will be used"
+    label: "Deaths per Million (New)"
     type: number
     sql: 1000000*${deaths_new} / nullif(${population_by_county_state_country.sum_population},0) ;;
     value_format_name: decimal_0
@@ -797,7 +804,8 @@ view: covid_combined {
 
   #this field displays the running total of deaths if a date filter has been applied, or else is gives the numbers from the most recent record
   measure: deaths_running_total {
-    group_label: " Running Total"
+    group_label: "  Running Total (Running Total)"
+    description: "Filter on Measurement Date or Days Since First Outbreak to see the running total on a specific date, don't use with a range of dates or else the results will show the sum of the running totals for each day in that timeframe. If no dates are selected the most recent record will be used."
     label: "Deaths"
     type: number
     sql:
@@ -818,8 +826,10 @@ view: covid_combined {
   }
 
   measure: deaths_running_total_per_million {
-    group_label: " Running Total"
-    label: "Deaths per Million"
+    group_label: "  Running Total"
+    label: "Deaths per Million (Running Total)"
+    description: "Filter on Measurement Date or Days Since First Outbreak to see the running total on a specific date, don't use with a range of dates or else the results will show the sum of the running totals for each day in that timeframe. If no dates are selected the most recent record will be used."
+
     type: number
     sql: 1000000*${deaths_running_total} / nullif(${population_by_county_state_country.sum_population},0) ;;
     value_format_name: decimal_0
@@ -837,8 +847,10 @@ view: covid_combined {
   }
 
   measure: case_fatality_rate {
-#     group_label: " Rates"
-    description: "What percent of infections have resulted in death?"
+    group_label: "  Running Total"
+#     description: "What percent of infections have resulted in death?"
+    description: "Filter on Measurement Date or Days Since First Outbreak to see the running total on a specific date, don't use with a range of dates or else the results will show the sum of the running totals for each day in that timeframe. If no dates are selected the most recent record will be used."
+
     type: number
     sql: 1.0 * ${deaths_running_total}/NULLIF(${confirmed_running_total}, 0);;
     value_format_name: percent_1
