@@ -572,7 +572,7 @@ view: italy_regions {
     sql:  {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
             NULL
           {% else %}
-            ${tamponi_nuovi}
+            CASE WHEN ${tamponi_nuovi} >=0 THEN ${tamponi_nuovi} ELSE 0 END
           {% endif %};;
     html: {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
             Metric only available at regional level
