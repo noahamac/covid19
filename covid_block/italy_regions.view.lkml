@@ -1,3 +1,4 @@
+#This view pulls in data about cases, hospitalizations, and tests for italian regions
 view: italy_regions {
   # SRC: https://github.com/pcm-dpc/COVID-19/blob/master/dati-regioni/dpc-covid19-ita-regioni.csv
   derived_table: {
@@ -212,6 +213,8 @@ view: italy_regions {
 
 ######## NEW MEASURES ########
 
+## If date selected, report on non-icu hospitalizations for the given date(s)
+## Otherwise report on non-icu hospitalizations for most recent date
   measure: currently_hospitalized {
     type: sum
     sql: {% if reporting_date._is_selected %}
@@ -240,6 +243,8 @@ view: italy_regions {
 #     value_format: "#;-#"
 #   }
 
+## If date selected, report on icu hospitalizations for the given date(s)
+## Otherwise report on icu hospitalizations for most recent date
   measure: icu {
     type: sum
     label: "Current ICU patients"
@@ -267,6 +272,8 @@ view: italy_regions {
 #     label: "Change in ICU patients"
 #   }
 
+## If date selected, report on all hospitalizations for the given date(s)
+## Otherwise report on all hospitalizations for most recent date
   measure: total_hospitalized {
     type: sum
     sql:  {% if reporting_date._is_selected %}
@@ -295,6 +302,8 @@ view: italy_regions {
     value_format_name: decimal_2
   }
 
+## If date selected, report on number of people under home quarantine for the given date(s)
+## Otherwise report on number of people under home quarantine for most recent date
   measure: home_quarantine {
     type: sum
     sql:  {% if reporting_date._is_selected %}
@@ -315,6 +324,8 @@ view: italy_regions {
     value_format_name: decimal_2
   }
 
+## If date selected, report on total active cases for the given date(s)
+## Otherwise report on total active cases for most recent date
   measure: total_active_cases {
     type: sum
     sql:  {% if reporting_date._is_selected %}
@@ -335,6 +346,8 @@ view: italy_regions {
     value_format_name: decimal_2
   }
 
+## If date selected, report on total recovered cases (running total) for the given date(s)
+## Otherwise report on total recovered cases (running total) for most recent date
   measure: recovered {
     type: sum
     sql:  {% if reporting_date._is_selected %}
@@ -363,6 +376,8 @@ view: italy_regions {
     group_label: "Resolved cases by status"
   }
 
+## If date selected, report on total deaths (running total) for the given date(s)
+## Otherwise report on total deaths (running total) for most recent date
   measure: deceased {
     type: sum
     sql:  {% if reporting_date._is_selected %}
@@ -391,7 +406,6 @@ view: italy_regions {
     group_label: "Resolved cases by status"
   }
 
-
   measure: total_cases_region {
     type: sum
     sql:  {% if reporting_date._is_selected %}
@@ -408,6 +422,8 @@ view: italy_regions {
     hidden: yes
   }
 
+## If date selected, report on total new cases for the given date(s)
+## Otherwise report on total new cases for most recent date
   measure: new_cases {
     type: number
     sql: {% if italy_province.denominazione_provincia._in_query  or italy_province.sigla_provincia._in_query %}
@@ -422,6 +438,8 @@ view: italy_regions {
       drill_fields: [italy_province.denominazione_provincia]
     }
 
+## If date selected, report on total tests run (running total) for the given date(s)
+## Otherwise report on total tests run (running total) for most recent date
   measure: tests_run {
     type: sum
     sql:  {% if reporting_date._is_selected %}

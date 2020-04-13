@@ -1,3 +1,5 @@
+#This view pulls data from a static table that has information about each state - name, region, abbreviation, etc.
+
 view: state_region {
   sql_table_name: `lookerdata.covid19_block.state_region`;;
 

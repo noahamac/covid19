@@ -175,8 +175,10 @@ view: covid_tracking_project {
 #### Measures ####
 ####################
 
+## Based on new_vs_running_total parameter chosen, return new or running total hospitalizations
   measure: hospitalizations {
     group_label: "Dynamic (Testing - US Only)"
+    description: "Use with New vs Running Total Filter"
     label: "Hospitalizations"
     type: number
     sql:
@@ -186,8 +188,10 @@ view: covid_tracking_project {
     drill_fields: [drill*]
   }
 
+## Based on new_vs_running_total parameter chosen, return new or running total negative test results
   measure: negative_test {
     group_label: "Dynamic (Testing - US Only)"
+    description: "Use with New vs Running Total Filter"
     label: "Negative Test Results"
     type: number
     sql:
@@ -197,8 +201,10 @@ view: covid_tracking_project {
     drill_fields: [drill*]
   }
 
+## Based on new_vs_running_total parameter chosen, return new or running total pending test results
   measure: pending_test {
     group_label: "Dynamic (Testing - US Only)"
+    description: "Use with New vs Running Total Filter"
     label: "Pending Test Results"
     type: number
     sql:
@@ -208,8 +214,10 @@ view: covid_tracking_project {
     drill_fields: [drill*]
   }
 
+## Based on new_vs_running_total parameter chosen, return new or running total positive test results
   measure: positive_test {
     group_label: "Dynamic (Testing - US Only)"
+    description: "Use with New vs Running Total Filter"
     label: "Positive Test Results"
     type: number
     sql:
@@ -219,8 +227,10 @@ view: covid_tracking_project {
     drill_fields: [drill*]
   }
 
+## Based on new_vs_running_total parameter chosen, return new or running total of tests
   measure: total {
     group_label: "Dynamic (Testing - US Only)"
+    description: "Use with New vs Running Total Filter"
     label: "Total Tests"
     type: number
     sql:
@@ -253,6 +263,7 @@ view: covid_tracking_project {
     }
   }
 
+## If date in query, show running total of hospitalizations for given date(s), otherwise show running total hospitalizations for most recent date
   measure: hospitalized_running_total {
     group_label: "Running Total (Testing - US Only)"
     label: "Hospitalizations (Running Total)"
@@ -286,6 +297,7 @@ view: covid_tracking_project {
     }
   }
 
+## If date in query, show running total of negative test results for given date(s), otherwise show running total of negative test results for most recent date
   measure: negative_running_total {
     group_label: "Running Total (Testing - US Only)"
     label: "Negative Test Results (Running Total)"
@@ -319,6 +331,7 @@ view: covid_tracking_project {
     }
   }
 
+## If date in query, show running total of pending test results for given date(s), otherwise show running total of pending test results for most recent date
   measure: pending_running_total {
     group_label: "Running Total (Testing - US Only)"
     label: "Pending Test Results (Running Total)"
@@ -352,6 +365,7 @@ view: covid_tracking_project {
     }
   }
 
+## If date in query, show running total of positive test results for given date(s), otherwise show running total of positive test results for most recent dat
   measure: positive_running_total {
     group_label: "Running Total (Testing - US Only)"
     label: "Positive Test Results (Running Total)"
@@ -385,6 +399,7 @@ view: covid_tracking_project {
     }
   }
 
+## If date in query, show running total of total tests for given date(s), otherwise show running total of total test results for most recent date
   measure: total_running_total {
     group_label: "Running Total (Testing - US Only)"
     label: "Total Tests (Running Total)"
@@ -441,6 +456,7 @@ view: covid_tracking_project {
 
 #### REDUNDANT FROM JHU DATA
 
+## Based on new_vs_running_total parameter chosen, return new or running total of deaths
   measure: deaths {
     hidden: yes
     group_label: "Dynamic (Testing - US Only)"
@@ -477,6 +493,7 @@ view: covid_tracking_project {
     }
   }
 
+## If date in query, show running total of deaths for given date(s), otherwise show runnning total of deaths for most recent date
   measure: death_running_total {
     hidden: yes
     group_label: "Running Total (Testing - US Only)"

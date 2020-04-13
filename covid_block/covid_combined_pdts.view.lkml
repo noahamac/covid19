@@ -331,6 +331,7 @@ view: prior_days_cases_covid {
   measure: seven_day_average_change_rate_confirmed_cases_running_total {
     group_label: "Advanced Analytics"
     label: "Confirmed Cases Running Total (7 Day Average Change)"
+    description: "These metrics require having date selected or filtered to a single date."
     type: number
     value_format_name: percent_1
     sql:
@@ -358,6 +359,7 @@ view: prior_days_cases_covid {
   measure: seven_day_average_change_rate_deaths_running_total {
     group_label: "Advanced Analytics"
     label: "Deaths Running Total (7 Day Average Change)"
+    description: "These metrics require having date selected or filtered to a single date."
     type: number
     value_format_name: percent_1
     sql:
@@ -385,6 +387,7 @@ view: prior_days_cases_covid {
   measure: seven_day_average_change_rate_confirmed_cases_new {
     group_label: "Advanced Analytics"
     label: "Confirmed Cases New (7 Day Average Change)"
+    description: "These metrics require having date selected or filtered to a single date."
     type: number
     value_format_name: percent_1
     sql:
@@ -412,6 +415,7 @@ view: prior_days_cases_covid {
   measure: seven_day_average_change_rate_deaths_new {
     group_label: "Advanced Analytics"
     label: "Deaths New (7 Day Average Change)"
+    description: "These metrics require having date selected or filtered to a single date."
     type: number
     value_format_name: percent_1
     sql:
@@ -439,6 +443,7 @@ view: prior_days_cases_covid {
   measure: seven_day_average_change_rate_confirmed_cases_running_total_per_million {
     group_label: "Advanced Analytics"
     label: "Confirmed Cases Running Total per Million (7 Day Average Change)"
+    description: "These metrics require having date selected or filtered to a single date."
     type: number
     value_format_name: percent_1
     sql:
@@ -466,6 +471,7 @@ view: prior_days_cases_covid {
   measure: seven_day_average_change_rate_deaths_running_total_per_million {
     group_label: "Advanced Analytics"
     label: "Deaths Running Total per Million (7 Day Average Change)"
+    description: "These metrics require having date selected or filtered to a single date."
     type: number
     value_format_name: percent_1
     sql:
@@ -493,6 +499,7 @@ view: prior_days_cases_covid {
   measure: seven_day_average_change_rate_confirmed_cases_new_per_million {
     group_label: "Advanced Analytics"
     label: "Confirmed Cases New per Million (7 Day Average Change)"
+    description: "These metrics require having date selected or filtered to a single date."
     type: number
     value_format_name: percent_1
     sql:
@@ -520,6 +527,7 @@ view: prior_days_cases_covid {
   measure: seven_day_average_change_rate_deaths_new_per_million {
     group_label: "Advanced Analytics"
     label: "Deaths New per Million (7 Day Average Change)"
+    description: "These metrics require having date selected or filtered to a single date."
     type: number
     value_format_name: percent_1
     sql:
@@ -544,9 +552,11 @@ view: prior_days_cases_covid {
     }
   }
 
+## Using the rule of 70 to calculate doubling time
   measure: doubling_time_confirmed_cases_rolling_total {
     group_label: "Advanced Analytics"
     label: "Confirmed Cases Running Total (Days to Double)"
+    description: "These metrics require having date selected or filtered to a single date."
     type: number
     value_format_name: decimal_1
     sql:  70 / NULLIF(100*${seven_day_average_change_rate_confirmed_cases_running_total},0);;
@@ -566,6 +576,7 @@ view: prior_days_cases_covid {
   measure: doubling_time_deaths_rolling_total {
     group_label: "Advanced Analytics"
     label: "Deaths Running Total (Days to Double)"
+    description: "These metrics require having date selected or filtered to a single date."
     type: number
     value_format_name: decimal_1
     sql:  70 / NULLIF(100*${seven_day_average_change_rate_deaths_running_total},0);;
@@ -585,6 +596,7 @@ view: prior_days_cases_covid {
   measure: doubling_time_confirmed_cases_new {
     group_label: "Advanced Analytics"
     label: "Confirmed Cases New (Days to Double)"
+    description: "These metrics require having date selected or filtered to a single date."
     type: number
     value_format_name: decimal_1
     sql:  70 / NULLIF(100*${seven_day_average_change_rate_confirmed_cases_new},0);;
@@ -604,6 +616,7 @@ view: prior_days_cases_covid {
   measure: doubling_time_deaths_new {
     group_label: "Advanced Analytics"
     label: "Deaths New (Days to Double)"
+    description: "These metrics require having date selected or filtered to a single date."
     type: number
     value_format_name: decimal_1
     sql:  70 / NULLIF(100*${seven_day_average_change_rate_deaths_new},0);;
@@ -623,6 +636,7 @@ view: prior_days_cases_covid {
   measure: doubling_time_confirmed_cases_rolling_total_per_million {
     group_label: "Advanced Analytics"
     label: "Confirmed Cases Running Total per Million (Days to Double)"
+    description: "These metrics require having date selected or filtered to a single date."
     type: number
     value_format_name: decimal_1
     sql:  70 / NULLIF(100*${seven_day_average_change_rate_confirmed_cases_running_total_per_million},0);;
@@ -642,6 +656,7 @@ view: prior_days_cases_covid {
   measure: doubling_time_deaths_rolling_total_per_million {
     group_label: "Advanced Analytics"
     label: "Deaths Running Total per Million (Days to Double)"
+    description: "These metrics require having date selected or filtered to a single date."
     type: number
     value_format_name: decimal_1
     sql:  70 / NULLIF(100*${seven_day_average_change_rate_deaths_running_total_per_million},0);;
@@ -661,6 +676,7 @@ view: prior_days_cases_covid {
   measure: doubling_time_confirmed_cases_new_per_million {
     group_label: "Advanced Analytics"
     label: "Confirmed Cases New per Million (Days to Double)"
+    description: "These metrics require having date selected or filtered to a single date."
     type: number
     value_format_name: decimal_1
     sql:  70 / NULLIF(100*${seven_day_average_change_rate_confirmed_cases_new_per_million},0);;
@@ -680,6 +696,7 @@ view: prior_days_cases_covid {
   measure: doubling_time_deaths_new_per_million {
     group_label: "Advanced Analytics"
     label: "Deaths New per Million (Days to Double)"
+    description: "These metrics require having date selected or filtered to a single date."
     type: number
     value_format_name: decimal_1
     sql:  70 / NULLIF(100*${seven_day_average_change_rate_deaths_new_per_million},0);;
