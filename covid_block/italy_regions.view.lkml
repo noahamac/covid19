@@ -70,7 +70,7 @@ view: italy_regions {
     sql: ${TABLE}.codice_regione ;;
     label: "Region Code"
     description: "The ISTAT code of the region in Italy, (IT: Codice della Regione)"
-    drill_fields: [italy_province.denominazione_provincia]
+    drill_fields: [italy_province.nome_pro]
   }
 
   dimension: ricoverati_con_sintomi {
@@ -208,7 +208,7 @@ view: italy_regions {
     map_layer_name: regioni_italiani
     label: "Region Name"
     description: "The name of the region in Italy, (IT: Denominazione Regione)"
-    drill_fields: [italy_provinces.denominazione_provincia]
+    drill_fields: [italy_provinces.nome_pro]
   }
 
 ######## NEW MEASURES ########
@@ -217,10 +217,17 @@ view: italy_regions {
 ## Otherwise report on non-icu hospitalizations for most recent date
   measure: currently_hospitalized {
     type: sum
-    sql: {% if reporting_date._is_selected %}
+    sql:  {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
+            NULL
+          {% elsif reporting_date._is_selected %}
             ${ricoverati_con_sintomi}
           {% else %}
             CASE WHEN ${reporting_date} = ${max_italy_date.max_date} THEN ${ricoverati_con_sintomi} ELSE NULL END
+          {% endif %};;
+    html: {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
+            Metric only available at regional level
+          {% else %}
+            {{rendered_value}}
           {% endif %};;
     label: "Non-ICU hospitalizations"
     description: "Current number of patients hospitalized, excluding in ICU (IT: Ricoverati con sintomi), avail by region only"
@@ -230,6 +237,11 @@ view: italy_regions {
   measure: hospitalized_non_icu_pp {
     type: number
     sql: 1000* ${currently_hospitalized}/NULLIF(${population}, 0) ;;
+    html: {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
+            Metric only available at regional level
+          {% else %}
+            {{rendered_value}}
+          {% endif %};;
     label: "Currently hospitalized (non-ICU) (per thousand)"
     group_label: "Current cases by status"
     value_format_name: decimal_2
@@ -248,10 +260,17 @@ view: italy_regions {
   measure: icu {
     type: sum
     label: "Current ICU patients"
-    sql: {% if reporting_date._is_selected %}
+    sql:  {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
+            NULL
+          {% elsif reporting_date._is_selected %}
             ${terapia_intensiva}
           {% else %}
             CASE WHEN ${reporting_date} = ${max_italy_date.max_date} THEN ${terapia_intensiva} ELSE NULL END
+          {% endif %};;
+    html: {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
+            Metric only available at regional level
+          {% else %}
+            {{rendered_value}}
           {% endif %};;
     description: "Current number of patients in ICU (IT: Terapia intensiva), avail by region only"
     group_label: "Current cases by status"
@@ -260,6 +279,11 @@ view: italy_regions {
   measure: icu_pp {
     type: number
     sql: 1000* ${icu}/NULLIF(${population}, 0) ;;
+    html: {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
+            Metric only available at regional level
+          {% else %}
+            {{rendered_value}}
+          {% endif %};;
     label: "Current ICU patients (per thousand)"
     group_label: "Current cases by status"
     value_format_name: decimal_2
@@ -276,10 +300,17 @@ view: italy_regions {
 ## Otherwise report on all hospitalizations for most recent date
   measure: total_hospitalized {
     type: sum
-    sql:  {% if reporting_date._is_selected %}
+    sql:  {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
+            NULL
+          {% elsif reporting_date._is_selected %}
             ${totale_ospedalizzati}
           {% else %}
             CASE WHEN ${reporting_date} = ${max_italy_date.max_date} THEN ${totale_ospedalizzati} ELSE NULL END
+          {% endif %};;
+    html: {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
+            Metric only available at regional level
+          {% else %}
+            {{rendered_value}}
           {% endif %};;
     label: "All hospitalizations"
     description: "Current number of patients hospitalized, including in ICU (IT: Totale ospedalizzati), avail by region only"
@@ -288,7 +319,16 @@ view: italy_regions {
 
   measure: change_in_hospitalization {
     type: sum
-    sql: ${totale_ospedalizzati_cambio} ;;
+    sql:  {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
+            NULL
+          {% else %}
+            ${totale_ospedalizzati_cambio}
+          {% endif %};;
+    html: {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
+            Metric only available at regional level
+          {% else %}
+            {{rendered_value}}
+          {% endif %};;
     label: "Change in total hospitalized"
     description: "Change in number of patients hospitalized from previous period, including in ICU (IT: Totale ospedalizzati cambio), avail by region only"
     group_label: "Current cases by status"
@@ -297,6 +337,11 @@ view: italy_regions {
   measure: hospitalized_pp {
     type: number
     sql: 1000* ${total_hospitalized}/NULLIF(${population}, 0) ;;
+    html: {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
+            Metric only available at regional level
+          {% else %}
+            {{rendered_value}}
+          {% endif %};;
     label: "Current Hospitalized (incl ICU) (per thousand)"
     group_label: "Current cases by status"
     value_format_name: decimal_2
@@ -306,10 +351,17 @@ view: italy_regions {
 ## Otherwise report on number of people under home quarantine for most recent date
   measure: home_quarantine {
     type: sum
-    sql:  {% if reporting_date._is_selected %}
+    sql:  {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
+            NULL
+          {% elsif reporting_date._is_selected %}
             ${isolamento_domiciliare}
           {% else %}
             CASE WHEN ${reporting_date} = ${max_italy_date.max_date} THEN ${isolamento_domiciliare} ELSE NULL END
+          {% endif %};;
+    html: {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
+            Metric only available at regional level
+          {% else %}
+            {{rendered_value}}
           {% endif %};;
     label: "Currently under home quarantine"
     description: "Positive cases currently at home (IT: Isolamento domiciliare), avail by region only"
@@ -319,6 +371,11 @@ view: italy_regions {
   measure: home_quarantine_pp {
     type: number
     sql: 1000* ${home_quarantine}/NULLIF(${population}, 0) ;;
+    html: {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
+            Metric only available at regional level
+          {% else %}
+            {{rendered_value}}
+          {% endif %};;
     label: "Current Home Quarantine (per thousand)"
     group_label: "Current cases by status"
     value_format_name: decimal_2
@@ -328,10 +385,17 @@ view: italy_regions {
 ## Otherwise report on total active cases for most recent date
   measure: total_active_cases {
     type: sum
-    sql:  {% if reporting_date._is_selected %}
+    sql:  {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
+            NULL
+          {% elsif reporting_date._is_selected %}
             ${totale_positivi}
           {% else %}
             CASE WHEN ${reporting_date} = ${max_italy_date.max_date} THEN ${totale_positivi} ELSE NULL END
+          {% endif %};;
+    html: {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
+            Metric only available at regional level
+          {% else %}
+            {{rendered_value}}
           {% endif %};;
     label: "Total number of active cases"
     description: "Count of active cases including hospitalized patients + home confinement (IT: Totale attualmente positive), avail by region only"
@@ -341,6 +405,11 @@ view: italy_regions {
   measure: total_active_cases_pp {
     type: number
     sql: 1000* ${total_active_cases}/NULLIF(${population}, 0) ;;
+    html: {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
+            Metric only available at regional level
+          {% else %}
+            {{rendered_value}}
+          {% endif %};;
     label: "Total Active Cases (per thousand)"
     group_label: "Total cases"
     value_format_name: decimal_2
@@ -350,10 +419,17 @@ view: italy_regions {
 ## Otherwise report on total recovered cases (running total) for most recent date
   measure: recovered {
     type: sum
-    sql:  {% if reporting_date._is_selected %}
+    sql:  {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
+            NULL
+          {% elsif reporting_date._is_selected %}
             ${dimessi_guariti}
           {% else %}
             CASE WHEN ${reporting_date} = ${max_italy_date.max_date} THEN ${dimessi_guariti} ELSE NULL END
+          {% endif %};;
+    html: {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
+            Metric only available at regional level
+          {% else %}
+            {{rendered_value}}
           {% endif %};;
     label: "Recovered"
     description: "Running total of all patients who have recovered (IT: Dimessi guariti), avail by region only"
@@ -363,6 +439,11 @@ view: italy_regions {
   measure: total_recovered_pp {
     type: number
     sql: 1000* ${recovered}/NULLIF(${population}, 0) ;;
+    html: {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
+            Metric only available at regional level
+          {% else %}
+            {{rendered_value}}
+          {% endif %};;
     label: "Total Recovered (per thousand)"
     group_label: "Resolved cases by status"
     value_format_name: decimal_2
@@ -370,7 +451,16 @@ view: italy_regions {
 
   measure: newly_recovered {
     type: sum
-    sql: ${dimessi_guariti_nuovi} ;;
+    sql:  {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
+            NULL
+          {% else %}
+            ${dimessi_guariti_nuovi}
+          {% endif %};;
+    html: {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
+            Metric only available at regional level
+          {% else %}
+            {{rendered_value}}
+          {% endif %};;
     label: "Newly recovered"
     description: "The count of patients who were reported recovered in that day (IT: Dimessi guariti nuovi), avail by region only"
     group_label: "Resolved cases by status"
@@ -380,10 +470,17 @@ view: italy_regions {
 ## Otherwise report on total deaths (running total) for most recent date
   measure: deceased {
     type: sum
-    sql:  {% if reporting_date._is_selected %}
+    sql:  {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
+            NULL
+          {% elsif reporting_date._is_selected %}
             ${deceduti}
           {% else %}
             CASE WHEN ${reporting_date} = ${max_italy_date.max_date} THEN ${deceduti} ELSE NULL END
+          {% endif %};;
+    html: {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
+            Metric only available at regional level
+          {% else %}
+            {{rendered_value}}
           {% endif %};;
     label: "Deceased"
     description: "Running total of deaths (IT: Deceduti), avail by region only"
@@ -393,6 +490,11 @@ view: italy_regions {
   measure: total_deceased_pp {
     type: number
     sql: 1000* ${deceased}/NULLIF(${population}, 0) ;;
+    html: {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
+            Metric only available at regional level
+          {% else %}
+            {{rendered_value}}
+          {% endif %};;
     label: "Total Deaths (per thousand)"
     group_label: "Resolved cases by status"
     value_format_name: decimal_2
@@ -400,7 +502,16 @@ view: italy_regions {
 
   measure: newly_deceased {
     type: sum
-    sql: ${deceduti_nuovi} ;;
+    sql:  {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
+            NULL
+          {% else %}
+            ${deceduti_nuovi}
+          {% endif %};;
+    html: {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
+            Metric only available at regional level
+          {% else %}
+            {{rendered_value}}
+          {% endif %};;
     label: "Newly deceased"
     description: "The count of deaths by day (IT: Deceduti nuovi), avail by region only"
     group_label: "Resolved cases by status"
@@ -408,7 +519,9 @@ view: italy_regions {
 
   measure: total_cases_region {
     type: sum
-    sql:  {% if reporting_date._is_selected %}
+    sql:  {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
+            NULL
+          {% elsif reporting_date._is_selected %}
             ${totale_casi_regione}
           {% else %}
             CASE WHEN ${reporting_date} = ${max_italy_date.max_date} THEN ${totale_casi_regione} ELSE NULL END
@@ -426,26 +539,32 @@ view: italy_regions {
 ## Otherwise report on total new cases for most recent date
   measure: new_cases {
     type: number
-    sql: {% if italy_province.denominazione_provincia._in_query  or italy_province.sigla_provincia._in_query %}
-        ${italy_province.new_cases_province}
-       {% else %}
-      ${new_cases_region}
-        {% endif %}
-        ;;
+    sql:  {% if italy_province.nome_pro._in_query  or italy_province.sigla_provincia._in_query %}
+            ${italy_province.new_cases_province}
+          {% else %}
+            ${new_cases_region}
+          {% endif %};;
       label: "New cases"
       description: "Newly confirmed cases by day (IT: Totale casi nuovi), avail by region or province"
       group_label: "Total cases"
-      drill_fields: [italy_province.denominazione_provincia]
+      drill_fields: [italy_province.nome_pro]
     }
 
 ## If date selected, report on total tests run (running total) for the given date(s)
 ## Otherwise report on total tests run (running total) for most recent date
   measure: tests_run {
     type: sum
-    sql:  {% if reporting_date._is_selected %}
+    sql:  {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
+            NULL
+          {% elsif reporting_date._is_selected %}
             ${tamponi}
           {% else %}
             CASE WHEN ${reporting_date} = ${max_italy_date.max_date} THEN ${tamponi} ELSE NULL END
+          {% endif %};;
+    html: {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
+            Metric only available at regional level
+          {% else %}
+            {{rendered_value}}
           {% endif %};;
     label: "Tests run"
     description: "Running total of tests run (IT: Tamponi), avail by region only"
@@ -455,6 +574,11 @@ view: italy_regions {
   measure: tests_pp {
     type: number
     sql: 1000* ${tests_run}/NULLIF(${population}, 0) ;;
+    html: {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
+            Metric only available at regional level
+          {% else %}
+            {{rendered_value}}
+          {% endif %};;
     label: "Tests run (per thousand)"
     group_label: "Testing"
     value_format_name: decimal_2
@@ -463,7 +587,16 @@ view: italy_regions {
 
   measure: new_tests {
     type: sum
-    sql: ${tamponi_nuovi} ;;
+    sql:  {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
+            NULL
+          {% else %}
+            CASE WHEN ${tamponi_nuovi} >=0 THEN ${tamponi_nuovi} ELSE 0 END
+          {% endif %};;
+    html: {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
+            Metric only available at regional level
+          {% else %}
+            {{rendered_value}}
+          {% endif %};;
     label: "New tests run"
     description: "Count of tests run by day (IT: Tamponi nuovi), avail by region only"
     group_label: "Testing"
