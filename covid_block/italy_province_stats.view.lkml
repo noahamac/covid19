@@ -1,8 +1,8 @@
 #This view has population and area stats for Italian provinces
 view: italy_province_stats {
   derived_table: {
-    sql: SELECT * FROM `lookerdata.covid19.italy_province_stats` ;;
-    sql_trigger_value: SELECT COUNT(*) FROM `lookerdata.covid19.italy_province_stats` ;;
+    sql: SELECT * FROM `lookerdata.covid19_block.italy_province_stats` ;;
+    sql_trigger_value: SELECT COUNT(*) FROM `lookerdata.covid19_block.italy_province_stats` ;;
   }
 
 ######## PRIMARY KEY ########
