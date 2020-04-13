@@ -69,7 +69,7 @@ view: italy_regions {
     sql: ${TABLE}.codice_regione ;;
     label: "Region Code"
     description: "The ISTAT code of the region in Italy, (IT: Codice della Regione)"
-    drill_fields: [italy_province.denominazione_provincia]
+    drill_fields: [italy_province.nome_pro]
   }
 
   dimension: ricoverati_con_sintomi {
@@ -207,7 +207,7 @@ view: italy_regions {
     map_layer_name: regioni_italiani
     label: "Region Name"
     description: "The name of the region in Italy, (IT: Denominazione Regione)"
-    drill_fields: [italy_provinces.denominazione_provincia]
+    drill_fields: [italy_provinces.nome_pro]
   }
 
 ######## NEW MEASURES ########
@@ -523,7 +523,7 @@ view: italy_regions {
 
   measure: new_cases {
     type: number
-    sql:  {% if italy_province.denominazione_provincia._in_query  or italy_province.sigla_provincia._in_query %}
+    sql:  {% if italy_province.nome_pro._in_query  or italy_province.sigla_provincia._in_query %}
             ${italy_province.new_cases_province}
           {% else %}
             ${new_cases_region}
@@ -531,7 +531,7 @@ view: italy_regions {
       label: "New cases"
       description: "Newly confirmed cases by day (IT: Totale casi nuovi), avail by region or province"
       group_label: "Total cases"
-      drill_fields: [italy_province.denominazione_provincia]
+      drill_fields: [italy_province.nome_pro]
     }
 
   measure: tests_run {
