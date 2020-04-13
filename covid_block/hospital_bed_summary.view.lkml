@@ -1,5 +1,6 @@
-#This view calculates thing like how many beds are available in different geopgrahies and estimates how many beds are being utilized
+#This view calculates thing like how many beds are available in different geograhies and estimates how many beds are being utilized
 
+#source: defitinitve healthcare, https://opendata.arcgis.com/datasets/1044bb19da8d4dbfb6a96eb1b4ebf629_0.csv
 
 view: hospital_bed_summary {
   derived_table: {

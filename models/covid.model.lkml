@@ -29,7 +29,7 @@ explore: covid_combined {
     view_label: " COVID19"
     relationship: many_to_one
     sql_on:
-          ${state_region.state_code} = ${covid_tracking_project.state}
+          ${state_region.state_code} = ${covid_tracking_project.state_code}
       AND ${covid_combined.measurement_raw} = ${covid_tracking_project.measurement_raw}
     ;;
   }

@@ -103,7 +103,9 @@ view: covid_combined {
     type: time
     timeframes: [
       raw,
-      date
+      date,
+      week,
+      month
     ]
     convert_tz: no
     datatype: date
@@ -150,6 +152,8 @@ view: covid_combined {
   #this dimension uses the lat/lon from the JHU data
   dimension: location {
     group_label: "Location"
+    label: "County (Point Location)"
+    description: "Lat / Lon point location, sourced from JHU for each county"
     type: location
     sql_latitude: ${lat} ;;
     sql_longitude: ${long} ;;
@@ -167,6 +171,7 @@ view: covid_combined {
 
   dimension: province_state {
     group_label: "Location"
+    description: "Map only configured for US states, but states from other countries are also present in the data"
     label: "State"
     map_layer_name: us_states
     type: string
@@ -306,7 +311,7 @@ view: covid_combined {
 
 ## Parameter allowing users to filter on top X countries, state, or counties - e.g. Top 5 countries based on total cases
   parameter: show_top_x_values {
-    description: "Use this filter with the country, state and county top X dimensions"
+    description: "Use this filter with the country, state and county top X dimensions to just focus on the regions with the highest confirmed running totals"
     type: number
     default_value: "10"
   }
@@ -314,16 +319,16 @@ view: covid_combined {
 ## Only show countries where rank is less than or equal to show_top_x_values parameter chosen by users
   dimension: country_top_x {
     group_label: "Location"
-    label: "Country (Show Top X Values)"
-    description: "Use this field with the Show Top X Values parameter"
+    label: "Country (Show Top X)"
+    description: "Use this field with the Show Top X Values filter, ordered by confirmed running total"
     sql: case when ${country_rank.rank} <= {% parameter show_top_x_values %} then ${country_region} else ' Other' end ;;
   }
 
 ## Only show states where rank is less than or equal to show_top_x_values parameter chosen by users
   dimension: state_top_x {
     group_label: "Location"
-    description: "Use this field with the Show Top X Values parameter"
-    label: "State (Show Top X Values)"
+    description: "Use this field with the Show Top X Values filter, ordered by confirmed running total"
+    label: "State (Show Top X)"
     sql: case when ${state_rank.rank} <= {% parameter show_top_x_values %} then ${province_state} else ' Other' end ;;
     link: {
       label: "{{ value }} - State Deep Dive"
@@ -335,8 +340,8 @@ view: covid_combined {
  ## Only show counties where rank is less than or equal to show_top_x_values parameter chosen by users
  dimension: county_top_x {
     group_label: "Location"
-    description: "Use this field with the Show Top X Values parameter"
-    label: "County (Show Top X Values)"
+    description: "Use this field with the Show Top X Values filter, ordered by confirmed running total"
+    label: "County (Show Top X)"
     sql: case when ${fips_rank.rank} <= {% parameter show_top_x_values %} then ${county} else ' Other' end ;;
     link: {
       label: "Filter to County - {{ value }}"
@@ -349,6 +354,7 @@ view: covid_combined {
 #### Max Date ####
 
   dimension: is_max_date {
+    label: "  Is Max Date"
     description: "Is this record from the most recent day in the dataset? The most recent day is the minimum of the most recent measurement date for both JHU and NYT data"
     #hidden: yes
     type: yesno
@@ -356,6 +362,7 @@ view: covid_combined {
   }
 
   dimension: days_since_max_date {
+    description: "The number of days that have passed since the maximum date in the dataset (i.e. how many days of data are we missing here)"
     type:  number
     sql: date_diff(${measurement_raw},${max_date_covid.max_date_raw},day) ;;
   }
@@ -436,7 +443,8 @@ view: covid_combined {
   }
 
   dimension: days_since_first_outbreak {
-    label: "Days Since Oubreak of X cases"
+    label: "Days Since X Cases"
+    description: "Use with the minimum number of cases filter, if nothing is selected the default is X = 1"
     type:  number
     sql:
           {% if covid_combined.fips._in_query %} ${days_since_first_outbreak_county}
@@ -452,7 +460,8 @@ view: covid_combined {
 
 ## Let user choose between looking at new cases (active, confirmed, deaths, etc) or running total
   parameter: new_vs_running_total {
-    description: "Filter to either see just new cases, or the running total"
+    hidden: yes
+    description: "Use with the dynamic measures to see either new cases or the running total, can be used to easily toggle between the two on a Look or Dashboard"
     type: unquoted
     default_value: "new_cases"
     allowed_value: {
@@ -468,7 +477,7 @@ view: covid_combined {
 ## Based on new_vs_running_total parameter chosen, return new or running total confirmed cases
   measure: confirmed_cases {
     group_label: " Dynamic"
-    description: "Use with New vs Running Total Filter"
+    description: "Use with New vs Running Total Filter, can be useful for creating a Look or Dashboard where you toggle between the two"
     label: "Confirmed Cases"
     type: number
     sql:
@@ -491,7 +500,7 @@ view: covid_combined {
 ## Based on new_vs_running_total parameter chosen, return new or running total deaths
   measure: deaths {
     group_label: " Dynamic"
-    description: "Use with New vs Running Total Filter"
+    description: "Use with New vs Running Total Filter, can be useful for creating a Look or Dashboard where you toggle between the two"
     label: "Deaths"
     type: number
     sql:
@@ -532,7 +541,8 @@ view: covid_combined {
   #this field displays the new cases if a date filter has been applied, or else is gives the numbers from the most recent record
   measure: confirmed_new {
     group_label: " New Cases"
-    label: "Confirmed Cases (New)"
+    label: "Confirmed Cases"
+    description: "Filter on Measurement Date or Days Since First Outbreak to see the new cases during the selected timeframe, otherwise the most recent record will be used"
     type: number
     sql:
       {% if covid_combined.measurement_date._in_query or covid_combined.days_since_first_outbreak._in_query or
@@ -554,7 +564,8 @@ view: covid_combined {
 
   measure: confirmed_new_per_million {
     group_label: " New Cases"
-    label: "Confirmed Cases per Million (New)"
+    description: "Filter on Measurement Date or Days Since First Outbreak to see the new cases during the selected timeframe, otherwise the most recent record will be used"
+    label: "Confirmed Cases per Million"
     type: number
     sql: 1000000*${confirmed_new} / nullif(${population_by_county_state_country.sum_population},0) ;;
     value_format_name: decimal_0
@@ -592,7 +603,8 @@ view: covid_combined {
   #this field displays the running total of cases if a date filter has been applied, or else is gives the numbers from the most recent record
   measure: confirmed_running_total {
     group_label: " Running Total"
-    label: "Confirmed Cases (Running Total)"
+    description: "Filter on Measurement Date or Days Since First Outbreak to see the running total for a specific timeframe, otherwise the most recent record will be used"
+    label: "Confirmed Cases"
     type: number
     sql:
           {% if covid_combined.measurement_date._in_query or covid_combined.days_since_first_outbreak._in_query or covid_combined.days_since_max_date._in_query %} ${confirmed_option_1}
@@ -611,10 +623,11 @@ view: covid_combined {
     }
   }
 
-  #this field displays the running total of cases if a date filter has been applied, or else is gives the numbers from the most recent record but is DOES not have a drill path
+  #this field displays the running total of cases if a date filter has been applied, or else is gives the numbers from the most recent record but is does not have a drill path
   measure: confirmed_running_total_no_drill {
+    hidden: yes
     group_label: " Running Total"
-    label: "Confirmed Cases (Running Total) [No Drill]"
+    label: "Confirmed Cases  [No Drill]"
     type: number
     sql:
           {% if covid_combined.measurement_date._in_query or covid_combined.days_since_first_outbreak._in_query or covid_combined.days_since_max_date._in_query %} ${confirmed_option_1}
@@ -635,7 +648,7 @@ view: covid_combined {
 
   measure: confirmed_running_total_per_million {
     group_label: " Running Total"
-    label: "Confirmed Cases per Million (Running Total)"
+    label: "Confirmed Cases per Million"
     type: number
     sql: 1000000*${confirmed_running_total} / nullif(${population_by_county_state_country.sum_population},0) ;;
     value_format_name: decimal_0
@@ -728,7 +741,7 @@ view: covid_combined {
   #this field displays the new deaths if a date filter has been applied, or else is gives the numbers from the most recent record
   measure: deaths_new {
     group_label: " New Cases"
-    label: "Deaths (New)"
+    label: "Deaths"
     type: number
     sql:
       {% if covid_combined.measurement_date._in_query or covid_combined.days_since_first_outbreak._in_query or covid_combined.days_since_max_date._in_query %} ${deaths_new_option_1}
@@ -749,7 +762,7 @@ view: covid_combined {
 
   measure: deaths_new_per_million {
     group_label: " New Cases"
-    label: "Deaths per Million (New)"
+    label: "Deaths per Million"
     type: number
     sql: 1000000*${deaths_new} / nullif(${population_by_county_state_country.sum_population},0) ;;
     value_format_name: decimal_0
@@ -785,7 +798,7 @@ view: covid_combined {
   #this field displays the running total of deaths if a date filter has been applied, or else is gives the numbers from the most recent record
   measure: deaths_running_total {
     group_label: " Running Total"
-    label: "Deaths (Running Total)"
+    label: "Deaths"
     type: number
     sql:
           {% if covid_combined.measurement_date._in_query or covid_combined.days_since_first_outbreak._in_query or covid_combined.days_since_max_date._in_query %} ${deaths_option_1}
@@ -806,7 +819,7 @@ view: covid_combined {
 
   measure: deaths_running_total_per_million {
     group_label: " Running Total"
-    label: "Deaths per Million (Running Total)"
+    label: "Deaths per Million"
     type: number
     sql: 1000000*${deaths_running_total} / nullif(${population_by_county_state_country.sum_population},0) ;;
     value_format_name: decimal_0
@@ -824,7 +837,7 @@ view: covid_combined {
   }
 
   measure: case_fatality_rate {
-    group_label: " Rates"
+#     group_label: " Rates"
     description: "What percent of infections have resulted in death?"
     type: number
     sql: 1.0 * ${deaths_running_total}/NULLIF(${confirmed_running_total}, 0);;
