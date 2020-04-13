@@ -5,31 +5,31 @@ view: covid_tracking_project {
     datagroup_trigger: covid_data
     sql:
       SELECT
-        a.state,
+        state,
         date as measurement_date,
         total as total_cumulative,
-        total - coalesce(LAG(total, 1) OVER (PARTITION BY a.state  ORDER BY date ASC),0) as total_new_cases,
+        total - coalesce(LAG(total, 1) OVER (PARTITION BY state  ORDER BY date ASC),0) as total_new_cases,
         death as death_cumulative,
-        death - coalesce(LAG(death, 1) OVER (PARTITION BY a.state  ORDER BY date ASC),0) as death_new_cases,
+        death - coalesce(LAG(death, 1) OVER (PARTITION BY state  ORDER BY date ASC),0) as death_new_cases,
         recovered as recovered_cumulative,
-        recovered - coalesce(LAG(recovered, 1) OVER (PARTITION BY a.state  ORDER BY date ASC),0) as recovered_new_cases,
+        recovered - coalesce(LAG(recovered, 1) OVER (PARTITION BY state  ORDER BY date ASC),0) as recovered_new_cases,
         hospitalizedCumulative as hospitalized_cumulative,
-        hospitalizedCumulative - coalesce(LAG(hospitalizedCumulative, 1) OVER (PARTITION BY a.state  ORDER BY date ASC),0) as hospitalized_new_cases,
+        hospitalizedCumulative - coalesce(LAG(hospitalizedCumulative, 1) OVER (PARTITION BY state  ORDER BY date ASC),0) as hospitalized_new_cases,
         hospitalizedCurrently,
         inIcuCumulative as inIcu_Cumulative,
-        inIcuCumulative - coalesce(LAG(inIcuCumulative, 1) OVER (PARTITION BY a.state  ORDER BY date ASC),0) as inIcu_new_cases,
+        inIcuCumulative - coalesce(LAG(inIcuCumulative, 1) OVER (PARTITION BY state  ORDER BY date ASC),0) as inIcu_new_cases,
         inIcuCurrently,
         onVentilatorCumulative as onVentilator_Cumulative,
-        onVentilatorCumulative - coalesce(LAG(onVentilatorCumulative, 1) OVER (PARTITION BY a.state  ORDER BY date ASC),0) as onVentilator_new_cases,
+        onVentilatorCumulative - coalesce(LAG(onVentilatorCumulative, 1) OVER (PARTITION BY state  ORDER BY date ASC),0) as onVentilator_new_cases,
         onVentilatorCurrently,
         positive as positive_cumulative,
-        positive - coalesce(LAG(positive, 1) OVER (PARTITION BY a.state  ORDER BY date ASC),0) as positive_new_cases,
+        positive - coalesce(LAG(positive, 1) OVER (PARTITION BY state  ORDER BY date ASC),0) as positive_new_cases,
         pending as pending_cumulative,
-        pending - coalesce(LAG(pending, 1) OVER (PARTITION BY a.state  ORDER BY date ASC),0) as pending_new_cases,
+        pending - coalesce(LAG(pending, 1) OVER (PARTITION BY state  ORDER BY date ASC),0) as pending_new_cases,
         negative as negative_cumulative,
-        negative - coalesce(LAG(negative, 1) OVER (PARTITION BY a.state  ORDER BY date ASC),0) as negative_new_cases,
+        negative - coalesce(LAG(negative, 1) OVER (PARTITION BY state  ORDER BY date ASC),0) as negative_new_cases,
 
-      FROM `lookerdata.covid19_block.covid_tracking_project`;;
+      FROM `lookerdata.covid19_block.covid19_tracking_project`;;
   }
 
 ####################
@@ -45,6 +45,11 @@ view: covid_tracking_project {
   }
 
 ## Date & Location
+
+  dimension: state_code {
+    hidden: yes
+    sql: ${TABLE}.state ;;
+  }
 
   dimension: state {
     hidden: yes
@@ -72,7 +77,7 @@ view: covid_tracking_project {
     ]
     convert_tz: no
     datatype: date
-    sql: ${TABLE}.measurement_date ;;
+    sql: parse_date('%Y%m%d',cast(${TABLE}.measurement_date as string));;
   }
 
 ### KPIs

@@ -11,7 +11,7 @@ view: italy_province {
         -- Because of Trento/Bolzano, we need the denominazione as well as the codice
         , denominazione_regione
         , SUM(totale_casi) as provincia_casi
-      FROM covid19.italy_province
+      FROM `lookerdata.covid19_block.italy_province`
       GROUP BY 1, 2, 3),
     unioned_provinces as (SELECT
       date(ir.data) as data
@@ -22,7 +22,7 @@ view: italy_province {
       , '' as sigla_provincia
       , ir.totale_casi - rr.provincia_casi as totale_casi
     FROM
-      covid19.italy_regions ir
+      `lookerdata.covid19_block.italy_regions` ir
       -- Join the regional data to the province-level rollup on date, region code and region name
       LEFT JOIN region_rollup rr ON
         rr.data = date(ir.data)
@@ -41,7 +41,7 @@ view: italy_province {
       , sigla_provincia
       , totale_casi
     FROM
-      covid19.italy_province
+      `lookerdata.covid19_block.italy_province`
     WHERE
       not (denominazione_provincia = "In fase di definizione/aggiornamento" AND totale_casi = 0))
     SELECT
@@ -55,7 +55,7 @@ view: italy_province {
     FROM
       unioned_provinces
     ;;
-    sql_trigger_value: SELECT COUNT(*) FROM `lookerdata.covid19.italy_province` ;;
+    sql_trigger_value: SELECT COUNT(*) FROM `lookerdata.covid19_block.italy_province` ;;
   }
 
 ######## PRIMARY KEY ########

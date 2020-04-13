@@ -27,6 +27,6 @@ view: state_region {
   dimension: state_code {
     hidden: yes
     type: string
-    sql: ${TABLE}.state_code ;;
+    sql: ${TABLE}.StateCode ;;
   }
 }

@@ -29,7 +29,7 @@ explore: covid_combined {
     view_label: " COVID19"
     relationship: many_to_one
     sql_on:
-          ${state_region.state_code} = ${covid_tracking_project.state}
+          ${state_region.state_code} = ${covid_tracking_project.state_code}
       AND ${covid_combined.measurement_raw} = ${covid_tracking_project.measurement_raw}
     ;;
   }
@@ -161,7 +161,7 @@ datagroup: covid_data {
     SELECT min(max_date) as max_date
     FROM
     (
-      SELECT max(cast(date as date)) as max_date FROM `lookerdata.covid19.nyt_covid_data`
+      SELECT max(cast(date as date)) as max_date FROM `lookerdata.covid19_block.nyt_data`
       UNION ALL
       SELECT max(cast(date as date)) as max_date FROM `bigquery-public-data.covid19_jhu_csse.summary`
     ) a

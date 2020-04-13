@@ -26,12 +26,12 @@ view: italy_regions {
       , ir.tamponi
       , tamponi - coalesce(LAG(tamponi, 1) OVER (PARTITION BY ir.denominazione_regione, ir.codice_regione ORDER BY ir.data ASC),0) as tamponi_nuovi
     FROM
-      `lookerdata.covid19.italy_regions` ir
+      `lookerdata.covid19_block.italy_regions` ir
     WHERE
       data is not null
       AND denominazione_regione is not null
       ;;
-    sql_trigger_value: SELECT COUNT(*) FROM `lookerdata.covid19.italy_regions` WHERE codice_regione is not null ;;
+    sql_trigger_value: SELECT COUNT(*) FROM `lookerdata.covid19_block.italy_regions` WHERE codice_regione is not null ;;
   }
 
 
@@ -624,7 +624,7 @@ view: max_italy_date {
    sql: SELECT
     max(data) as max_date
   FROM
-    `lookerdata.covid19.italy_regions`
+    `lookerdata.covid19_block.italy_regions`
   WHERE
     {% condition italy.reporting_date %} date(data) {% endcondition %} ;;
   }
