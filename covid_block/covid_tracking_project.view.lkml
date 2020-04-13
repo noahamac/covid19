@@ -178,6 +178,7 @@ view: covid_tracking_project {
 ## Based on new_vs_running_total parameter chosen, return new or running total hospitalizations
   measure: hospitalizations {
     group_label: "Dynamic (Testing - US Only)"
+    description: "Use with New vs Running Total Filter"
     label: "Hospitalizations"
     type: number
     sql:
@@ -190,6 +191,7 @@ view: covid_tracking_project {
 ## Based on new_vs_running_total parameter chosen, return new or running total negative test results
   measure: negative_test {
     group_label: "Dynamic (Testing - US Only)"
+    description: "Use with New vs Running Total Filter"
     label: "Negative Test Results"
     type: number
     sql:
@@ -202,6 +204,7 @@ view: covid_tracking_project {
 ## Based on new_vs_running_total parameter chosen, return new or running total pending test results
   measure: pending_test {
     group_label: "Dynamic (Testing - US Only)"
+    description: "Use with New vs Running Total Filter"
     label: "Pending Test Results"
     type: number
     sql:
@@ -214,6 +217,7 @@ view: covid_tracking_project {
 ## Based on new_vs_running_total parameter chosen, return new or running total positive test results
   measure: positive_test {
     group_label: "Dynamic (Testing - US Only)"
+    description: "Use with New vs Running Total Filter"
     label: "Positive Test Results"
     type: number
     sql:
@@ -226,6 +230,7 @@ view: covid_tracking_project {
 ## Based on new_vs_running_total parameter chosen, return new or running total of tests
   measure: total {
     group_label: "Dynamic (Testing - US Only)"
+    description: "Use with New vs Running Total Filter"
     label: "Total Tests"
     type: number
     sql:

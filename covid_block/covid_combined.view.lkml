@@ -158,6 +158,7 @@ view: covid_combined {
   dimension: fips {
     group_label: "Location"
     label: "County (Maps)"
+    description: "Use this field to map cases by county"
     map_layer_name: us_counties_fips_nyc
     type: string
     sql: SUBSTR('00000' || IFNULL(SAFE_CAST(${TABLE}.fips AS STRING), ''), -5) ;;
@@ -282,6 +283,7 @@ view: covid_combined {
   dimension: country_ordered {
     group_label: "Location"
     label: "Country (Ordered)"
+    description: "Ordered by confirmed running total of cases"
     sql: concat(cast(${country_rank.rank} as string),'-',${country_raw}) ;;
     html: {{ country_region._value }} ;;
   }
@@ -289,6 +291,7 @@ view: covid_combined {
   dimension: state_ordered {
     group_label: "Location"
     label: "State (Ordered)"
+    description: "Ordered by confirmed running total of cases"
     sql: concat(cast(${state_rank.rank} as string),'-',${province_state}) ;;
     html: {{ province_state._value }} ;;
   }
@@ -296,6 +299,7 @@ view: covid_combined {
   dimension: fips_ordered {
     group_label: "Location"
     label: "County (Ordered)"
+    description: "Ordered by confirmed running total of cases"
     sql: concat(cast(${fips_rank.rank} as string),'-',${fips}) ;;
     html: {{ county._value }} ;;
   }
@@ -464,6 +468,7 @@ view: covid_combined {
 ## Based on new_vs_running_total parameter chosen, return new or running total confirmed cases
   measure: confirmed_cases {
     group_label: " Dynamic"
+    description: "Use with New vs Running Total Filter"
     label: "Confirmed Cases"
     type: number
     sql:
@@ -486,6 +491,7 @@ view: covid_combined {
 ## Based on new_vs_running_total parameter chosen, return new or running total deaths
   measure: deaths {
     group_label: " Dynamic"
+    description: "Use with New vs Running Total Filter"
     label: "Deaths"
     type: number
     sql:
