@@ -49,19 +49,19 @@ view: hospital_bed_summary {
   }
 
   dimension: hospital_name {
-    group_label: "Hospital"
+    group_label: "Hospital (US Only)"
     type: string
     sql: ${TABLE}.HOSPITAL_NAME ;;
   }
 
   dimension: hospital_type {
-    group_label: "Hospital"
+    group_label: "Hospital (US Only)"
     type: string
     sql: ${TABLE}.HOSPITAL_TYPE ;;
   }
 
   dimension: hq_address {
-    group_label: "Hospital"
+    group_label: "Hospital (US Only)"
     label: "Hospital Address"
     type: string
     sql: ${TABLE}.HQ_ADDRESS ;;
@@ -74,7 +74,7 @@ view: hospital_bed_summary {
   }
 
   dimension: hq_city {
-    group_label: "Hospital"
+    group_label: "Hospital (US Only)"
     label: "Hospital City"
     type: string
     sql: ${TABLE}.HQ_CITY ;;
@@ -87,7 +87,7 @@ view: hospital_bed_summary {
   }
 
   dimension: hq_zip_code {
-    group_label: "Hospital"
+    group_label: "Hospital (US Only)"
     label: "Hospital Zip Code"
     value_format_name: id
     type: number
@@ -107,7 +107,7 @@ view: hospital_bed_summary {
   }
 
   dimension: hospital_location {
-    group_label: "Hospital"
+    group_label: "Hospital (US Only)"
     type: location
     sql_latitude: ${lat} ;;
     sql_longitude: ${long} ;;
@@ -194,28 +194,28 @@ view: hospital_bed_summary {
 ####################
 
   measure: sum_num_icu_beds {
-    group_label: "Hospital Capacity"
+    group_label: " Hospital Capacity (US Only)"
     label: "Count ICU Beds"
     type: sum
     sql: ${num_icu_beds} ;;
   }
 
   measure: sum_num_licensed_beds {
-    group_label: "Hospital Capacity"
+    group_label: " Hospital Capacity (US Only)"
     label: "Count Licensed Beds"
     type: sum
     sql: ${num_licensed_beds} ;;
   }
 
   measure: sum_num_staffed_beds {
-    group_label: "Hospital Capacity"
+    group_label: " Hospital Capacity (US Only)"
     label: "Count Staffed Beds"
     type: sum
     sql: ${num_staffed_beds} ;;
   }
 
   measure: sum_num_icu_beds_available {
-    group_label: "Hospital Capacity"
+    group_label: " Hospital Capacity (US Only)"
     label: "Count ICU Beds Typically Available"
     type: sum
     sql: ${num_icu_beds_available} ;;
@@ -223,7 +223,7 @@ view: hospital_bed_summary {
   }
 
   measure: sum_num_staffed_beds_available {
-    group_label: "Hospital Capacity"
+    group_label: " Hospital Capacity (US Only)"
     label: "Count Staffed Beds Typically Available"
     type: sum
     sql: ${num_staffed_beds_available} ;;
