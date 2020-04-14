@@ -192,10 +192,15 @@ view: prior_days_cases_covid {
     sql: concat(${pre_pk},${measurement_date}) ;;
   }
 
-  dimension: measurement_date {
-    type: date
+  dimension_group: measurement {
+    type: time
+    timeframes: [date,raw]
     hidden:yes
+    datatype: date
+    sql: cast(${TABLE}.measurement_date as date) ;;
   }
+
+
   dimension: pre_pk { hidden:yes}
 
   dimension: prior_1_days_confirmed_running_total {type:number hidden:yes}
