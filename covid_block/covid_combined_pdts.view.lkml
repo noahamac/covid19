@@ -901,7 +901,7 @@ view: kpis_by_entity_by_date {
   dimension: doubling_time_deaths_rolling_total_per_million { type: number hidden:yes }
 
   parameter: minimum_number_cases {
-    label: "Minimum Number of cases (X)"
+    label: "Minimum Number of Cases (X)"
     description: "Modify your analysis to start counting days since outbreak to start with a minumum of X cases."
     type: number
     default_value: "1"
@@ -923,6 +923,7 @@ view: kpis_by_entity_by_date {
 
   dimension: days_since_first_outbreaks {
     label: "Days Since (X) Cases"
+    description: "Use with the minimum number of cases filter, otherwise the default is 1 case"
     type:  number
     sql: date_diff(${measurement_date},${outbreak_start_date},  day) + 1 ;;
   }
@@ -941,6 +942,7 @@ view: kpis_by_entity_by_date {
   }
 
   parameter: metric_value {
+    description: "Select the value of the metric you want to compare, use with the metric fiter. For example, selecting 'actual value' with confirmed cases, means you want to compare the raw number of confirmed cases or deaths."
     type: string
     default_value: "per_million_people"
     allowed_value: {
@@ -958,6 +960,7 @@ view: kpis_by_entity_by_date {
   }
 
   parameter: metric {
+    description: "Select the metric you would like to compare, either confirmed cases or deahts"
     type: string
     default_value: "confirmed_cases"
     allowed_value: {
@@ -997,55 +1000,65 @@ view: kpis_by_entity_by_date {
     ;;
     value_format_name: decimal_1
   }
+
   measure: sum_confirmed_new {
+    group_label: "New"
     label: "Confirmed (New)"
     type: sum
     sql: ${confirmed_new} ;;
     value_format_name: decimal_0
   }
   measure: sum_confirmed_new_per_million {
+    group_label: "New"
     label: "Confirmed (New) (Per Million)"
     type: sum
     sql: ${confirmed_new_per_million} ;;
     value_format_name: decimal_0
   }
   measure: sum_deaths_new {
+    group_label: "New"
     label: "Deaths (New)"
     type: sum
     sql: ${deaths_new} ;;
     value_format_name: decimal_0
   }
   measure: sum_deaths_new_per_million {
+    group_label: "New"
     label: "Deaths (New) (Per Million)"
     type: sum
     sql: ${deaths_new_per_million} ;;
     value_format_name: decimal_0
   }
   measure: sum_confirmed_running_total {
+    group_label: "Running Total"
     label: "Confirmed (Running Total)"
     type: sum
     sql: ${confirmed_running_total} ;;
     value_format_name: decimal_0
   }
   measure: sum_confirmed_running_total_per_million {
+    group_label: "Running Total"
     label: "Confirmed (Running Total) (Per Million)"
     type: sum
     sql: ${confirmed_running_total_per_million} ;;
     value_format_name: decimal_0
   }
   measure: sum_deaths_running_total {
+    group_label: "Running Total"
     label: "Deaths (Running Total)"
     type: sum
     sql: ${deaths_running_total} ;;
     value_format_name: decimal_0
   }
   measure: sum_deaths_running_total_per_million {
+    group_label: "Running Total"
     label: "Deaths (Running Total) (Per Million)"
     type: sum
     sql: ${deaths_running_total_per_million} ;;
     value_format_name: decimal_0
   }
   measure: sum_doubling_time_confirmed_cases_new_per_million {
+    group_label: "New"
     label: "Days to double Confirmed Cases (New)"
     type: average
     sql: ${doubling_time_confirmed_cases_new_per_million} ;;
@@ -1053,6 +1066,7 @@ view: kpis_by_entity_by_date {
     html: {{rendered_value}} Day(s) ;;
   }
   measure: sum_doubling_time_confirmed_cases_rolling_total_per_million {
+    group_label: "Running Total"
     label: "Days to double Confirmed Cases (Rolling Total)"
     type: average
     sql: ${doubling_time_confirmed_cases_rolling_total_per_million} ;;
@@ -1060,6 +1074,7 @@ view: kpis_by_entity_by_date {
     html: {{rendered_value}} Day(s) ;;
   }
   measure: sum_doubling_time_deaths_new_per_million {
+    group_label: "New"
     label: "Days to double Deaths (New)"
     type: average
     sql: ${doubling_time_deaths_new_per_million} ;;
@@ -1067,6 +1082,7 @@ view: kpis_by_entity_by_date {
     html: {{rendered_value}} Day(s) ;;
   }
   measure: sum_doubling_time_deaths_rolling_total_per_million {
+    group_label: "Running Total"
     label: "Days to double Deaths (Rolling Total)"
     type: average
     sql: ${doubling_time_deaths_rolling_total_per_million} ;;
