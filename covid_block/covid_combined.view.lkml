@@ -804,9 +804,9 @@ view: covid_combined {
 
   #this field displays the running total of deaths if a date filter has been applied, or else is gives the numbers from the most recent record
   measure: deaths_running_total {
-    group_label: "  Running Total (Running Total)"
+    group_label: "  Running Total"
     description: "Filter on Measurement Date or Days Since First Outbreak to see the running total on a specific date, don't use with a range of dates or else the results will show the sum of the running totals for each day in that timeframe. If no dates are selected the most recent record will be used."
-    label: "Deaths"
+    label: "Deaths (Running Total)"
     type: number
     sql:
           {% if covid_combined.measurement_date._in_query or covid_combined.days_since_first_outbreak._in_query or covid_combined.days_since_max_date._in_query %} ${deaths_option_1}
