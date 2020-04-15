@@ -222,8 +222,8 @@ view: italy_regions {
 
 #   dimension: is_max_date {
 #     type: yesno
-#     hidden: yes
-#     sql: ${reporting_date} = ${max_date_italy.max_date_raw} ;;
+#     hidden: no
+#     sql: ${reporting_date} =  ${max_italy_date.max_date};;
 #   }
 
   dimension: region {
@@ -252,14 +252,14 @@ view: italy_regions {
 ## Otherwise report on non-icu hospitalizations for most recent date
   measure: currently_hospitalized {
     type: sum
-    sql:  {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
+    sql:  {% if italy_province.province_abbreviation._in_query or italy_province.province._in_query %}
             NULL
           {% elsif reporting_date._is_selected %}
             ${hospitalized_patients_symptoms}
           {% else %}
             CASE WHEN ${reporting_date} = ${max_italy_date.max_date} THEN ${hospitalized_patients_symptoms} ELSE NULL END
           {% endif %};;
-    html: {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
+    html: {% if italy_province.province_abbreviation._in_query or italy_province.province._in_query %}
             Metric only available at regional level
           {% else %}
             {{rendered_value}}
@@ -272,7 +272,7 @@ view: italy_regions {
   measure: hospitalized_non_icu_pp {
     type: number
     sql: 1000* ${currently_hospitalized}/NULLIF(${population}, 0) ;;
-    html: {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
+    html: {% if italy_province.province_abbreviation._in_query or italy_province.province._in_query %}
             Metric only available at regional level
           {% else %}
             {{rendered_value}}
@@ -294,14 +294,14 @@ view: italy_regions {
   measure: icu {
     type: sum
     label: "Current ICU patients"
-    sql:  {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
+    sql:  {% if italy_province.province_abbreviation._in_query or italy_province.province._in_query %}
             NULL
           {% elsif reporting_date._is_selected %}
             ${hospitalized_patients_intensive_care}
           {% else %}
             CASE WHEN ${reporting_date} = ${max_italy_date.max_date} THEN ${hospitalized_patients_intensive_care} ELSE NULL END
           {% endif %};;
-    html: {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
+    html: {% if italy_province.province_abbreviation._in_query or italy_province.province._in_query %}
             Metric only available at regional level
           {% else %}
             {{rendered_value}}
@@ -313,7 +313,7 @@ view: italy_regions {
   measure: icu_pp {
     type: number
     sql: 1000* ${icu}/NULLIF(${population}, 0) ;;
-    html: {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
+    html: {% if italy_province.province_abbreviation._in_query or italy_province.province._in_query %}
             Metric only available at regional level
           {% else %}
             {{rendered_value}}
@@ -333,14 +333,14 @@ view: italy_regions {
 ## Otherwise report on all hospitalizations for most recent date
   measure: total_hospitalized {
     type: sum
-    sql:  {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
+    sql:  {% if italy_province.province_abbreviation._in_query or italy_province.province._in_query %}
             NULL
           {% elsif reporting_date._is_selected %}
             ${total_hospitalized_patients}
           {% else %}
             CASE WHEN ${reporting_date} = ${max_italy_date.max_date} THEN ${total_hospitalized_patients} ELSE NULL END
           {% endif %};;
-    html: {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
+    html: {% if italy_province.province_abbreviation._in_query or italy_province.province._in_query %}
             Metric only available at regional level
           {% else %}
             {{rendered_value}}
@@ -352,12 +352,12 @@ view: italy_regions {
 
   measure: change_in_hospitalization {
     type: sum
-    sql:  {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
+    sql:  {% if italy_province.province_abbreviation._in_query or italy_province.province._in_query %}
             NULL
           {% else %}
             ${change_in_total_hospitalized_patients}
           {% endif %};;
-    html: {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
+    html: {% if italy_province.province_abbreviation._in_query or italy_province.province._in_query %}
             Metric only available at regional level
           {% else %}
             {{rendered_value}}
@@ -370,7 +370,7 @@ view: italy_regions {
   measure: hospitalized_pp {
     type: number
     sql: 1000* ${total_hospitalized}/NULLIF(${population}, 0) ;;
-    html: {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
+    html: {% if italy_province.province_abbreviation._in_query or italy_province.province._in_query %}
             Metric only available at regional level
           {% else %}
             {{rendered_value}}
@@ -384,14 +384,14 @@ view: italy_regions {
 ## Otherwise report on number of people under home quarantine for most recent date
   measure: home_quarantine {
     type: sum
-    sql:  {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
+    sql:  {% if italy_province.province_abbreviation._in_query or italy_province.province._in_query %}
             NULL
           {% elsif reporting_date._is_selected %}
             ${home_confinement_cases}
           {% else %}
             CASE WHEN ${reporting_date} = ${max_italy_date.max_date} THEN ${home_confinement_cases} ELSE NULL END
           {% endif %};;
-    html: {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
+    html: {% if italy_province.province_abbreviation._in_query or italy_province.province._in_query %}
             Metric only available at regional level
           {% else %}
             {{rendered_value}}
@@ -404,7 +404,7 @@ view: italy_regions {
   measure: home_quarantine_pp {
     type: number
     sql: 1000* ${home_quarantine}/NULLIF(${population}, 0) ;;
-    html: {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
+    html: {% if italy_province.province_abbreviation._in_query or italy_province.province._in_query %}
             Metric only available at regional level
           {% else %}
             {{rendered_value}}
@@ -418,14 +418,14 @@ view: italy_regions {
 ## Otherwise report on total active cases for most recent date
   measure: total_active_cases {
     type: sum
-    sql:  {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
+    sql:  {% if italy_province.province_abbreviation._in_query or italy_province.province._in_query %}
             NULL
           {% elsif reporting_date._is_selected %}
             ${total_current_confirmed_cases}
           {% else %}
             CASE WHEN ${reporting_date} = ${max_italy_date.max_date} THEN ${total_current_confirmed_cases} ELSE NULL END
           {% endif %};;
-    html: {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
+    html: {% if italy_province.province_abbreviation._in_query or italy_province.province._in_query %}
             Metric only available at regional level
           {% else %}
             {{rendered_value}}
@@ -438,7 +438,7 @@ view: italy_regions {
   measure: total_active_cases_pp {
     type: number
     sql: 1000* ${total_active_cases}/NULLIF(${population}, 0) ;;
-    html: {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
+    html: {% if italy_province.province_abbreviation._in_query or italy_province.province._in_query %}
             Metric only available at regional level
           {% else %}
             {{rendered_value}}
@@ -452,14 +452,14 @@ view: italy_regions {
 ## Otherwise report on total recovered cases (running total) for most recent date
   measure: total_recovered {
     type: sum
-    sql:  {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
+    sql:  {% if italy_province.province_abbreviation._in_query or italy_province.province._in_query %}
             NULL
           {% elsif reporting_date._is_selected %}
             ${recovered}
           {% else %}
             CASE WHEN ${reporting_date} = ${max_italy_date.max_date} THEN ${recovered} ELSE NULL END
           {% endif %};;
-    html: {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
+    html: {% if italy_province.province_abbreviation._in_query or italy_province.province._in_query %}
             Metric only available at regional level
           {% else %}
             {{rendered_value}}
@@ -472,7 +472,7 @@ view: italy_regions {
   measure: total_recovered_pp {
     type: number
     sql: 1000* ${total_recovered}/NULLIF(${population}, 0) ;;
-    html: {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
+    html: {% if italy_province.province_abbreviation._in_query or italy_province.province._in_query %}
             Metric only available at regional level
           {% else %}
             {{rendered_value}}
@@ -484,12 +484,12 @@ view: italy_regions {
 
   measure: newly_recovered {
     type: sum
-    sql:  {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
+    sql:  {% if italy_province.province_abbreviation._in_query or italy_province.province._in_query %}
             NULL
           {% else %}
             ${new_recovered}
           {% endif %};;
-    html: {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
+    html: {% if italy_province.province_abbreviation._in_query or italy_province.province._in_query %}
             Metric only available at regional level
           {% else %}
             {{rendered_value}}
@@ -503,14 +503,14 @@ view: italy_regions {
 ## Otherwise report on total deaths (running total) for most recent date
   measure: deceased {
     type: sum
-    sql:  {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
+    sql:  {% if italy_province.province_abbreviation._in_query or italy_province.province._in_query %}
             NULL
           {% elsif reporting_date._is_selected %}
             ${deaths}
           {% else %}
             CASE WHEN ${reporting_date} = ${max_italy_date.max_date} THEN ${deaths} ELSE NULL END
           {% endif %};;
-    html: {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
+    html: {% if italy_province.province_abbreviation._in_query or italy_province.province._in_query %}
             Metric only available at regional level
           {% else %}
             {{rendered_value}}
@@ -523,7 +523,7 @@ view: italy_regions {
   measure: total_deceased_pp {
     type: number
     sql: 1000* ${deceased}/NULLIF(${population}, 0) ;;
-    html: {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
+    html: {% if italy_province.province_abbreviation._in_query or italy_province.province._in_query %}
             Metric only available at regional level
           {% else %}
             {{rendered_value}}
@@ -535,12 +535,12 @@ view: italy_regions {
 
   measure: newly_deceased {
     type: sum
-    sql:  {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
+    sql:  {% if italy_province.province_abbreviation._in_query or italy_province.province._in_query %}
             NULL
           {% else %}
             ${new_deaths}
           {% endif %};;
-    html: {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
+    html: {% if italy_province.province_abbreviation._in_query or italy_province.province._in_query %}
             Metric only available at regional level
           {% else %}
             {{rendered_value}}
@@ -552,7 +552,7 @@ view: italy_regions {
 
   measure: total_cases_region {
     type: sum
-    sql:  {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
+    sql:  {% if italy_province.province_abbreviation._in_query or italy_province.province._in_query %}
             NULL
           {% elsif reporting_date._is_selected %}
             ${total_confirmed_cases}
@@ -572,7 +572,7 @@ view: italy_regions {
 ## Otherwise report on total new cases for most recent date
   measure: new_cases {
     type: number
-    sql:  {% if italy_province.nome_pro._in_query  or italy_province.sigla_provincia._in_query %}
+    sql:  {% if italy_province.province._in_query  or italy_province.province_abbreviation._in_query %}
             ${italy_province.new_cases_province}
           {% else %}
             ${new_cases_region}
@@ -580,21 +580,21 @@ view: italy_regions {
       label: "New cases"
       description: "Newly confirmed cases by day (IT: Totale casi nuovi), avail by region or province"
       group_label: "Total cases"
-      drill_fields: [italy_province.nome_pro]
+      drill_fields: [italy_province.province]
     }
 
 ## If date selected, report on total tests run (running total) for the given date(s)
 ## Otherwise report on total tests run (running total) for most recent date
   measure: tests_run {
     type: sum
-    sql:  {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
+    sql:  {% if italy_province.province_abbreviation._in_query or italy_province.province._in_query %}
             NULL
           {% elsif reporting_date._is_selected %}
             ${tests_performed}
           {% else %}
             CASE WHEN ${reporting_date} = ${max_italy_date.max_date} THEN ${tests_performed} ELSE NULL END
           {% endif %};;
-    html: {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
+    html: {% if italy_province.province_abbreviation._in_query or italy_province.province._in_query %}
             Metric only available at regional level
           {% else %}
             {{rendered_value}}
@@ -607,7 +607,7 @@ view: italy_regions {
   measure: tests_pp {
     type: number
     sql: 1000* ${tests_run}/NULLIF(${population}, 0) ;;
-    html: {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
+    html: {% if italy_province.province_abbreviation._in_query or italy_province.province._in_query %}
             Metric only available at regional level
           {% else %}
             {{rendered_value}}
@@ -620,12 +620,12 @@ view: italy_regions {
 
   measure: new_tests {
     type: sum
-    sql:  {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
+    sql:  {% if italy_province.province_abbreviation._in_query or italy_province.province._in_query %}
             NULL
           {% else %}
             CASE WHEN ${new_tests_performed} >=0 THEN ${new_tests_performed} ELSE 0 END
           {% endif %};;
-    html: {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
+    html: {% if italy_province.province_abbreviation._in_query or italy_province.province._in_query %}
             Metric only available at regional level
           {% else %}
             {{rendered_value}}
