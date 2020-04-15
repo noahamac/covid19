@@ -8,6 +8,7 @@ view: italy_province_stats {
 ######## PRIMARY KEY ########
 
   dimension: denominazione_provincia {
+    #province name
     type: string
     sql: ${TABLE}.denominazione_provincia ;;
     primary_key: yes
@@ -23,12 +24,14 @@ view: italy_province_stats {
   }
 
   dimension: popolazione {
+    #population
     type: number
     sql: ${TABLE}.popolazione ;;
     hidden: yes
   }
 
   dimension: sigla_provincia {
+    #province abbreviation
     type: string
     sql: ${TABLE}.sigla_provincia ;;
     hidden: yes
