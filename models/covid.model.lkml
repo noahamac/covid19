@@ -139,13 +139,13 @@ explore: italy {
 
   join: italy_region_stats {
     relationship: many_to_one
-    sql_on: (${italy.codice_regione} = ${italy_region_stats.codice_regione} OR ${italy_region_stats.codice_regione} = 4)
-              AND ${italy.denominazione_regione} = ${italy_region_stats.denominazione_regione} ;;
+    sql_on: (${italy.region_code} = ${italy_region_stats.codice_regione} OR ${italy_region_stats.codice_regione} = 4)
+              AND ${italy.region_name} = ${italy_region_stats.denominazione_regione} ;;
   }
 
   join: italy_province_stats {
     relationship: many_to_one
-    sql_on: ${italy_province.sigla_provincia} = ${italy_province_stats.sigla_provincia} ;;
+    sql_on: ${italy_province.province_abbreviation} = ${italy_province_stats.sigla_provincia} ;;
   }
 }
 

@@ -23,18 +23,21 @@ view: italy_region_stats {
   }
 
   dimension: codice_regione {
+    #region_code
     type: number
     sql: ${TABLE}.codice_regione ;;
     hidden: yes
   }
 
   dimension: denominazione_regione {
+    #region_name
     type: string
     sql: ${TABLE}.denominazione_regione ;;
     hidden: yes
   }
 
   dimension: popolazione {
+    #population
     type: number
     sql: ${TABLE}.popolazione ;;
     hidden: yes

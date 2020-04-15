@@ -4,34 +4,34 @@ view: italy_regions {
   derived_table: {
     sql:
     SELECT
-      date(ir.data) as data
-      , ir.denominazione_regione
-      , ir.codice_regione
-      , ir.ricoverati_con_sintomi
-      , ricoverati_con_sintomi - coalesce(LAG(ricoverati_con_sintomi, 1) OVER (PARTITION BY ir.denominazione_regione, ir.codice_regione ORDER BY ir.data ASC),0) as ricoverati_con_sintomi_cambio
-      , ir.terapia_intensiva
-      , terapia_intensiva - coalesce(LAG(terapia_intensiva, 1) OVER (PARTITION BY ir.denominazione_regione, ir.codice_regione ORDER BY ir.data ASC),0) as terapia_intensiva_cambio
-      , ir.totale_ospedalizzati
-      , totale_ospedalizzati - coalesce(LAG(totale_ospedalizzati, 1) OVER (PARTITION BY ir.denominazione_regione, ir.codice_regione ORDER BY ir.data ASC),0) as totale_ospedalizzati_cambio
-      , ir.isolamento_domiciliare
-      , isolamento_domiciliare - coalesce(LAG(isolamento_domiciliare, 1) OVER (PARTITION BY ir.denominazione_regione, ir.codice_regione ORDER BY ir.data ASC),0) as isolamento_domiciliare_cambio
-      , ir.totale_positivi
-      , ir.variazione_totale_positivi
-      , ir.dimessi_guariti
-      , dimessi_guariti - coalesce(LAG(dimessi_guariti, 1) OVER (PARTITION BY ir.denominazione_regione, ir.codice_regione ORDER BY ir.data ASC),0) as dimessi_guariti_nuovi
-      , ir.deceduti
-      , deceduti - coalesce(LAG(deceduti, 1) OVER (PARTITION BY ir.denominazione_regione, ir.codice_regione ORDER BY ir.data ASC),0) as deceduti_nuovi
-      , ir.totale_casi as totale_casi_regione
-      , ir.totale_casi - coalesce(LAG(ir.totale_casi, 1) OVER (PARTITION BY ir.denominazione_regione, ir.codice_regione ORDER BY ir.data ASC),0) as totale_casi_nuovi_regione
-      , ir.tamponi
-      , tamponi - coalesce(LAG(tamponi, 1) OVER (PARTITION BY ir.denominazione_regione, ir.codice_regione ORDER BY ir.data ASC),0) as tamponi_nuovi
+      date(ir.date) as date
+      , ir.region_name
+      , ir.region_code
+      , ir.hospitalized_patients_symptoms
+      , hospitalized_patients_symptoms - coalesce(LAG(hospitalized_patients_symptoms, 1) OVER (PARTITION BY ir.region_name, ir.region_code ORDER BY ir.date ASC),0) as change_in_hospitalized_patients_symptoms
+      , ir.hospitalized_patients_intensive_care
+      , hospitalized_patients_intensive_care - coalesce(LAG(hospitalized_patients_intensive_care, 1) OVER (PARTITION BY ir.region_name, ir.region_code ORDER BY ir.date ASC),0) as change_in_hospitalized_patients_intensive_care
+      , ir.total_hospitalized_patients
+      , total_hospitalized_patients - coalesce(LAG(total_hospitalized_patients, 1) OVER (PARTITION BY ir.region_name, ir.region_code ORDER BY ir.date ASC),0) as change_in_total_hospitalized_patients
+      , ir.home_confinement_cases
+      , home_confinement_cases - coalesce(LAG(home_confinement_cases, 1) OVER (PARTITION BY ir.region_name, ir.region_code ORDER BY ir.date ASC),0) as change_in_home_confinement_cases
+      , ir.total_current_confirmed_cases
+      , ir.new_current_confirmed_cases
+      , ir.recovered
+      , recovered - coalesce(LAG(recovered, 1) OVER (PARTITION BY ir.region_name, ir.region_code ORDER BY ir.date ASC),0) as new_recovered
+      , ir.deaths
+      , deaths - coalesce(LAG(deaths, 1) OVER (PARTITION BY ir.region_name, ir.region_code ORDER BY ir.date ASC),0) as new_deaths
+      , ir.total_confirmed_cases
+      , ir.total_confirmed_cases - coalesce(LAG(ir.total_confirmed_cases, 1) OVER (PARTITION BY ir.region_name, ir.region_code ORDER BY ir.date ASC),0) as new_total_confirmed_cases
+      , ir.tests_performed
+      , tests_performed - coalesce(LAG(tests_performed, 1) OVER (PARTITION BY ir.region_name, ir.region_code ORDER BY ir.date ASC),0) as new_tests_performed
     FROM
-      `lookerdata.covid19_block.italy_regions` ir
+      `bigquery-public-data.covid19_italy.data_by_region` ir
     WHERE
-      data is not null
-      AND denominazione_regione is not null
+      date is not null
+      AND region_name is not null
       ;;
-    sql_trigger_value: SELECT COUNT(*) FROM `lookerdata.covid19_block.italy_regions` WHERE codice_regione is not null ;;
+    sql_trigger_value: SELECT COUNT(*) FROM `bigquery-public-data.covid19_italy.data_by_region` WHERE codice_regione is not null ;;
   }
 
 
@@ -40,7 +40,7 @@ view: italy_regions {
   dimension: pk {
     primary_key: yes
     # Need both the name and code of each region because they're reporting Bolzano and Trento on their own rows despite their both being in region 4
-    sql: concat(${nome_reg}, ${codice_regione}, ${reporting_date}) ;;
+    sql: concat(${region}, ${region_code}, ${reporting_date}) ;;
     hidden: yes
   }
 
@@ -54,131 +54,166 @@ view: italy_regions {
       week,
       month,
     ]
-    sql: ${TABLE}.data ;;
+    sql: ${TABLE}.date ;;
   }
 
-  dimension: denominazione_regione {
+  dimension: region_name {
+    #denominazione_regione
     type: string
-    sql: ${TABLE}.denominazione_regione ;;
+    sql: ${TABLE}.region_name ;;
     hidden: yes
-    label: "Region Name"
     description: "The name of the region in Italy, with Trento and Bolzano named separately (IT: Denominazione Regione)"
   }
 
-  dimension: codice_regione {
+  dimension: region_code {
+    #codice_regione
     type: number
-    sql: ${TABLE}.codice_regione ;;
-    label: "Region Code"
+    sql: ${TABLE}.region_code ;;
     description: "The ISTAT code of the region in Italy, (IT: Codice della Regione)"
-    drill_fields: [italy_province.nome_pro]
+    drill_fields: [italy_province.province]
   }
 
-  dimension: ricoverati_con_sintomi {
+  dimension: hospitalized_patients_symptoms {
+    #ricoverati_con_sintomi
     type: number
     hidden: yes
     label: "Currently hospitalized patients with symptoms"
+    sql: ${TABLE}.hospitalized_patients_symptoms ;;
   }
 
-  dimension: ricoverati_con_sintomi_cambio {
+  dimension: change_in_hospitalized_patients_symptoms {
+    #ricoverati_con_sintomi_cambio
     type: number
     hidden: yes
     label: "Change in hospitalized patients with symptoms"
+    sql: ${TABLE}.change_in_hospitalized_patients_symptoms ;;
   }
 
-  dimension: terapia_intensiva {
+  dimension: hospitalized_patients_intensive_care {
+    #terapia_intensiva
     type: number
     hidden: yes
     label: "Current ICU patients"
+    sql: ${TABLE}.hospitalized_patients_intensive_care ;;
   }
 
-  dimension: terapia_intensiva_cambio {
+  dimension: change_in_hospitalized_patients_intensive_care {
+    #terapia_intensiva_cambio
     type: number
     hidden: yes
     label: "Change in ICU patients"
+    sql: ${TABLE}.change_in_hospitalized_patients_intensive_care;;
   }
 
-  dimension: totale_ospedalizzati {
+  dimension: total_hospitalized_patients {
+    #totale_ospedalizzati
     type: number
     hidden: yes
     label: "Total hospitalized"
+    sql: ${TABLE}.total_hospitalized_patients ;;
   }
 
-  dimension: totale_ospedalizzati_cambio {
+  dimension: change_in_total_hospitalized_patients {
+    #totale_ospedalizzati_cambio
     type: number
     hidden: yes
     label: "Change in total hospitalized"
+    sql: ${TABLE}.change_in_total_hospitalized_patients ;;
   }
 
-  dimension: isolamento_domiciliare {
+  dimension: home_confinement_cases {
+    #isolamento_domiciliare
     type: number
     hidden: yes
     label: "Currently under home quarantine"
+    sql: ${TABLE}.home_confinement_cases ;;
   }
 
-  dimension: isolamento_domiciliare_cambio {
+  dimension: change_in_home_confinement_cases {
+    #isolamento_domiciliare_cambio
     type: number
     hidden: yes
     label: "Change in number under home quarantine"
+    sql: ${TABLE}.change_in_home_confinement_cases ;;
   }
 
-  dimension: totale_positivi {
+  dimension: total_current_confirmed_cases {
+    #totale_positivi
     type: number
     hidden: yes
-    label: "Total number of active cases (Hospitalized patients + Home confinement)"
+    label: "Total number of current positive cases (Hospitalized patients + Home confinement)"
+    sql: ${TABLE}.total_current_confirmed_cases ;;
   }
 
-  dimension: variazione_totale_positivi {
+  dimension: new_current_confirmed_cases {
+    #variazione_totale_positivi
     type: number
     hidden: yes
     label: "New amount of active cases (total number of active cases - total number of active cases from the previous day)"
+    sql: ${TABLE}.new_current_confirmed_cases ;;
   }
 
-  dimension: dimessi_guariti {
+  dimension: recovered {
+    #dimessi_guariti
     type: number
     hidden: yes
-    label: "Recovered"
+    sql: ${TABLE}.recovered ;;
   }
 
-  dimension: dimessi_guariti_nuovi {
+  dimension: new_recovered {
+    #dimessi_guariti_nuovi
     type: number
     hidden: yes
     label: "Newly recovered"
+    sql: ${TABLE}.new_recovered ;;
   }
 
-  dimension: deceduti {
+  dimension: deaths {
+    #deceduti
     type: number
     hidden: yes
     label: "Deceased"
+    sql: ${TABLE}.deaths ;;
   }
 
-  dimension: deceduti_nuovi {
+  dimension: new_deaths {
+    #deceduti_nuovi
     type: number
     hidden: yes
     label: "Newly deceased"
+    sql: ${TABLE}.new_deaths ;;
   }
 
-  dimension: totale_casi_regione {
+  dimension: total_confirmed_cases {
+    #totale_casi_regione
     type: number
     hidden: yes
     label: "Total cases"
+    sql: ${TABLE}.total_confirmed_cases ;;
   }
 
-  dimension: totale_casi_nuovi_regione {
+  dimension: new_total_confirmed_cases {
+    #totale_casi_nuovi_regione
     type: number
     hidden: yes
     label: "New cases"
+    sql:${TABLE}.new_total_confirmed_cases ;;
   }
 
-  dimension: tamponi {
+  dimension: tests_performed {
+    #tamponi
     type: number
     hidden: yes
     label: "Tests"
+    sql:${TABLE}.tests_performed ;;
   }
 
-  dimension: tamponi_nuovi {
+  dimension: new_tests_performed {
+    #tamponi_nuovi
     type: number
     hidden: yes
     label: "New tests"
+    sql:${TABLE}.new_tests_performed ;;
   }
 
 
@@ -191,24 +226,24 @@ view: italy_regions {
 #     sql: ${reporting_date} = ${max_date_italy.max_date_raw} ;;
 #   }
 
-  dimension: nome_reg {
+  dimension: region {
     type: string
     sql: CASE
-          WHEN ${denominazione_regione} = 'P.A. Bolzano'
+          WHEN ${region_name} = 'P.A. Bolzano'
           THEN 'Bolzano'
-          WHEN ${denominazione_regione} = 'P.A. Trento'
+          WHEN ${region_name} = 'P.A. Trento'
           THEN 'Trento'
-          WHEN ${denominazione_regione} in ('Emilia Romagna', 'Emilia-Romagna')
+          WHEN ${region_name} in ('Emilia Romagna', 'Emilia-Romagna')
           THEN 'Emilia-Romagna'
-          WHEN ${denominazione_regione} = "Valle d'Aosta"
+          WHEN ${region_name} = "Valle d'Aosta"
           THEN 'Valle d’Aosta'
-          ELSE ${denominazione_regione}
+          ELSE ${region_name}
         END
           ;;
     map_layer_name: regioni_italiani
     label: "Region Name"
     description: "The name of the region in Italy, (IT: Denominazione Regione)"
-    drill_fields: [italy_provinces.nome_pro]
+    drill_fields: [italy_provinces.province]
   }
 
 ######## NEW MEASURES ########
@@ -220,9 +255,9 @@ view: italy_regions {
     sql:  {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
             NULL
           {% elsif reporting_date._is_selected %}
-            ${ricoverati_con_sintomi}
+            ${hospitalized_patients_symptoms}
           {% else %}
-            CASE WHEN ${reporting_date} = ${max_italy_date.max_date} THEN ${ricoverati_con_sintomi} ELSE NULL END
+            CASE WHEN ${reporting_date} = ${max_italy_date.max_date} THEN ${hospitalized_patients_symptoms} ELSE NULL END
           {% endif %};;
     html: {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
             Metric only available at regional level
@@ -247,7 +282,6 @@ view: italy_regions {
     value_format_name: decimal_2
   }
 
-
 #   measure: currently_hospitalized_change {
 #     type: sum
 #     sql: ${ricoverati_con_sintomi_cambio} ;;
@@ -263,9 +297,9 @@ view: italy_regions {
     sql:  {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
             NULL
           {% elsif reporting_date._is_selected %}
-            ${terapia_intensiva}
+            ${hospitalized_patients_intensive_care}
           {% else %}
-            CASE WHEN ${reporting_date} = ${max_italy_date.max_date} THEN ${terapia_intensiva} ELSE NULL END
+            CASE WHEN ${reporting_date} = ${max_italy_date.max_date} THEN ${hospitalized_patients_intensive_care} ELSE NULL END
           {% endif %};;
     html: {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
             Metric only available at regional level
@@ -289,7 +323,6 @@ view: italy_regions {
     value_format_name: decimal_2
   }
 
-
 #   dimension: terapia_intensiva_cambio {
 #     type: number
 #     hidden: yes
@@ -303,9 +336,9 @@ view: italy_regions {
     sql:  {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
             NULL
           {% elsif reporting_date._is_selected %}
-            ${totale_ospedalizzati}
+            ${total_hospitalized_patients}
           {% else %}
-            CASE WHEN ${reporting_date} = ${max_italy_date.max_date} THEN ${totale_ospedalizzati} ELSE NULL END
+            CASE WHEN ${reporting_date} = ${max_italy_date.max_date} THEN ${total_hospitalized_patients} ELSE NULL END
           {% endif %};;
     html: {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
             Metric only available at regional level
@@ -322,7 +355,7 @@ view: italy_regions {
     sql:  {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
             NULL
           {% else %}
-            ${totale_ospedalizzati_cambio}
+            ${change_in_total_hospitalized_patients}
           {% endif %};;
     html: {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
             Metric only available at regional level
@@ -354,9 +387,9 @@ view: italy_regions {
     sql:  {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
             NULL
           {% elsif reporting_date._is_selected %}
-            ${isolamento_domiciliare}
+            ${home_confinement_cases}
           {% else %}
-            CASE WHEN ${reporting_date} = ${max_italy_date.max_date} THEN ${isolamento_domiciliare} ELSE NULL END
+            CASE WHEN ${reporting_date} = ${max_italy_date.max_date} THEN ${home_confinement_cases} ELSE NULL END
           {% endif %};;
     html: {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
             Metric only available at regional level
@@ -388,9 +421,9 @@ view: italy_regions {
     sql:  {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
             NULL
           {% elsif reporting_date._is_selected %}
-            ${totale_positivi}
+            ${total_current_confirmed_cases}
           {% else %}
-            CASE WHEN ${reporting_date} = ${max_italy_date.max_date} THEN ${totale_positivi} ELSE NULL END
+            CASE WHEN ${reporting_date} = ${max_italy_date.max_date} THEN ${total_current_confirmed_cases} ELSE NULL END
           {% endif %};;
     html: {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
             Metric only available at regional level
@@ -417,14 +450,14 @@ view: italy_regions {
 
 ## If date selected, report on total recovered cases (running total) for the given date(s)
 ## Otherwise report on total recovered cases (running total) for most recent date
-  measure: recovered {
+  measure: total_recovered {
     type: sum
     sql:  {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
             NULL
           {% elsif reporting_date._is_selected %}
-            ${dimessi_guariti}
+            ${recovered}
           {% else %}
-            CASE WHEN ${reporting_date} = ${max_italy_date.max_date} THEN ${dimessi_guariti} ELSE NULL END
+            CASE WHEN ${reporting_date} = ${max_italy_date.max_date} THEN ${recovered} ELSE NULL END
           {% endif %};;
     html: {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
             Metric only available at regional level
@@ -438,7 +471,7 @@ view: italy_regions {
 
   measure: total_recovered_pp {
     type: number
-    sql: 1000* ${recovered}/NULLIF(${population}, 0) ;;
+    sql: 1000* ${total_recovered}/NULLIF(${population}, 0) ;;
     html: {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
             Metric only available at regional level
           {% else %}
@@ -454,7 +487,7 @@ view: italy_regions {
     sql:  {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
             NULL
           {% else %}
-            ${dimessi_guariti_nuovi}
+            ${new_recovered}
           {% endif %};;
     html: {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
             Metric only available at regional level
@@ -473,9 +506,9 @@ view: italy_regions {
     sql:  {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
             NULL
           {% elsif reporting_date._is_selected %}
-            ${deceduti}
+            ${deaths}
           {% else %}
-            CASE WHEN ${reporting_date} = ${max_italy_date.max_date} THEN ${deceduti} ELSE NULL END
+            CASE WHEN ${reporting_date} = ${max_italy_date.max_date} THEN ${deaths} ELSE NULL END
           {% endif %};;
     html: {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
             Metric only available at regional level
@@ -505,7 +538,7 @@ view: italy_regions {
     sql:  {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
             NULL
           {% else %}
-            ${deceduti_nuovi}
+            ${new_deaths}
           {% endif %};;
     html: {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
             Metric only available at regional level
@@ -522,16 +555,16 @@ view: italy_regions {
     sql:  {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
             NULL
           {% elsif reporting_date._is_selected %}
-            ${totale_casi_regione}
+            ${total_confirmed_cases}
           {% else %}
-            CASE WHEN ${reporting_date} = ${max_italy_date.max_date} THEN ${totale_casi_regione} ELSE NULL END
+            CASE WHEN ${reporting_date} = ${max_italy_date.max_date} THEN ${total_confirmed_cases} ELSE NULL END
           {% endif %};;
     hidden: yes
   }
 
   measure: new_cases_region {
     type: sum
-    sql:  ${totale_casi_nuovi_regione};;
+    sql:  ${new_total_confirmed_cases};;
     hidden: yes
   }
 
@@ -557,9 +590,9 @@ view: italy_regions {
     sql:  {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
             NULL
           {% elsif reporting_date._is_selected %}
-            ${tamponi}
+            ${tests_performed}
           {% else %}
-            CASE WHEN ${reporting_date} = ${max_italy_date.max_date} THEN ${tamponi} ELSE NULL END
+            CASE WHEN ${reporting_date} = ${max_italy_date.max_date} THEN ${tests_performed} ELSE NULL END
           {% endif %};;
     html: {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
             Metric only available at regional level
@@ -590,7 +623,7 @@ view: italy_regions {
     sql:  {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
             NULL
           {% else %}
-            CASE WHEN ${tamponi_nuovi} >=0 THEN ${tamponi_nuovi} ELSE 0 END
+            CASE WHEN ${new_tests_performed} >=0 THEN ${new_tests_performed} ELSE 0 END
           {% endif %};;
     html: {% if italy_province.sigla_provincia._in_query or italy_province.nome_pro._in_query %}
             Metric only available at regional level
@@ -622,11 +655,11 @@ view: italy_regions {
 view: max_italy_date {
   derived_table: {
    sql: SELECT
-    max(data) as max_date
+    max(date) as max_date
   FROM
-    `lookerdata.covid19_block.italy_regions`
+     `bigquery-public-data.covid19_italy.data_by_region`
   WHERE
-    {% condition italy.reporting_date %} date(data) {% endcondition %} ;;
+    {% condition italy.reporting_date %} date(date) {% endcondition %} ;;
   }
 
   dimension: max_date {
