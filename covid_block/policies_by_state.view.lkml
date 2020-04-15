@@ -15,7 +15,6 @@ view: policies_by_state {
       , CASE WHEN Bar__Restaurant_Limits = '-' THEN 'None' ELSE Bar__Restaurant_Limits END as Bar__Restaurant_Limits
       , CASE WHEN Mandatory_Quarantine IS NULL THEN 'None' ELSE Mandatory_Quarantine END as Mandatory_Quarantine
       , CASE WHEN Non_Essential_Business_Closures = '-' THEN 'None' ELSE Non_Essential_Business_Closures END as Non_Essential_Business_Closures
-      , Emergency_Declaration
       , Primary_Election_Postponement
       , CASE WHEN State_Mandated_School_Closures = '-' THEN 'None' ELSE State_Mandated_School_Closures END as State_Mandated_School_Closures
       , CASE WHEN Large_Gatherings_Ban = '-' THEN 'None' ELSE Large_Gatherings_Ban END as Large_Gatherings_Ban
@@ -30,10 +29,9 @@ view: policies_by_state {
     (
       SELECT
           coalesce(a.Location,b.Location)  as state
-        , a.Bar__Restaurant_Limits
+        , a.Bar___Restaurant_Limits as Bar__Restaurant_Limits
         , a.Mandatory_Quarantine
         , a.Non_Essential_Business_Closures
-        , a.Emergency_Declaration
         , a.Primary_Election_Postponement
         , a.State_Mandated_School_Closures
         , a.Large_Gatherings_Ban
@@ -160,16 +158,16 @@ view: policies_by_state {
       {% endif %} ;;
   }
 
-  dimension: emergency_declaration {
-    group_label: "Policy"
-    type: yesno
-    sql: ${TABLE}.Emergency_Declaration ;;
-    html:
-    {% if value == 'No policy' %} <font color="red">{{ rendered_value }}</font>
-    {% elsif value == 'Not approved' %} <font color="black">{{ rendered_value }}</font>
-    {% else %}                    <font color="green">{{ rendered_value }}</font>
-    {% endif %} ;;
-  }
+#   dimension: emergency_declaration {
+#     group_label: "Policy"
+#     type: yesno
+#     sql: ${TABLE}.Emergency_Declaration ;;
+#     html:
+#     {% if value == 'No policy' %} <font color="red">{{ rendered_value }}</font>
+#     {% elsif value == 'Not approved' %} <font color="black">{{ rendered_value }}</font>
+#     {% else %}                    <font color="green">{{ rendered_value }}</font>
+#     {% endif %} ;;
+#   }
 
   dimension: free_cost_vaccine_when_available {
     group_label: "Policy"
