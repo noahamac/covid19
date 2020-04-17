@@ -178,7 +178,7 @@ view: covid_combined {
     map_layer_name: us_states
     type: string
     sql: ${TABLE}.province_state ;;
-    drill_fields: [fips]
+    drill_fields: [county]
     link: {
       label: "{{ value }} - State Deep Dive"
       url: "/dashboards/39?State={{ value }}"
