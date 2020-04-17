@@ -12,25 +12,25 @@ view: covid_combined {
     (SELECT
         cast(a.fips as int64) as fips,
         a.county,
-        a.state as province_state,
+        a.state_name as province_state,
         'US' as country_region,
         b.latitude,
         b.longitude,
         case
-          when a.state is null then 'US'
-          when a.state is not null AND a.county is null then concat(a.state,', US')
-          when a.county is not null then concat(a.county, ', ', a.state, ', US')
+          when a.state_name is null then 'US'
+          when a.state_name is not null AND a.county is null then concat(a.state_name,', US')
+          when a.county is not null then concat(a.county, ', ', a.state_name, ', US')
         end as combined_key,
         cast(a.date as date) as measurement_date,
-        a.cases as confirmed_cumulative,
-        a.cases - coalesce(
-          LAG(a.cases, 1) OVER (
-          PARTITION BY concat(coalesce(a.county,''), coalesce(a.state,''), 'US'
+        a.confirmed_cases as confirmed_cumulative,
+        a.confirmed_cases - coalesce(
+          LAG(a.confirmed_cases, 1) OVER (
+          PARTITION BY concat(coalesce(a.county,''), coalesce(a.state_name,''), 'US'
           ) ORDER BY a.date ASC),0) as confirmed_new_cases,
         a.deaths as deaths_cumulative,
         a.deaths - coalesce(
           LAG(deaths, 1) OVER (
-          PARTITION BY concat(coalesce(a.county,''), coalesce(a.state,''), 'US'
+          PARTITION BY concat(coalesce(a.county,''), coalesce(a.state_name,''), 'US'
           )  ORDER BY date ASC),0) as deaths_new_cases
       FROM ${nyt_data.SQL_TABLE_NAME} as a
       LEFT JOIN (SELECT fips, latitude, longitude, count(*) as count FROM `bigquery-public-data.covid19_jhu_csse.summary` WHERE fips is not null GROUP BY 1,2,3) as b
@@ -895,7 +895,6 @@ view: covid_combined {
     fields: [
       country_region,
       province_state,
-      x,
       confirmed_cases,
       deaths
     ]
