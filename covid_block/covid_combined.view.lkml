@@ -545,13 +545,14 @@ view: covid_combined {
   measure: confirmed_new {
     group_label: "  New Cases"
     label: "Confirmed Cases (New)"
-    description: "Filter on Measurement Date or Days Since First Outbreak to see the new cases during the selected timeframe, otherwise the most recent record will be used"
+    description: "Filter on Measurement Date or Days Since First Outbreak to see the new cases during the selected timeframe, otherwise the sum of all the new cases for each day will be displayed"
     type: number
-    sql:
-      {% if covid_combined.measurement_date._in_query or covid_combined.days_since_first_outbreak._in_query or
-        covid_combined.days_since_max_date._in_query %} ${confirmed_new_option_1}
-      {% else %}  ${confirmed_new_option_2}
-      {% endif %} ;;
+    sql: ${confirmed_new_option_1};;
+# code to instead default to most recenet new confirmed cases:
+#       {% if covid_combined.measurement_date._in_query or covid_combined.days_since_first_outbreak._in_query or
+#       covid_combined.days_since_max_date._in_query %} ${confirmed_new_option_1}
+#        {% else %}  ${confirmed_new_option_2}
+#       {% endif %} ;;
     drill_fields: [drill*]
     link: {
       label: "Data Source - NYT County Data"
@@ -567,7 +568,7 @@ view: covid_combined {
 
   measure: confirmed_new_per_million {
     group_label: "  New Cases"
-    description: "Filter on Measurement Date or Days Since First Outbreak to see the new cases during the selected timeframe, otherwise the most recent record will be used"
+    description: "Filter on Measurement Date or Days Since First Outbreak to see the new cases during the selected timeframe, otherwise the sum of all the new cases for each day will be displayed"
     label: "Confirmed Cases per Million (New)"
     type: number
     sql: 1000000*${confirmed_new} / nullif(${population_by_county_state_country.sum_population},0) ;;
@@ -747,13 +748,14 @@ view: covid_combined {
   #this field displays the new deaths if a date filter has been applied, or else is gives the numbers from the most recent record
   measure: deaths_new {
     group_label: "  New Cases"
-    description: "Filter on Measurement Date or Days Since First Outbreak to see the new cases during the selected timeframe, otherwise the most recent record will be used"
+    description: "Filter on Measurement Date or Days Since First Outbreak to see the new cases during the selected timeframe, otherwise the sum of all the new cases for each day will be displayed"
     label: "Deaths (New)"
     type: number
-    sql:
-      {% if covid_combined.measurement_date._in_query or covid_combined.days_since_first_outbreak._in_query or covid_combined.days_since_max_date._in_query %} ${deaths_new_option_1}
-      {% else %}  ${deaths_new_option_2}
-      {% endif %} ;;
+    sql:${deaths_new_option_1};;
+    # code to instead default to most recenet new confirmed cases:
+#       {% if covid_combined.measurement_date._in_query or covid_combined.days_since_first_outbreak._in_query or covid_combined.days_since_max_date._in_query %} ${deaths_new_option_1}
+#       {% else %}  ${deaths_new_option_2}
+#       {% endif %} ;;
     drill_fields: [drill*]
     link: {
       label: "Data Source - NYT County Data"
@@ -769,7 +771,7 @@ view: covid_combined {
 
   measure: deaths_new_per_million {
     group_label: "  New Cases"
-    description: "Filter on Measurement Date or Days Since First Outbreak to see the new cases during the selected timeframe, otherwise the most recent record will be used"
+    description: "Filter on Measurement Date or Days Since First Outbreak to see the new cases during the selected timeframe, otherwise the sum of all the new cases for each day will be displayed"
     label: "Deaths per Million (New)"
     type: number
     sql: 1000000*${deaths_new} / nullif(${population_by_county_state_country.sum_population},0) ;;
