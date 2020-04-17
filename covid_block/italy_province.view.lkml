@@ -199,6 +199,7 @@ view: italy_province {
 
 
   measure: population {
+    description: "The total estimated population"
     type: number
     sql: ${italy_province_stats.population} ;;
     label: "Population"
