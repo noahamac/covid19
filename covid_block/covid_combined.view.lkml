@@ -22,16 +22,18 @@ view: covid_combined {
           when a.county is not null then concat(a.county, ', ', a.state_name, ', US')
         end as combined_key,
         cast(a.date as date) as measurement_date,
-        a.confirmed_cases as confirmed_cumulative,
-        a.confirmed_cases - coalesce(
-          LAG(a.confirmed_cases, 1) OVER (
-          PARTITION BY concat(coalesce(a.county,''), coalesce(a.state_name,''), 'US'
-          ) ORDER BY a.date ASC),0) as confirmed_new_cases,
-        a.deaths as deaths_cumulative,
-        a.deaths - coalesce(
-          LAG(deaths, 1) OVER (
-          PARTITION BY concat(coalesce(a.county,''), coalesce(a.state_name,''), 'US'
-          )  ORDER BY date ASC),0) as deaths_new_cases
+        a.daily_confirmed_cases as confirmed_cumulative,
+        a.daily_confirmed_cases - coalesce(
+        LAG(a.daily_confirmed_cases, 1) OVER (
+            PARTITION BY concat(coalesce(a.county,''), coalesce(a.state_name,''), 'US'
+              ) ORDER BY a.date ASC),0) as confirmed_new_cases,
+       --a.daily_confirmed_cases   as confirmed_new_cases,
+        a.daily_deaths as deaths_cumulative,
+        a.daily_deaths - coalesce(
+         LAG(daily_deaths, 1) OVER (
+         PARTITION BY concat(coalesce(a.county,''), coalesce(a.state_name,''), 'US'
+         )  ORDER BY date ASC),0) as deaths_new_cases
+        --a.daily_deaths as deaths_new_cases
       FROM ${nyt_data.SQL_TABLE_NAME} as a
       LEFT JOIN (SELECT fips, latitude, longitude, count(*) as count FROM `bigquery-public-data.covid19_jhu_csse.summary` WHERE fips is not null GROUP BY 1,2,3) as b
         ON cast(a.fips as int64) = cast(b.fips as int64)
@@ -600,7 +602,6 @@ view: covid_combined {
       value: "Yes"
     }
   }
-
 
   #this field displays the running total of cases if a date filter has been applied, or else is gives the numbers from the most recent record
   measure: confirmed_running_total {
