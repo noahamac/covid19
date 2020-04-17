@@ -895,7 +895,6 @@ view: covid_combined {
     fields: [
       country_region,
       province_state,
-      x,
       confirmed_cases,
       deaths
     ]
