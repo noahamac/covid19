@@ -1,4 +1,12 @@
+include: "//@{CONFIG_PROJECT_NAME}/census_data/zip_to_puma_v2.view.lkml"
+
 view: zip_to_puma_v2 {
+  extends: [zip_to_puma_v2_config]
+}
+
+###################################################
+view: zip_to_puma_v2_core {
+  extension: required
   sql_table_name: lookerdata.covid19.zip_to_puma_v2 ;;
   label: " COVID19"
 

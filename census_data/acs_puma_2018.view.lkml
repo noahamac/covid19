@@ -1,8 +1,16 @@
+include: "//@{CONFIG_PROJECT_NAME}/census_data/acs_puma_2018.view.lkml"
 include: "acs_puma_base_fields.view"
 
 view: acs_puma_2018 {
+  extends: [acs_puma_2018_config]
+}
+
+###################################################
+
+view: acs_puma_2018_core {
   sql_table_name: lookerdata.covid19.puma_demographics_2018_v2 ;;
   extends: [acs_puma_base_fields]
+  extension: required
 
 #   dimension: geo_id {
 #     label: "Zipcode"

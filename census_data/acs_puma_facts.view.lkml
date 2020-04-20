@@ -1,4 +1,13 @@
+include: "//@{CONFIG_PROJECT_NAME}/census_data/acs_puma_facts.view.lkml"
+
 view: acs_puma_facts {
+  extends: [acs_puma_facts_config]
+}
+
+###################################################
+
+view: acs_puma_facts_core {
+  extension: required
 
   derived_table: {
     explore_source: acs_puma_2018 {

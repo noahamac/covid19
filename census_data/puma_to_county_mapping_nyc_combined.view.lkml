@@ -1,4 +1,13 @@
+include: "//@{CONFIG_PROJECT_NAME}/census_data/puma_to_county_mapping_nyc_combined.view.lkml"
+
 view: puma_to_county_mapping_nyc_combined {
+  extends: [puma_to_county_mapping_nyc_combined_config]
+}
+
+###################################################
+
+view: puma_to_county_mapping_nyc_combined_core {
+  extension: required
   sql_table_name: `lookerdata.covid19.puma_to_county_mapping_nyc_combined`;;
   label: " COVID19"
 

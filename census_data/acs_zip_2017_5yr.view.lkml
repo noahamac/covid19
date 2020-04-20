@@ -1,8 +1,16 @@
 include: "acs_base_fields.view"
+include: "//@{CONFIG_PROJECT_NAME}/census_data/acs_zip_2017_5yr.view.lkml"
 
 view: acs_zip_codes_2017_5yr {
+  extends: [acs_zip_codes_2017_5yr_config]
+}
+
+###################################################
+
+view: acs_zip_codes_2017_5yr_core {
   sql_table_name: `bigquery-public-data.census_bureau_acs.zip_codes_2017_5yr`;;
   extends: [acs_base_fields]
+  extension: required
 
   dimension: geo_id {
     label: "Zipcode"

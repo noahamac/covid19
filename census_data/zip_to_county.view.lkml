@@ -1,4 +1,12 @@
+include: "//@{CONFIG_PROJECT_NAME}/census_data/zip_to_county.view.lkml"
+
 view: zip_to_county {
+  extends: [zip_to_county_config]
+}
+
+###################################################
+view: zip_to_county_core {
+  extension: required
   sql_table_name: `lookerdata.covid19.zip_to_county_master`
     ;;
 

@@ -1,8 +1,15 @@
 include: "/covid_block/covid_combined.view.lkml"
-
+include: "//@{CONFIG_PROJECT_NAME}/census_data/covid_combined_puma.view.lkml"
 
 view: covid_combined_puma {
+  extends: [covid_combined_puma_config]
+}
+
+###################################################
+
+view: covid_combined_puma_core {
   extends: [covid_combined]
+  extension: required
 
 ########################################
 ## County to PUMA Measure Conversion ###

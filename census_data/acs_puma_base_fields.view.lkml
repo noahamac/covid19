@@ -1,4 +1,12 @@
+include: "//@{CONFIG_PROJECT_NAME}/census_data/acs_puma_base_fields.view.lkml"
+
 view: acs_puma_base_fields {
+  extends: [acs_puma_base_fields_config]
+}
+
+###################################################
+
+view: acs_puma_base_fields_core {
   extension: required
 
   dimension: geo_id {

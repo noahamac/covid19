@@ -1,4 +1,12 @@
+include: "//@{CONFIG_PROJECT_NAME}/census_data/us_zipcode_boundaries.view.lkml"
+
 view: us_zipcode_boundaries {
+  extends: [us_zipcode_boundaries_config]
+}
+
+###################################################
+view: us_zipcode_boundaries_core {
+  extension: required
   label: "Geographic Areas"
   sql_table_name: `bigquery-public-data.geo_us_boundaries.zip_codes`;;
 

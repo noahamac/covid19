@@ -1,4 +1,12 @@
+include: "//@{CONFIG_PROJECT_NAME}/census_data/acs_base_fields.view.lkml"
+
 view: acs_base_fields {
+  extends: [acs_base_fields_config]
+}
+
+###################################################
+
+view: acs_base_fields_core {
   extension: required
 
   dimension: geo_id {
@@ -7,8 +15,6 @@ view: acs_base_fields {
     type: string
     sql: ${TABLE}.geo_id ;;
   }
-
-
 
   ### Ethnicity / Race Populations ###
 

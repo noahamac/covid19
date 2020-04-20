@@ -1,7 +1,15 @@
 # include: "covid.model.lkml"
+include: "//@{CONFIG_PROJECT_NAME}/census_data/acs_puma_state_facts.view.lkml"
 
 view: acs_puma_state_facts {
+  extends: [acs_puma_state_facts_config]
+}
 
+###################################################
+
+
+view: acs_puma_state_facts_core {
+  extension: required
   label: "Census Demographics"
 
   derived_table: {
