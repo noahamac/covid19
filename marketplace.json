@@ -11,9 +11,6 @@
       "label": "Connection Name",
       "value_constraint": "connection"
     },
-    "DATASET_NAME": {
-      "label": "Covid-19 Dataset Name"
-    },
     "CONFIG_PROJECT_NAME": {
       "label": "Config Project Name"
     }
