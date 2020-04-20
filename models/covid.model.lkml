@@ -3,7 +3,7 @@ connection: "@{CONNECTION_NAME}"
 include: "/covid_block/*.view.lkml"
 include: "/census_data/*.view.lkml"
 include: "/explores/*.explore.lkml"
-include: "*.dashboard.lookml"
+include: "/dashboards/*.dashboard.lookml"
 
 include: "//@{CONFIG_PROJECT_NAME}/*.model.lkml"
 include: "//@{CONFIG_PROJECT_NAME}/*.dashboard"
@@ -21,6 +21,10 @@ explore: covid_combined {
 
 explore: kpis_by_entity_by_date {
   extends: [kpis_by_entity_by_date_config]
+}
+
+explore: italy {
+  extends: [italy_config]
 }
 
 ############ Caching Logic ############

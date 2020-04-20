@@ -2,7 +2,7 @@
 # include: "/covid_block/*.view.lkml"
 # include: "covid.model.lkml"
 
-connection: "lookerdata"
+connection: "@{CONNECTION_NAME}"
 
 ## Logic to map county data to PUMA level ##
 

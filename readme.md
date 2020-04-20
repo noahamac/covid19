@@ -11,7 +11,7 @@
  - [italy_province](/projects/covid/files/covid_block/italy_province.view.lkml) and [italy_region](/projects/covid/files/covid_block/italy_regions.view.lkml) Calculates COVID19 metrics based on the data provided by Presidenza del Consiglio dei Ministri - Dipartimento della Protezione Civil
 
 
-*Views that pull data from datasets we've made available in BigQuery - the ETL for these has not bee fully tested, and data should be treated with somewhat less certainty:*
+*Views that pull data from datasets we've made available in BigQuery - the ETL for these has not been fully tested, and data should be treated with somewhat less certainty:*
 
   - [coving_tracking_project](/projects/covid/files/covid_block/covid_tracking_project.view.lkml) Pulls in data from the [COVID-19 Tracking project](https://github.com/COVID19Tracking/covid-tracking-data/blob/master/data/states_daily_4pm_et.csv  ) and houses calculations on testing in the US
   - [policies_by_state](/projects/covid/files/covid_block/policies_by_state.view.lkml) Pulls in data from the [Kaiser Family Foundation](https://s3-us-west-1.amazonaws.com/starschema.covid/) on policies that states have implemented in response to COVID-19
