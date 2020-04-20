@@ -12,26 +12,29 @@ view: covid_combined {
     (SELECT
         cast(a.fips as int64) as fips,
         a.county,
-        a.state as province_state,
+        a.state_name as province_state,
         'US' as country_region,
         b.latitude,
         b.longitude,
         case
-          when a.state is null then 'US'
-          when a.state is not null AND a.county is null then concat(a.state,', US')
-          when a.county is not null then concat(a.county, ', ', a.state, ', US')
+          when a.state_name is null then 'US'
+          when a.state_name is not null AND a.county is null then concat(a.state_name,', US')
+          when a.county is not null then concat(a.county, ', ', a.state_name, ', US')
         end as combined_key,
         cast(a.date as date) as measurement_date,
-        a.cases as confirmed_cumulative,
-        a.cases - coalesce(
-          LAG(a.cases, 1) OVER (
-          PARTITION BY concat(coalesce(a.county,''), coalesce(a.state,''), 'US'
-          ) ORDER BY a.date ASC),0) as confirmed_new_cases,
+        --a.daily_confirmed_cases as confirmed_cumulative,
+        a.confirmed_cases as confirmed_cumulative,
+        a.confirmed_cases - coalesce(
+        LAG(a.confirmed_cases, 1) OVER (
+            PARTITION BY concat(coalesce(a.county,''), coalesce(a.state_name,''), 'US'
+              ) ORDER BY a.date ASC),0) as confirmed_new_cases,
+       --a.daily_confirmed_cases   as confirmed_new_cases,
         a.deaths as deaths_cumulative,
         a.deaths - coalesce(
-          LAG(deaths, 1) OVER (
-          PARTITION BY concat(coalesce(a.county,''), coalesce(a.state,''), 'US'
-          )  ORDER BY date ASC),0) as deaths_new_cases
+         LAG(deaths, 1) OVER (
+         PARTITION BY concat(coalesce(a.county,''), coalesce(a.state_name,''), 'US'
+         )  ORDER BY date ASC),0) as deaths_new_cases
+        --a.daily_deaths as deaths_new_cases
       FROM ${nyt_data.SQL_TABLE_NAME} as a
       LEFT JOIN (SELECT fips, latitude, longitude, count(*) as count FROM `bigquery-public-data.covid19_jhu_csse.summary` WHERE fips is not null GROUP BY 1,2,3) as b
         ON cast(a.fips as int64) = cast(b.fips as int64)
@@ -176,7 +179,7 @@ view: covid_combined {
     map_layer_name: us_states
     type: string
     sql: ${TABLE}.province_state ;;
-    drill_fields: [fips]
+    drill_fields: [county]
     link: {
       label: "{{ value }} - State Deep Dive"
       url: "/dashboards/39?State={{ value }}"
@@ -543,13 +546,14 @@ view: covid_combined {
   measure: confirmed_new {
     group_label: "  New Cases"
     label: "Confirmed Cases (New)"
-    description: "Filter on Measurement Date or Days Since First Outbreak to see the new cases during the selected timeframe, otherwise the most recent record will be used"
+    description: "Filter on Measurement Date or Days Since First Outbreak to see the new cases during the selected timeframe, otherwise the sum of all the new cases for each day will be displayed"
     type: number
-    sql:
-      {% if covid_combined.measurement_date._in_query or covid_combined.days_since_first_outbreak._in_query or
-        covid_combined.days_since_max_date._in_query %} ${confirmed_new_option_1}
-      {% else %}  ${confirmed_new_option_2}
-      {% endif %} ;;
+    sql: ${confirmed_new_option_1};;
+# code to instead default to most recenet new confirmed cases:
+#       {% if covid_combined.measurement_date._in_query or covid_combined.days_since_first_outbreak._in_query or
+#       covid_combined.days_since_max_date._in_query %} ${confirmed_new_option_1}
+#        {% else %}  ${confirmed_new_option_2}
+#       {% endif %} ;;
     drill_fields: [drill*]
     link: {
       label: "Data Source - NYT County Data"
@@ -565,7 +569,7 @@ view: covid_combined {
 
   measure: confirmed_new_per_million {
     group_label: "  New Cases"
-    description: "Filter on Measurement Date or Days Since First Outbreak to see the new cases during the selected timeframe, otherwise the most recent record will be used"
+    description: "Filter on Measurement Date or Days Since First Outbreak to see the new cases during the selected timeframe, otherwise the sum of all the new cases for each day will be displayed"
     label: "Confirmed Cases per Million (New)"
     type: number
     sql: 1000000*${confirmed_new} / nullif(${population_by_county_state_country.sum_population},0) ;;
@@ -600,7 +604,6 @@ view: covid_combined {
       value: "Yes"
     }
   }
-
 
   #this field displays the running total of cases if a date filter has been applied, or else is gives the numbers from the most recent record
   measure: confirmed_running_total {
@@ -746,13 +749,14 @@ view: covid_combined {
   #this field displays the new deaths if a date filter has been applied, or else is gives the numbers from the most recent record
   measure: deaths_new {
     group_label: "  New Cases"
-    description: "Filter on Measurement Date or Days Since First Outbreak to see the new cases during the selected timeframe, otherwise the most recent record will be used"
+    description: "Filter on Measurement Date or Days Since First Outbreak to see the new cases during the selected timeframe, otherwise the sum of all the new cases for each day will be displayed"
     label: "Deaths (New)"
     type: number
-    sql:
-      {% if covid_combined.measurement_date._in_query or covid_combined.days_since_first_outbreak._in_query or covid_combined.days_since_max_date._in_query %} ${deaths_new_option_1}
-      {% else %}  ${deaths_new_option_2}
-      {% endif %} ;;
+    sql:${deaths_new_option_1};;
+    # code to instead default to most recenet new confirmed cases:
+#       {% if covid_combined.measurement_date._in_query or covid_combined.days_since_first_outbreak._in_query or covid_combined.days_since_max_date._in_query %} ${deaths_new_option_1}
+#       {% else %}  ${deaths_new_option_2}
+#       {% endif %} ;;
     drill_fields: [drill*]
     link: {
       label: "Data Source - NYT County Data"
@@ -768,7 +772,7 @@ view: covid_combined {
 
   measure: deaths_new_per_million {
     group_label: "  New Cases"
-    description: "Filter on Measurement Date or Days Since First Outbreak to see the new cases during the selected timeframe, otherwise the most recent record will be used"
+    description: "Filter on Measurement Date or Days Since First Outbreak to see the new cases during the selected timeframe, otherwise the sum of all the new cases for each day will be displayed"
     label: "Deaths per Million (New)"
     type: number
     sql: 1000000*${deaths_new} / nullif(${population_by_county_state_country.sum_population},0) ;;
@@ -895,7 +899,6 @@ view: covid_combined {
     fields: [
       country_region,
       province_state,
-      x,
       confirmed_cases,
       deaths
     ]
