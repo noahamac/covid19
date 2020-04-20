@@ -474,21 +474,21 @@
       options:
         steps: 5
     y_axes: [{label: Confirmed Cases, orientation: left, series: [{axisId: " Other\
-              \ - jhu_sample_county_level_final.confirmed_running_total_no_drill",
-            id: " Other - jhu_sample_county_level_final.confirmed_running_total_no_drill",
-            name: " Other"}, {axisId: California - jhu_sample_county_level_final.confirmed_running_total_no_drill,
-            id: California - jhu_sample_county_level_final.confirmed_running_total_no_drill,
-            name: California}, {axisId: Michigan - jhu_sample_county_level_final.confirmed_running_total_no_drill,
-            id: Michigan - jhu_sample_county_level_final.confirmed_running_total_no_drill,
-            name: Michigan}, {axisId: New Jersey - jhu_sample_county_level_final.confirmed_running_total_no_drill,
-            id: New Jersey - jhu_sample_county_level_final.confirmed_running_total_no_drill,
-            name: New Jersey}, {axisId: New York - jhu_sample_county_level_final.confirmed_running_total_no_drill,
-            id: New York - jhu_sample_county_level_final.confirmed_running_total_no_drill,
-            name: New York}, {axisId: Washington - jhu_sample_county_level_final.confirmed_running_total_no_drill,
-            id: Washington - jhu_sample_county_level_final.confirmed_running_total_no_drill,
+              \ - covid_combined.confirmed_running_total_no_drill",
+            id: " Other - covid_combined.confirmed_running_total_no_drill",
+            name: " Other"}, {axisId: California - covid_combined.confirmed_running_total_no_drill,
+            id: California - covid_combined.confirmed_running_total_no_drill,
+            name: California}, {axisId: Michigan - covid_combined.confirmed_running_total_no_drill,
+            id: Michigan - covid_combined.confirmed_running_total_no_drill,
+            name: Michigan}, {axisId: New Jersey - covid_combined.confirmed_running_total_no_drill,
+            id: New Jersey - covid_combined.confirmed_running_total_no_drill,
+            name: New Jersey}, {axisId: New York - covid_combined.confirmed_running_total_no_drill,
+            id: New York - covid_combined.confirmed_running_total_no_drill,
+            name: New York}, {axisId: Washington - covid_combined.confirmed_running_total_no_drill,
+            id: Washington - covid_combined.confirmed_running_total_no_drill,
             name: Washington}], showLabels: true, showValues: true, unpinAxis: false,
         tickDensity: default, tickDensityCustom: 5, type: linear}]
-    hidden_series: [" Other - jhu_sample_county_level_final.confirmed_running_total"]
+    hidden_series: [" Other - covid_combined.confirmed_running_total"]
     colors: ["#5a30c2"]
     series_types: {}
     series_colors: {}
@@ -577,22 +577,22 @@
         Growth
       prior_days_cases_covid.seven_day_average_change_rate_deaths_running_total: Death
         Growth
-      jhu_sample_county_level_final.confirmed_new: New Cases
+      covid_combined.confirmed_new: New Cases
       covid_combined.confirmed_cases_per_icu_beds: Cases / ICU Bed
       covid_combined.confirmed_cases_per_licensed_beds: Cases / Licensed Beds
       covid_combined.confirmed_running_total: Confirmed
       covid_combined.deaths_running_total: Deaths
       covid_combined.confirmed_running_total_per_million: Cases / Mil
     series_cell_visualizations:
-      jhu_sample_county_level_final.confirmed_running_total:
+      covid_combined.confirmed_running_total:
         is_active: false
       prior_days_cases_covid.seven_day_average_change_rate_deaths_running_total:
         is_active: false
-      jhu_sample_county_level_final.deaths_running_total:
+      covid_combined.deaths_running_total:
         is_active: false
-      jhu_sample_county_level_final.confirmed_cases_per_icu_beds:
+      covid_combined.confirmed_cases_per_icu_beds:
         is_active: true
-      jhu_sample_county_level_final.confirmed_cases_per_licensed_beds:
+      covid_combined.confirmed_cases_per_licensed_beds:
         is_active: true
     x_axis_gridlines: false
     y_axis_gridlines: true
@@ -681,8 +681,8 @@
     default_value: ''
     allow_multiple_values: true
     required: false
-    model: covid_hospital
-    explore: jhu_sample_county_level_final
+    model: covid
+    explore: covid_combined
     listens_to_filters: []
     field: state_region.region
   - name: State

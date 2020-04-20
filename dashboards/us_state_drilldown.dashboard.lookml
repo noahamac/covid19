@@ -462,22 +462,22 @@
         Growth
       prior_days_cases_covid.seven_day_average_change_rate_deaths_running_total: Death
         Growth
-      jhu_sample_county_level_final.confirmed_new: New Cases
+      covid_combined.confirmed_new: New Cases
       covid_combined.confirmed_cases_per_icu_beds: Cases / ICU Bed
       covid_combined.confirmed_cases_per_licensed_beds: Cases / Licensed Bed
       covid_combined.confirmed_running_total: Confirmed
       covid_combined.deaths_running_total: Deaths
       covid_combined.confirmed_running_total_per_million: Cases / Mil
     series_cell_visualizations:
-      jhu_sample_county_level_final.confirmed_running_total:
+      covid_combined.confirmed_running_total:
         is_active: false
       prior_days_cases_covid.seven_day_average_change_rate_deaths_running_total:
         is_active: false
-      jhu_sample_county_level_final.deaths_running_total:
+      covid_combined.deaths_running_total:
         is_active: false
-      jhu_sample_county_level_final.confirmed_cases_per_icu_beds:
+      covid_combined.confirmed_cases_per_icu_beds:
         is_active: true
-      jhu_sample_county_level_final.confirmed_cases_per_licensed_beds:
+      covid_combined.confirmed_cases_per_licensed_beds:
         is_active: true
     x_axis_gridlines: false
     y_axis_gridlines: true
@@ -555,7 +555,7 @@
     type: looker_single_record
     fields: [covid_combined.province_state, policies_by_state.non_essential_business_closures,
       policies_by_state.large_gatherings_ban, policies_by_state.bar_restaurant_limits,
-      policies_by_state.state_mandated_school_closures, policies_by_state.emergency_declaration,
+      policies_by_state.state_mandated_school_closures,
       policies_by_state.paid_sick_leave, policies_by_state.section_1135_waiver]
     filters:
       covid_combined.country_region: United States of America
@@ -654,28 +654,28 @@
       options:
         steps: 5
     y_axes: [{label: Confirmed Cases, orientation: left, series: [{axisId: " Other\
-              \ -  Other - jhu_sample_county_level_final.confirmed_running_total_no_drill",
-            id: " Other -  Other - jhu_sample_county_level_final.confirmed_running_total_no_drill",
-            name: " Other"}, {axisId: " Other - California - jhu_sample_county_level_final.confirmed_running_total_no_drill",
-            id: " Other - California - jhu_sample_county_level_final.confirmed_running_total_no_drill",
-            name: " Other"}, {axisId: " Other - Michigan - jhu_sample_county_level_final.confirmed_running_total_no_drill",
-            id: " Other - Michigan - jhu_sample_county_level_final.confirmed_running_total_no_drill",
-            name: " Other"}, {axisId: " Other - New Jersey - jhu_sample_county_level_final.confirmed_running_total_no_drill",
-            id: " Other - New Jersey - jhu_sample_county_level_final.confirmed_running_total_no_drill",
-            name: " Other"}, {axisId: " Other - New York - jhu_sample_county_level_final.confirmed_running_total_no_drill",
-            id: " Other - New York - jhu_sample_county_level_final.confirmed_running_total_no_drill",
-            name: " Other"}, {axisId: " Other - Washington - jhu_sample_county_level_final.confirmed_running_total_no_drill",
-            id: " Other - Washington - jhu_sample_county_level_final.confirmed_running_total_no_drill",
-            name: " Other"}, {axisId: Cook -  Other - jhu_sample_county_level_final.confirmed_running_total_no_drill,
-            id: Cook -  Other - jhu_sample_county_level_final.confirmed_running_total_no_drill,
-            name: Cook}, {axisId: Nassau - New York - jhu_sample_county_level_final.confirmed_running_total_no_drill,
-            id: Nassau - New York - jhu_sample_county_level_final.confirmed_running_total_no_drill,
-            name: Nassau}, {axisId: New York City - New York - jhu_sample_county_level_final.confirmed_running_total_no_drill,
-            id: New York City - New York - jhu_sample_county_level_final.confirmed_running_total_no_drill,
-            name: New York City}, {axisId: Suffolk - New York - jhu_sample_county_level_final.confirmed_running_total_no_drill,
-            id: Suffolk - New York - jhu_sample_county_level_final.confirmed_running_total_no_drill,
-            name: Suffolk}, {axisId: Westchester - New York - jhu_sample_county_level_final.confirmed_running_total_no_drill,
-            id: Westchester - New York - jhu_sample_county_level_final.confirmed_running_total_no_drill,
+              \ -  Other - covid_combined.confirmed_running_total_no_drill",
+            id: " Other -  Other - covid_combined.confirmed_running_total_no_drill",
+            name: " Other"}, {axisId: " Other - California - covid_combined.confirmed_running_total_no_drill",
+            id: " Other - California - covid_combined.confirmed_running_total_no_drill",
+            name: " Other"}, {axisId: " Other - Michigan - covid_combined.confirmed_running_total_no_drill",
+            id: " Other - Michigan - covid_combined.confirmed_running_total_no_drill",
+            name: " Other"}, {axisId: " Other - New Jersey - covid_combined.confirmed_running_total_no_drill",
+            id: " Other - New Jersey - covid_combined.confirmed_running_total_no_drill",
+            name: " Other"}, {axisId: " Other - New York - covid_combined.confirmed_running_total_no_drill",
+            id: " Other - New York - covid_combined.confirmed_running_total_no_drill",
+            name: " Other"}, {axisId: " Other - Washington - covid_combined.confirmed_running_total_no_drill",
+            id: " Other - Washington - covid_combined.confirmed_running_total_no_drill",
+            name: " Other"}, {axisId: Cook -  Other - covid_combined.confirmed_running_total_no_drill,
+            id: Cook -  Other - covid_combined.confirmed_running_total_no_drill,
+            name: Cook}, {axisId: Nassau - New York - covid_combined.confirmed_running_total_no_drill,
+            id: Nassau - New York - covid_combined.confirmed_running_total_no_drill,
+            name: Nassau}, {axisId: New York City - New York - covid_combined.confirmed_running_total_no_drill,
+            id: New York City - New York - covid_combined.confirmed_running_total_no_drill,
+            name: New York City}, {axisId: Suffolk - New York - covid_combined.confirmed_running_total_no_drill,
+            id: Suffolk - New York - covid_combined.confirmed_running_total_no_drill,
+            name: Suffolk}, {axisId: Westchester - New York - covid_combined.confirmed_running_total_no_drill,
+            id: Westchester - New York - covid_combined.confirmed_running_total_no_drill,
             name: Westchester}], showLabels: true, showValues: true, unpinAxis: false,
         tickDensity: default, tickDensityCustom: 5, type: linear}]
     hidden_series: []
@@ -754,6 +754,6 @@
     allow_multiple_values: true
     required: false
     model: covid
-    explore: covid_hospital
+    explore: covid_combined
     listens_to_filters: [State]
-    field: jhu_sample_county_level_final.county
+    field: covid_combined.county

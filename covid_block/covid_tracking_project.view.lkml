@@ -67,12 +67,7 @@ view: covid_tracking_project_core {
     sql: ${state_region.state} ;;
     link: {
       label: "{{ value }} Drill Down"
-      url: "/dashboards-next/4?State={{ value }}"
-      icon_url: "https://looker.com/favicon.ico"
-    }
-    link: {
-      label: "See original data"
-      url: "https://covidtracking.com/us-daily/"
+      url: "/dashboards/covid::state_cases__policy_response?State={{ value }}"
       icon_url: "https://looker.com/favicon.ico"
     }
   }

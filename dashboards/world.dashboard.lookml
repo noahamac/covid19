@@ -57,7 +57,7 @@
     listen:
       Region: country_region.region
       Country: covid_combined.country_region
-    row: 3
+    row: 5
     col: 0
     width: 6
     height: 5
@@ -116,7 +116,7 @@
     listen:
       Region: country_region.region
       Country: covid_combined.country_region
-    row: 3
+    row: 5
     col: 6
     width: 6
     height: 5
@@ -175,7 +175,7 @@
     listen:
       Region: country_region.region
       Country: covid_combined.country_region
-    row: 3
+    row: 5
     col: 12
     width: 6
     height: 5
@@ -235,7 +235,7 @@
     listen:
       Region: country_region.region
       Country: covid_combined.country_region
-    row: 3
+    row: 5
     col: 18
     width: 6
     height: 5
@@ -318,7 +318,7 @@
     listen:
       Region: country_region.region
       Country: covid_combined.country_region
-    row: 8
+    row: 10
     col: 0
     width: 8
     height: 6
@@ -403,7 +403,7 @@
     listen:
       Region: country_region.region
       Country: covid_combined.country_region
-    row: 8
+    row: 10
     col: 8
     width: 8
     height: 6
@@ -485,7 +485,7 @@
     listen:
       Region: country_region.region
       Country: covid_combined.country_region
-    row: 8
+    row: 10
     col: 16
     width: 8
     height: 6
@@ -597,7 +597,7 @@
     listen:
       Region: country_region.region
       Country: covid_combined.country_region
-    row: 14
+    row: 16
     col: 0
     width: 12
     height: 8
@@ -709,7 +709,7 @@
     listen:
       Region: country_region.region
       Country: covid_combined.country_region
-    row: 14
+    row: 16
     col: 12
     width: 12
     height: 8
@@ -828,7 +828,7 @@
     listen:
       Region: country_region.region
       Country: covid_combined.country_region
-    row: 22
+    row: 24
     col: 0
     width: 24
     height: 8
@@ -842,7 +842,7 @@
     row: 0
     col: 0
     width: 24
-    height: 3
+    height: 5
   filters:
   - name: Region
     title: Region
