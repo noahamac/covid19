@@ -1,4 +1,5 @@
 include: "//@{CONFIG_PROJECT_NAME}/covid_block/covid_combined.view.lkml"
+include: "/dashboards/*.dashboard.lookml"
 
 # The county level data shows NYT + JHU, NYT is used for US county level data and JHU data is used for international data
 

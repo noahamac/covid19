@@ -207,6 +207,11 @@ view: hospital_bed_summary_core {
     label: "Count ICU Beds"
     type: sum
     sql: ${num_icu_beds} ;;
+    link: {
+      label: "Data Source - ESRI Hospital Beds"
+      url: "https://coronavirus-resources.esri.com/datasets/definitivehc::definitive-healthcare-usa-hospital-beds?geometry=38.847%2C-16.820%2C-63.809%2C72.123"
+      icon_url: "http://www.google.com/s2/favicons?domain_url=http://www.esri.com"
+    }
   }
 
   measure: sum_num_licensed_beds {
@@ -214,6 +219,11 @@ view: hospital_bed_summary_core {
     label: "Count Licensed Beds"
     type: sum
     sql: ${num_licensed_beds} ;;
+    link: {
+      label: "Data Source - ESRI Hospital Beds"
+      url: "https://coronavirus-resources.esri.com/datasets/definitivehc::definitive-healthcare-usa-hospital-beds?geometry=38.847%2C-16.820%2C-63.809%2C72.123"
+      icon_url: "http://www.google.com/s2/favicons?domain_url=http://www.esri.com"
+    }
   }
 
   measure: sum_num_staffed_beds {
@@ -221,6 +231,11 @@ view: hospital_bed_summary_core {
     label: "Count Staffed Beds"
     type: sum
     sql: ${num_staffed_beds} ;;
+    link: {
+      label: "Data Source - ESRI Hospital Beds"
+      url: "https://coronavirus-resources.esri.com/datasets/definitivehc::definitive-healthcare-usa-hospital-beds?geometry=38.847%2C-16.820%2C-63.809%2C72.123"
+      icon_url: "http://www.google.com/s2/favicons?domain_url=http://www.esri.com"
+    }
   }
 
   measure: sum_num_icu_beds_available {
@@ -229,6 +244,11 @@ view: hospital_bed_summary_core {
     type: sum
     sql: ${num_icu_beds_available} ;;
     value_format_name: decimal_0
+    link: {
+      label: "Data Source - ESRI Hospital Beds"
+      url: "https://coronavirus-resources.esri.com/datasets/definitivehc::definitive-healthcare-usa-hospital-beds?geometry=38.847%2C-16.820%2C-63.809%2C72.123"
+      icon_url: "http://www.google.com/s2/favicons?domain_url=http://www.esri.com"
+    }
   }
 
   measure: sum_num_staffed_beds_available {
@@ -237,12 +257,22 @@ view: hospital_bed_summary_core {
     type: sum
     sql: ${num_staffed_beds_available} ;;
     value_format_name: decimal_0
+    link: {
+      label: "Data Source - ESRI Hospital Beds"
+      url: "https://coronavirus-resources.esri.com/datasets/definitivehc::definitive-healthcare-usa-hospital-beds?geometry=38.847%2C-16.820%2C-63.809%2C72.123"
+      icon_url: "http://www.google.com/s2/favicons?domain_url=http://www.esri.com"
+    }
   }
 
   measure: sum_county_num_licensed_beds {
     hidden: yes
     type: sum
     sql: ${county_num_licensed_beds} ;;
+    link: {
+      label: "Data Source - ESRI Hospital Beds"
+      url: "https://coronavirus-resources.esri.com/datasets/definitivehc::definitive-healthcare-usa-hospital-beds?geometry=38.847%2C-16.820%2C-63.809%2C72.123"
+      icon_url: "http://www.google.com/s2/favicons?domain_url=http://www.esri.com"
+    }
   }
 
   measure: force_1 {
@@ -263,6 +293,11 @@ view: hospital_bed_summary_core {
       {% else %}  ${force_1}
       {% endif %} ;;
     value_format_name: percent_1
+    link: {
+      label: "Data Source - ESRI Hospital Beds"
+      url: "https://coronavirus-resources.esri.com/datasets/definitivehc::definitive-healthcare-usa-hospital-beds?geometry=38.847%2C-16.820%2C-63.809%2C72.123"
+      icon_url: "http://www.google.com/s2/favicons?domain_url=http://www.esri.com"
+    }
   }
 
 }
