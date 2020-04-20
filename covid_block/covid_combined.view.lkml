@@ -46,7 +46,7 @@ view: covid_combined {
         NULL as fips,
         cast(NULL as string) as county,
         province_state,
-        country_region,
+        case when country_region = 'United Kingdom' then 'UK' else country_region end,
         latitude,
         longitude,
         case
@@ -58,12 +58,12 @@ view: covid_combined {
         confirmed as confirmed_cumulative,
         confirmed - coalesce(
           LAG(confirmed, 1) OVER (
-          PARTITION BY concat(coalesce(NULL,''), coalesce(NULL,''), coalesce(country_region,'')
+          PARTITION BY concat(coalesce(NULL,''), coalesce(province_state,''), coalesce(country_region,'')
           ) ORDER BY date ASC),0) as confirmed_new_cases,
         deaths as deaths_cumulative,
         deaths - coalesce(
           LAG(deaths, 1) OVER (
-          PARTITION BY concat(coalesce(NULL,''), coalesce(NULL,''), coalesce(country_region,'')
+          PARTITION BY concat(coalesce(NULL,''), coalesce(province_state,''), coalesce(country_region,'')
           )  ORDER BY date ASC),0) as deaths_new_cases
         FROM `bigquery-public-data.covid19_jhu_csse.summary`
         WHERE country_region <> 'US'
