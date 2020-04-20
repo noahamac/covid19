@@ -1,8 +1,7 @@
 connection: "lookerdata"
-
 #views
 include: "/covid_block/*.view.lkml"
-
+# include: "//@{CONFIG_PROJECT_NAME}/covid_block/*.view.lkml"
 
 #map layers
 include: "map_layers.lkml"
@@ -12,7 +11,9 @@ include: "map_layers.lkml"
 
 ### Main Covid Explore ######
 
-explore: covid_combined {
+explore: covid_combined_core {
+  from: covid_combined
+  extension: required
   description: "This explore has the core metrics for the COVID19 datasets, international data is available at the state level through JHU and county level data is available for the United States through NYT"
   group_label: "*COVID 19"
   label: "COVID - Main"
@@ -110,7 +111,9 @@ explore: covid_combined {
 
 #### Compare Geographies ####
 
-explore: kpis_by_entity_by_date {
+explore: kpis_by_entity_by_date_core {
+  from: kpis_by_country_by_date
+  extension: required
   description: "This is a simplified explore, based only on JHU / NYT data, that can be used to compare different geographies with each other"
   group_label: "*COVID 19"
   label: "COVID Apps - Compare Geographies"
@@ -124,10 +127,12 @@ explore: kpis_by_entity_by_date {
 
 #### Italy ####
 
-explore: italy {
+explore: italy_core {
+  from: italy_regions
+  extension: required
   description: "This explore is based off of data released from the Italian government which shows province and region level data for Italy"
   group_label: "*COVID 19"
-  from: italy_regions
+
 
   join: italy_province {
     relationship: one_to_many

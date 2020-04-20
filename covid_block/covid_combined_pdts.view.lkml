@@ -1,11 +1,70 @@
+include: "//@{CONFIG_PROJECT_NAME}/covid_block/covid_combined_pdts.view.lkml"
+
 ### This view file has several different PDTs that calculate metrics like ranks and comparisons of geographies
 
 
 ####################
 ### Max Dates
 ####################
-
 view: max_date_covid {
+  extends: [max_date_covid_config]
+}
+
+view: max_date_tracking_project {
+  extends: [max_date_tracking_project_config]
+}
+
+
+####################
+### Ranks
+####################
+view: country_rank {
+  extends: [country_rank_config]
+}
+
+view: state_rank {
+  extends: [state_rank_config]
+}
+
+view: fips_rank {
+  extends: [fips_rank_config]
+}
+
+
+####################
+### Growth Rate / Days to Double
+####################
+view: prior_days_cases_covid {
+  extends: [prior_days_cases_covid_config]
+}
+
+####################
+### Compare Geographies
+####################
+view: kpis_by_county_by_date {
+  extends: [kpis_by_county_by_date_config]
+}
+
+view: kpis_by_state_by_date {
+  extends: [kpis_by_state_by_date_config]
+}
+
+view: kpis_by_country_by_date {
+  extends: [kpis_by_country_by_date_config]
+}
+
+view: kpis_by_entity_by_date {
+  extends: [kpis_by_entity_by_date_config]
+}
+
+##########################################
+
+
+####################
+### Max Dates
+####################
+
+view: max_date_covid_core {
   derived_table: {
     datagroup_trigger: covid_data
     explore_source: covid_combined {
@@ -23,7 +82,7 @@ view: max_date_covid {
   }
 }
 
-view: max_date_tracking_project {
+view: max_date_tracking_project_core {
   derived_table: {
     datagroup_trigger: covid_data
     explore_source: covid_combined {
@@ -45,7 +104,7 @@ view: max_date_tracking_project {
 ### Ranks
 ####################
 
-view: country_rank {
+view: country_rank_core {
   derived_table: {
     explore_source: covid_combined {
       bind_all_filters: yes
@@ -60,7 +119,7 @@ view: country_rank {
   dimension: rank { hidden: yes type: number }
 }
 
-view: state_rank {
+view: state_rank_core {
   derived_table: {
     explore_source: covid_combined {
       bind_all_filters: yes
@@ -79,7 +138,7 @@ view: state_rank {
   dimension: rank { hidden: yes type: number }
 }
 
-view: fips_rank {
+view: fips_rank_core {
   derived_table: {
     explore_source: covid_combined {
       bind_all_filters: yes
@@ -102,7 +161,7 @@ view: fips_rank {
 ### Growth Rate / Days to Double
 ####################
 
-view: prior_days_cases_covid {
+view: prior_days_cases_covid_core {
   view_label: "Trends"
   derived_table: {
     datagroup_trigger: covid_data
@@ -724,7 +783,7 @@ view: prior_days_cases_covid {
 ### Compare Geographies
 ####################
 
-view: kpis_by_county_by_date {
+view: kpis_by_county_by_date_core {
   derived_table: {
     datagroup_trigger: covid_data
     explore_source: covid_combined {
@@ -751,7 +810,7 @@ view: kpis_by_county_by_date {
   }
 }
 
-view: kpis_by_state_by_date {
+view: kpis_by_state_by_date_core {
   derived_table: {
     datagroup_trigger: covid_data
     explore_source: covid_combined {
@@ -778,7 +837,7 @@ view: kpis_by_state_by_date {
   }
 }
 
-view: kpis_by_country_by_date {
+view: kpis_by_country_by_date_core {
   derived_table: {
     datagroup_trigger: covid_data
     explore_source: covid_combined {
@@ -805,7 +864,7 @@ view: kpis_by_country_by_date {
   }
 }
 
-view: kpis_by_entity_by_date {
+view: kpis_by_entity_by_date_core {
   derived_table: {
     datagroup_trigger: covid_data
     sql:

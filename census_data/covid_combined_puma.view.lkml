@@ -32,7 +32,7 @@ view: covid_combined_puma {
     description: "For zip to PUMA or County weighting"
     hidden: yes
     type: sum
-    sql: ${confirmed_new_cases}*${puma_conversion_factor} ;;
+    sql: ${covid_combined.confirmed_new_cases}*${puma_conversion_factor} ;;
     value_format_name: decimal_0
   }
 
@@ -40,9 +40,9 @@ view: covid_combined_puma {
     description: "For zip to PUMA or County weighting"
     hidden: yes
     type: sum
-    sql: ${confirmed_new_cases}*${puma_conversion_factor} ;;
+    sql: ${covid_combined.confirmed_new_cases}*${puma_conversion_factor} ;;
     filters: {
-      field: is_max_date
+      field: covid_combined.is_max_date
       value: "Yes"
     }
     value_format_name: decimal_0
@@ -57,7 +57,7 @@ view: covid_combined_puma {
           {% if covid_combined.measurement_date._in_query or covid_combined.days_since_first_outbreak._in_query or covid_combined.days_since_max_date._in_query %} ${puma_confirmed_new_option_1}
           {% else %}  ${puma_confirmed_new_option_2}
           {% endif %} ;;
-    drill_fields: [drill*]
+    drill_fields: [covid_combined.drill*]
     link: {
       label: "Data Source - NYT County Data"
       url: "https://github.com/nytimes/covid-19-data"
@@ -78,16 +78,16 @@ view: covid_combined_puma {
   measure: puma_confirmed_option_1 {
     hidden: yes
     type: sum
-    sql: ${confirmed_cumulative}*${puma_conversion_factor} ;;
+    sql: ${covid_combined.confirmed_cumulative}*${puma_conversion_factor} ;;
     value_format_name: decimal_0
   }
 
   measure: puma_confirmed_option_2 {
     hidden: yes
     type: sum
-    sql: ${confirmed_cumulative}*${puma_conversion_factor} ;;
+    sql: ${covid_combined.confirmed_cumulative}*${puma_conversion_factor} ;;
     filters: {
-      field: is_max_date
+      field: covid_combined.is_max_date
       value: "Yes"
     }
     value_format_name: decimal_0
@@ -102,7 +102,7 @@ view: covid_combined_puma {
           {% if covid_combined.measurement_date._in_query or covid_combined.days_since_first_outbreak._in_query or covid_combined.days_since_max_date._in_query %} ${puma_confirmed_option_1}
           {% else %}  ${puma_confirmed_option_2}
           {% endif %} ;;
-    drill_fields: [drill*]
+    drill_fields: [covid_combined.drill*]
     link: {
       label: "Data Source - NYT County Data"
       url: "https://github.com/nytimes/covid-19-data"

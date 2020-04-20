@@ -1,9 +1,17 @@
+include: "//@{CONFIG_PROJECT_NAME}/covid_block/covid_combined.view.lkml"
+
 # The county level data shows NYT + JHU, NYT is used for US county level data and JHU data is used for international data
 
 ## NYT data: https://github.com/nytimes/covid-19-data
 ## JHU data: https://cloud.google.com/blog/products/data-analytics/free-public-datasets-for-covid19
 
 view: covid_combined {
+  extends: [covid_combined_config]
+}
+
+###################################################
+
+view: covid_combined_core {
   derived_table: {
     datagroup_trigger: covid_data
     sql:
