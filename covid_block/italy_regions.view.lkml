@@ -41,7 +41,7 @@ view: italy_regions_core {
       date is not null
       AND region_name is not null
       ;;
-    sql_trigger_value: SELECT COUNT(*) FROM `bigquery-public-data.covid19_italy.data_by_region` WHERE codice_regione is not null ;;
+    sql_trigger_value: SELECT COUNT(*) FROM `bigquery-public-data.covid19_italy.data_by_region` WHERE region_name is not null ;;
   }
 
 
