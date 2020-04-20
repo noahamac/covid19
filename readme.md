@@ -26,3 +26,20 @@
   - [italy_region_stats](/projects/covid/files/covid_block/italy_region_stats.view.lkml) Population estimates and Area by Italy Region
 
 In order to extend the LookML from this block and join it with your own propietery data sources please use this [guide](https://docs.looker.com/data-modeling/marketplace/customize-blocks).
+
+
+### What We're Reading
+> Looking at the coronavirus data is like looking at funhouse mirrors. Everything is distorted in some direction or another; some things look much bigger than they really are, others much smaller. - Nate Silver, [Twitter](https://twitter.com/NateSilver538/status/1241064789738217473?s=20)
+With that in mind, here are some of the articles that have informed our understanding around how to explore, present, and share COVID-19 data.
+
+[**Ten Considerations Before You Create Another Chart About COVID-19** by Amanda Makulec](https://medium.com/nightingale/ten-considerations-before-you-create-another-chart-about-covid-19-27d3bd691be8)
+
+[**Coronavirus Case Counts Are Meaningless*** by Nate Silver](https://fivethirtyeight.com/features/coronavirus-case-counts-are-meaningless/)
+
+[**Improve Your COVID-19 Cases Map** by Jim Herries](https://storymaps.arcgis.com/stories/1cbce9094e88438fa75148cb35f99caf)
+
+[**Mapping coronavirus, responsibly** by Kenneth Field](https://www.esri.com/arcgis-blog/products/product/mapping/mapping-coronavirus-responsibly/)
+
+### Questions, Comments, Concerns?
+This information is provided for informational purposes only.
+We make our best effort to keep data accurate and up to date. If you have questions about the data, please contact the data source identified in the menu of each tile. If you have questions or feedback on the underlying Looker model, please email looker-covid-data-block@google.com
