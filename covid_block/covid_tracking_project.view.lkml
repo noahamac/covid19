@@ -200,6 +200,11 @@ view: covid_tracking_project_core {
         {% elsif covid_combined.new_vs_running_total._parameter_value == 'running_total' %} ${hospitalized_running_total}
         {% endif %} ;;
     drill_fields: [drill*]
+    link: {
+      label: "Data Source - COVID Tracking Project"
+      url: "https://covidtracking.com/data"
+      icon_url: "https://pbs.twimg.com/profile_images/1245385527701811200/YmXglGxq_400x400.jpg"
+    }
   }
 
 ## Based on new_vs_running_total parameter chosen, return new or running total negative test results
@@ -213,6 +218,11 @@ view: covid_tracking_project_core {
         {% elsif covid_combined.new_vs_running_total._parameter_value == 'running_total' %} ${negative_running_total}
         {% endif %} ;;
     drill_fields: [drill*]
+    link: {
+      label: "Data Source - COVID Tracking Project"
+      url: "https://covidtracking.com/data"
+      icon_url: "https://pbs.twimg.com/profile_images/1245385527701811200/YmXglGxq_400x400.jpg"
+    }
   }
 
 ## Based on new_vs_running_total parameter chosen, return new or running total pending test results
@@ -226,6 +236,11 @@ view: covid_tracking_project_core {
         {% elsif covid_combined.new_vs_running_total._parameter_value == 'running_total' %} ${pending_running_total}
         {% endif %} ;;
     drill_fields: [drill*]
+    link: {
+      label: "Data Source - COVID Tracking Project"
+      url: "https://covidtracking.com/data"
+      icon_url: "https://pbs.twimg.com/profile_images/1245385527701811200/YmXglGxq_400x400.jpg"
+    }
   }
 
 ## Based on new_vs_running_total parameter chosen, return new or running total positive test results
@@ -239,6 +254,11 @@ view: covid_tracking_project_core {
         {% elsif covid_combined.new_vs_running_total._parameter_value == 'running_total' %} ${positive_running_total}
         {% endif %} ;;
     drill_fields: [drill*]
+    link: {
+      label: "Data Source - COVID Tracking Project"
+      url: "https://covidtracking.com/data"
+      icon_url: "https://pbs.twimg.com/profile_images/1245385527701811200/YmXglGxq_400x400.jpg"
+    }
   }
 
 ## Based on new_vs_running_total parameter chosen, return new or running total of tests
@@ -252,6 +272,11 @@ view: covid_tracking_project_core {
         {% elsif covid_combined.new_vs_running_total._parameter_value == 'running_total' %} ${total_running_total}
         {% endif %} ;;
     drill_fields: [drill*]
+    link: {
+      label: "Data Source - COVID Tracking Project"
+      url: "https://covidtracking.com/data"
+      icon_url: "https://pbs.twimg.com/profile_images/1245385527701811200/YmXglGxq_400x400.jpg"
+    }
   }
 
   measure: hospitalized_new {
@@ -260,6 +285,11 @@ view: covid_tracking_project_core {
     label: "Hospitalizations"
     type: sum
     sql: ${hospitalized_new_cases} ;;
+    link: {
+      label: "Data Source - COVID Tracking Project"
+      url: "https://covidtracking.com/data"
+      icon_url: "https://pbs.twimg.com/profile_images/1245385527701811200/YmXglGxq_400x400.jpg"
+    }
   }
 
   measure: hospitalized_option_1 {
@@ -288,6 +318,11 @@ view: covid_tracking_project_core {
     {% if covid_tracking_project.measurement_date._in_query %} ${hospitalized_option_1}
     {% else %}  ${hospitalized_option_2}
     {% endif %} ;;
+    link: {
+      label: "Data Source - COVID Tracking Project"
+      url: "https://covidtracking.com/data"
+      icon_url: "https://pbs.twimg.com/profile_images/1245385527701811200/YmXglGxq_400x400.jpg"
+    }
   }
 
   measure: negative_new {
@@ -296,6 +331,11 @@ view: covid_tracking_project_core {
     description: "Filter on Measurement Date or Days Since First Outbreak to see the new cases during the selected timeframe, otherwise the most recent record will be used"
     type: sum
     sql: ${negative_new_cases} ;;
+    link: {
+      label: "Data Source - COVID Tracking Project"
+      url: "https://covidtracking.com/data"
+      icon_url: "https://pbs.twimg.com/profile_images/1245385527701811200/YmXglGxq_400x400.jpg"
+    }
   }
 
   measure: negative_option_1 {
@@ -324,6 +364,11 @@ view: covid_tracking_project_core {
     {% if covid_tracking_project.measurement_date._in_query %} ${negative_option_1}
     {% else %}  ${negative_option_2}
     {% endif %} ;;
+    link: {
+      label: "Data Source - COVID Tracking Project"
+      url: "https://covidtracking.com/data"
+      icon_url: "https://pbs.twimg.com/profile_images/1245385527701811200/YmXglGxq_400x400.jpg"
+    }
   }
 
   measure: pending_new {
@@ -332,6 +377,11 @@ view: covid_tracking_project_core {
     description: "Filter on Measurement Date or Days Since First Outbreak to see the new cases during the selected timeframe, otherwise the most recent record will be used"
     type: sum
     sql: ${pending_new_cases} ;;
+    link: {
+      label: "Data Source - COVID Tracking Project"
+      url: "https://covidtracking.com/data"
+      icon_url: "https://pbs.twimg.com/profile_images/1245385527701811200/YmXglGxq_400x400.jpg"
+    }
   }
 
   measure: pending_option_1 {
@@ -360,15 +410,24 @@ view: covid_tracking_project_core {
     {% if covid_tracking_project.measurement_date._in_query %} ${pending_option_1}
     {% else %}  ${pending_option_2}
     {% endif %} ;;
+    link: {
+      label: "Data Source - COVID Tracking Project"
+      url: "https://covidtracking.com/data"
+      icon_url: "https://pbs.twimg.com/profile_images/1245385527701811200/YmXglGxq_400x400.jpg"
+    }
   }
 
   measure: positive_new {
     group_label: "New Cases (Testing - US Only)"
     label: "Positive Test Results (New)"
     description: "Filter on Measurement Date or Days Since First Outbreak to see the new cases during the selected timeframe, otherwise the most recent record will be used"
-
     type: sum
     sql: ${positive_new_cases} ;;
+    link: {
+      label: "Data Source - COVID Tracking Project"
+      url: "https://covidtracking.com/data"
+      icon_url: "https://pbs.twimg.com/profile_images/1245385527701811200/YmXglGxq_400x400.jpg"
+    }
   }
 
   measure: positive_option_1 {
@@ -397,6 +456,11 @@ view: covid_tracking_project_core {
     {% if covid_tracking_project.measurement_date._in_query %} ${positive_option_1}
     {% else %}  ${positive_option_2}
     {% endif %} ;;
+    link: {
+      label: "Data Source - COVID Tracking Project"
+      url: "https://covidtracking.com/data"
+      icon_url: "https://pbs.twimg.com/profile_images/1245385527701811200/YmXglGxq_400x400.jpg"
+    }
   }
 
   measure: total_new {
@@ -405,6 +469,11 @@ view: covid_tracking_project_core {
     description: "Filter on Measurement Date or Days Since First Outbreak to see the new cases during the selected timeframe, otherwise the most recent record will be used"
     type: sum
     sql: ${total_new_cases} ;;
+    link: {
+      label: "Data Source - COVID Tracking Project"
+      url: "https://covidtracking.com/data"
+      icon_url: "https://pbs.twimg.com/profile_images/1245385527701811200/YmXglGxq_400x400.jpg"
+    }
   }
 
   measure: total_option_1 {
@@ -433,6 +502,11 @@ view: covid_tracking_project_core {
     {% if covid_tracking_project.measurement_date._in_query %} ${total_option_1}
     {% else %}  ${total_option_2}
     {% endif %} ;;
+    link: {
+      label: "Data Source - COVID Tracking Project"
+      url: "https://covidtracking.com/data"
+      icon_url: "https://pbs.twimg.com/profile_images/1245385527701811200/YmXglGxq_400x400.jpg"
+    }
   }
 
   measure: positive_rate {
@@ -441,6 +515,11 @@ view: covid_tracking_project_core {
     type: number
     sql: 1.0 * ${positive_running_total} / nullif((${total_running_total}),0);;
     value_format_name: percent_1
+    link: {
+      label: "Data Source - COVID Tracking Project"
+      url: "https://covidtracking.com/data"
+      icon_url: "https://pbs.twimg.com/profile_images/1245385527701811200/YmXglGxq_400x400.jpg"
+    }
   }
 
   measure: pending_rate {
@@ -449,6 +528,11 @@ view: covid_tracking_project_core {
     type: number
     sql: 1.0 * ${pending_running_total} / nullif((${total_running_total}),0);;
     value_format_name: percent_1
+    link: {
+      label: "Data Source - COVID Tracking Project"
+      url: "https://covidtracking.com/data"
+      icon_url: "https://pbs.twimg.com/profile_images/1245385527701811200/YmXglGxq_400x400.jpg"
+    }
   }
 
   measure: negative_rate {
@@ -457,6 +541,11 @@ view: covid_tracking_project_core {
     type: number
     sql: 1.0 * ${negative_running_total} / nullif((${total_running_total}),0);;
     value_format_name: percent_1
+    link: {
+      label: "Data Source - COVID Tracking Project"
+      url: "https://covidtracking.com/data"
+      icon_url: "https://pbs.twimg.com/profile_images/1245385527701811200/YmXglGxq_400x400.jpg"
+    }
   }
 
   measure: case_hospitalization_rate {
@@ -465,6 +554,11 @@ view: covid_tracking_project_core {
     type: number
     sql: 1.0 * ${hospitalized_running_total}/NULLIF(${positive_running_total}, 0);;
     value_format_name: percent_1
+    link: {
+      label: "Data Source - COVID Tracking Project"
+      url: "https://covidtracking.com/data"
+      icon_url: "https://pbs.twimg.com/profile_images/1245385527701811200/YmXglGxq_400x400.jpg"
+    }
   }
 
   measure: count {
@@ -492,6 +586,11 @@ view: covid_tracking_project_core {
         {% elsif covid_combined.new_vs_running_total._parameter_value == 'running_total' %} ${death_running_total}
         {% endif %} ;;
     drill_fields: [drill*]
+    link: {
+      label: "Data Source - COVID Tracking Project"
+      url: "https://covidtracking.com/data"
+      icon_url: "https://pbs.twimg.com/profile_images/1245385527701811200/YmXglGxq_400x400.jpg"
+    }
   }
 
   measure: death_new {
@@ -501,6 +600,11 @@ view: covid_tracking_project_core {
     description: "Filter on Measurement Date or Days Since First Outbreak to see the new cases during the selected timeframe, otherwise the most recent record will be used"
     type: sum
     sql: ${death_new_cases} ;;
+    link: {
+      label: "Data Source - COVID Tracking Project"
+      url: "https://covidtracking.com/data"
+      icon_url: "https://pbs.twimg.com/profile_images/1245385527701811200/YmXglGxq_400x400.jpg"
+    }
   }
 
   measure: death_option_1 {
@@ -531,6 +635,11 @@ view: covid_tracking_project_core {
     {% if covid_tracking_project.measurement_date._in_query %} ${death_option_1}
     {% else %}  ${death_option_2}
     {% endif %} ;;
+    link: {
+      label: "Data Source - COVID Tracking Project"
+      url: "https://covidtracking.com/data"
+      icon_url: "https://pbs.twimg.com/profile_images/1245385527701811200/YmXglGxq_400x400.jpg"
+    }
   }
 
   measure: case_fatality_rate {
@@ -540,6 +649,11 @@ view: covid_tracking_project_core {
     type: number
     sql: 1.0 * ${death_running_total}/NULLIF(${positive_running_total}, 0);;
     value_format_name: percent_1
+    link: {
+      label: "Data Source - COVID Tracking Project"
+      url: "https://covidtracking.com/data"
+      icon_url: "https://pbs.twimg.com/profile_images/1245385527701811200/YmXglGxq_400x400.jpg"
+    }
   }
 
   measure: case_fatality_or_hospitalization_rate {
@@ -549,6 +663,11 @@ view: covid_tracking_project_core {
     type: number
     sql: 1.0 * (${death_running_total} + ${hospitalized_running_total}) /NULLIF(${positive_running_total}, 0);;
     value_format_name: percent_1
+    link: {
+      label: "Data Source - COVID Tracking Project"
+      url: "https://covidtracking.com/data"
+      icon_url: "https://pbs.twimg.com/profile_images/1245385527701811200/YmXglGxq_400x400.jpg"
+    }
   }
 
   set: drill {

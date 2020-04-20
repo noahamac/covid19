@@ -62,7 +62,7 @@
     hidden_fields: []
     y_axes: []
     listen: {}
-    row: 10
+    row: 14
     col: 0
     width: 24
     height: 9
@@ -98,13 +98,13 @@
     map_latitude: 42.147114459221015
     map_longitude: 11.546630859375
     map_zoom: 5
-    map_value_colors: ["#ffffff", "#f83f65"]
+    map_value_colors: ["#ffffff", "#5a30c2"]
     map_value_scale_clamp_min: 0
     defaults_version: 1
     hidden_fields: []
     y_axes: []
     listen: {}
-    row: 0
+    row: 4
     col: 0
     width: 12
     height: 10
@@ -140,13 +140,13 @@
     map_latitude: 42.147114459221015
     map_longitude: 11.546630859375
     map_zoom: 5
-    map_value_colors: ["#ffffff", "#f83f65"]
+    map_value_colors: ["#ffffff", "#5a30c2"]
     map_value_scale_clamp_min: 0
     defaults_version: 1
     hidden_fields: []
     y_axes: []
     listen: {}
-    row: 0
+    row: 4
     col: 12
     width: 12
     height: 10
@@ -278,7 +278,7 @@
     y_axes: []
     column_order: {}
     listen: {}
-    row: 28
+    row: 32
     col: 0
     width: 24
     height: 46
@@ -356,7 +356,18 @@
     hidden_fields: [italy.population, italy.new_tests]
     y_axes: []
     listen: {}
-    row: 19
+    row: 23
     col: 0
     width: 24
     height: 9
+  - name: ''
+    type: text
+    title_text: ''
+    subtitle_text: <div style="color:black">COVID-19 Italy</div>
+    body_text: |-
+      <div style="color:black"><br />
+      <small><center><strong>This information is provided for informational purposes only.</strong></center> <center>We make our best effort to keep data accurate and up to date. If you have questions about the data, please contact the data source identified in the menu of each tile. If you have questions or feedback on the underlying Looker model, please email looker-covid-data-block@google.com </center></small></div>
+    row: 0
+    col: 0
+    width: 24
+    height: 4

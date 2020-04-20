@@ -190,6 +190,11 @@ view: italy_province_core {
     label: "Total cases"
     description: "Running total of confirmed cases (IT: Totale casi), avail by region or province"
     group_label: "Total cases"
+    link: {
+      label: "Data Source - Protezione Civile"
+      url: "https://github.com/pcm-dpc/COVID-19"
+      icon_url: "https://pngimage.net/wp-content/uploads/2018/06/repubblica-italiana-png-2.png"
+    }
   }
 
   measure: total_cases_pp {
@@ -198,6 +203,11 @@ view: italy_province_core {
     label: "Total cases (per thousand)"
     group_label: "Total cases"
     value_format_name: decimal_2
+    link: {
+      label: "Data Source - Protezione Civile"
+      url: "https://github.com/pcm-dpc/COVID-19"
+      icon_url: "https://pngimage.net/wp-content/uploads/2018/06/repubblica-italiana-png-2.png"
+    }
   }
 
   measure: new_cases_province {

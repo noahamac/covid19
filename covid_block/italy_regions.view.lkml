@@ -277,6 +277,11 @@ view: italy_regions_core {
     label: "Non-ICU hospitalizations"
     description: "Current number of patients hospitalized, excluding in ICU (IT: Ricoverati con sintomi), avail by region only"
     group_label: "Current cases by status"
+    link: {
+      label: "Data Source - Protezione Civile"
+      url: "https://github.com/pcm-dpc/COVID-19"
+      icon_url: "https://pngimage.net/wp-content/uploads/2018/06/repubblica-italiana-png-2.png"
+    }
   }
 
   measure: hospitalized_non_icu_pp {
@@ -290,6 +295,11 @@ view: italy_regions_core {
     label: "Currently hospitalized (non-ICU) (per thousand)"
     group_label: "Current cases by status"
     value_format_name: decimal_2
+    link: {
+      label: "Data Source - Protezione Civile"
+      url: "https://github.com/pcm-dpc/COVID-19"
+      icon_url: "https://pngimage.net/wp-content/uploads/2018/06/repubblica-italiana-png-2.png"
+    }
   }
 
 #   measure: currently_hospitalized_change {
@@ -318,6 +328,11 @@ view: italy_regions_core {
           {% endif %};;
     description: "Current number of patients in ICU (IT: Terapia intensiva), avail by region only"
     group_label: "Current cases by status"
+    link: {
+      label: "Data Source - Protezione Civile"
+      url: "https://github.com/pcm-dpc/COVID-19"
+      icon_url: "https://pngimage.net/wp-content/uploads/2018/06/repubblica-italiana-png-2.png"
+    }
   }
 
   measure: icu_pp {
@@ -331,6 +346,11 @@ view: italy_regions_core {
     label: "Current ICU patients (per thousand)"
     group_label: "Current cases by status"
     value_format_name: decimal_2
+    link: {
+      label: "Data Source - Protezione Civile"
+      url: "https://github.com/pcm-dpc/COVID-19"
+      icon_url: "https://pngimage.net/wp-content/uploads/2018/06/repubblica-italiana-png-2.png"
+    }
   }
 
 #   dimension: terapia_intensiva_cambio {
@@ -358,6 +378,11 @@ view: italy_regions_core {
     label: "All hospitalizations"
     description: "Current number of patients hospitalized, including in ICU (IT: Totale ospedalizzati), avail by region only"
     group_label: "Current cases by status"
+    link: {
+      label: "Data Source - Protezione Civile"
+      url: "https://github.com/pcm-dpc/COVID-19"
+      icon_url: "https://pngimage.net/wp-content/uploads/2018/06/repubblica-italiana-png-2.png"
+    }
   }
 
   measure: change_in_hospitalization {
@@ -372,6 +397,11 @@ view: italy_regions_core {
           {% else %}
             {{rendered_value}}
           {% endif %};;
+    link: {
+      label: "Data Source - Protezione Civile"
+      url: "https://github.com/pcm-dpc/COVID-19"
+      icon_url: "https://pngimage.net/wp-content/uploads/2018/06/repubblica-italiana-png-2.png"
+    }
     label: "Change in total hospitalized"
     description: "Change in number of patients hospitalized from previous period, including in ICU (IT: Totale ospedalizzati cambio), avail by region only"
     group_label: "Current cases by status"
@@ -388,6 +418,11 @@ view: italy_regions_core {
     label: "Current Hospitalized (incl ICU) (per thousand)"
     group_label: "Current cases by status"
     value_format_name: decimal_2
+    link: {
+      label: "Data Source - Protezione Civile"
+      url: "https://github.com/pcm-dpc/COVID-19"
+      icon_url: "https://pngimage.net/wp-content/uploads/2018/06/repubblica-italiana-png-2.png"
+    }
   }
 
 ## If date selected, report on number of people under home quarantine for the given date(s)
@@ -406,6 +441,11 @@ view: italy_regions_core {
           {% else %}
             {{rendered_value}}
           {% endif %};;
+    link: {
+      label: "Data Source - Protezione Civile"
+      url: "https://github.com/pcm-dpc/COVID-19"
+      icon_url: "https://pngimage.net/wp-content/uploads/2018/06/repubblica-italiana-png-2.png"
+    }
     label: "Currently under home quarantine"
     description: "Positive cases currently at home (IT: Isolamento domiciliare), avail by region only"
     group_label: "Current cases by status"
@@ -419,6 +459,11 @@ view: italy_regions_core {
           {% else %}
             {{rendered_value}}
           {% endif %};;
+    link: {
+      label: "Data Source - Protezione Civile"
+      url: "https://github.com/pcm-dpc/COVID-19"
+      icon_url: "https://pngimage.net/wp-content/uploads/2018/06/repubblica-italiana-png-2.png"
+    }
     label: "Current Home Quarantine (per thousand)"
     group_label: "Current cases by status"
     value_format_name: decimal_2
@@ -440,6 +485,11 @@ view: italy_regions_core {
           {% else %}
             {{rendered_value}}
           {% endif %};;
+    link: {
+      label: "Data Source - Protezione Civile"
+      url: "https://github.com/pcm-dpc/COVID-19"
+      icon_url: "https://pngimage.net/wp-content/uploads/2018/06/repubblica-italiana-png-2.png"
+    }
     label: "Total number of active cases"
     description: "Count of active cases including hospitalized patients + home confinement (IT: Totale attualmente positive), avail by region only"
     group_label: "Total cases"
@@ -453,6 +503,11 @@ view: italy_regions_core {
           {% else %}
             {{rendered_value}}
           {% endif %};;
+    link: {
+      label: "Data Source - Protezione Civile"
+      url: "https://github.com/pcm-dpc/COVID-19"
+      icon_url: "https://pngimage.net/wp-content/uploads/2018/06/repubblica-italiana-png-2.png"
+    }
     label: "Total Active Cases (per thousand)"
     group_label: "Total cases"
     value_format_name: decimal_2
@@ -474,6 +529,11 @@ view: italy_regions_core {
           {% else %}
             {{rendered_value}}
           {% endif %};;
+    link: {
+      label: "Data Source - Protezione Civile"
+      url: "https://github.com/pcm-dpc/COVID-19"
+      icon_url: "https://pngimage.net/wp-content/uploads/2018/06/repubblica-italiana-png-2.png"
+    }
     label: "Recovered"
     description: "Running total of all patients who have recovered (IT: Dimessi guariti), avail by region only"
     group_label: "Resolved cases by status"
@@ -487,6 +547,11 @@ view: italy_regions_core {
           {% else %}
             {{rendered_value}}
           {% endif %};;
+    link: {
+      label: "Data Source - Protezione Civile"
+      url: "https://github.com/pcm-dpc/COVID-19"
+      icon_url: "https://pngimage.net/wp-content/uploads/2018/06/repubblica-italiana-png-2.png"
+    }
     label: "Total Recovered (per thousand)"
     group_label: "Resolved cases by status"
     value_format_name: decimal_2
@@ -504,6 +569,11 @@ view: italy_regions_core {
           {% else %}
             {{rendered_value}}
           {% endif %};;
+    link: {
+      label: "Data Source - Protezione Civile"
+      url: "https://github.com/pcm-dpc/COVID-19"
+      icon_url: "https://pngimage.net/wp-content/uploads/2018/06/repubblica-italiana-png-2.png"
+    }
     label: "Newly recovered"
     description: "The count of patients who were reported recovered in that day (IT: Dimessi guariti nuovi), avail by region only"
     group_label: "Resolved cases by status"
@@ -525,6 +595,11 @@ view: italy_regions_core {
           {% else %}
             {{rendered_value}}
           {% endif %};;
+    link: {
+      label: "Data Source - Protezione Civile"
+      url: "https://github.com/pcm-dpc/COVID-19"
+      icon_url: "https://pngimage.net/wp-content/uploads/2018/06/repubblica-italiana-png-2.png"
+    }
     label: "Deceased"
     description: "Running total of deaths (IT: Deceduti), avail by region only"
     group_label: "Resolved cases by status"
@@ -538,6 +613,11 @@ view: italy_regions_core {
           {% else %}
             {{rendered_value}}
           {% endif %};;
+    link: {
+      label: "Data Source - Protezione Civile"
+      url: "https://github.com/pcm-dpc/COVID-19"
+      icon_url: "https://pngimage.net/wp-content/uploads/2018/06/repubblica-italiana-png-2.png"
+    }
     label: "Total Deaths (per thousand)"
     group_label: "Resolved cases by status"
     value_format_name: decimal_2
@@ -555,6 +635,11 @@ view: italy_regions_core {
           {% else %}
             {{rendered_value}}
           {% endif %};;
+    link: {
+      label: "Data Source - Protezione Civile"
+      url: "https://github.com/pcm-dpc/COVID-19"
+      icon_url: "https://pngimage.net/wp-content/uploads/2018/06/repubblica-italiana-png-2.png"
+    }
     label: "Newly deceased"
     description: "The count of deaths by day (IT: Deceduti nuovi), avail by region only"
     group_label: "Resolved cases by status"
@@ -591,6 +676,11 @@ view: italy_regions_core {
       description: "Newly confirmed cases by day (IT: Totale casi nuovi), avail by region or province"
       group_label: "Total cases"
       drill_fields: [italy_province.province]
+    link: {
+      label: "Data Source - Protezione Civile"
+      url: "https://github.com/pcm-dpc/COVID-19"
+      icon_url: "https://pngimage.net/wp-content/uploads/2018/06/repubblica-italiana-png-2.png"
+    }
     }
 
 ## If date selected, report on total tests run (running total) for the given date(s)
@@ -609,6 +699,11 @@ view: italy_regions_core {
           {% else %}
             {{rendered_value}}
           {% endif %};;
+    link: {
+      label: "Data Source - Protezione Civile"
+      url: "https://github.com/pcm-dpc/COVID-19"
+      icon_url: "https://pngimage.net/wp-content/uploads/2018/06/repubblica-italiana-png-2.png"
+    }
     label: "Tests run"
     description: "Running total of tests run (IT: Tamponi), avail by region only"
     group_label: "Testing"
@@ -625,6 +720,11 @@ view: italy_regions_core {
     label: "Tests run (per thousand)"
     group_label: "Testing"
     value_format_name: decimal_2
+    link: {
+      label: "Data Source - Protezione Civile"
+      url: "https://github.com/pcm-dpc/COVID-19"
+      icon_url: "https://pngimage.net/wp-content/uploads/2018/06/repubblica-italiana-png-2.png"
+    }
   }
 
 
@@ -643,6 +743,11 @@ view: italy_regions_core {
     label: "New tests run"
     description: "Count of tests run by day (IT: Tamponi nuovi), avail by region only"
     group_label: "Testing"
+    link: {
+      label: "Data Source - Protezione Civile"
+      url: "https://github.com/pcm-dpc/COVID-19"
+      icon_url: "https://pngimage.net/wp-content/uploads/2018/06/repubblica-italiana-png-2.png"
+    }
   }
 
 
@@ -657,6 +762,7 @@ view: italy_regions_core {
     sql: COALESCE(${italy_province_stats.population}, ${italy_region_stats.population}) ;;
     label: "Population"
     value_format_name: decimal_0
+
   }
 
 }

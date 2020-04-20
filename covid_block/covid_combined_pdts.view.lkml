@@ -1058,6 +1058,16 @@ view: kpis_by_entity_by_date_core {
     END
     ;;
     value_format_name: decimal_1
+    link: {
+      label: "Data Source - NYT County Data"
+      url: "https://github.com/nytimes/covid-19-data"
+      icon_url: "http://www.google.com/s2/favicons?domain_url=http://www.nytimes.com"
+    }
+    link: {
+      label: "Data Source - Johns Hopkins State & Country Data"
+      url: "https://github.com/CSSEGISandData/COVID-19"
+      icon_url: "http://www.google.com/s2/favicons?domain_url=http://www.jhu.edu"
+    }
   }
 
   measure: sum_confirmed_new {
@@ -1066,6 +1076,16 @@ view: kpis_by_entity_by_date_core {
     type: sum
     sql: ${confirmed_new} ;;
     value_format_name: decimal_0
+    link: {
+      label: "Data Source - NYT County Data"
+      url: "https://github.com/nytimes/covid-19-data"
+      icon_url: "http://www.google.com/s2/favicons?domain_url=http://www.nytimes.com"
+    }
+    link: {
+      label: "Data Source - Johns Hopkins State & Country Data"
+      url: "https://github.com/CSSEGISandData/COVID-19"
+      icon_url: "http://www.google.com/s2/favicons?domain_url=http://www.jhu.edu"
+    }
   }
   measure: sum_confirmed_new_per_million {
     group_label: "New"
@@ -1073,6 +1093,16 @@ view: kpis_by_entity_by_date_core {
     type: sum
     sql: ${confirmed_new_per_million} ;;
     value_format_name: decimal_0
+    link: {
+      label: "Data Source - NYT County Data"
+      url: "https://github.com/nytimes/covid-19-data"
+      icon_url: "http://www.google.com/s2/favicons?domain_url=http://www.nytimes.com"
+    }
+    link: {
+      label: "Data Source - Johns Hopkins State & Country Data"
+      url: "https://github.com/CSSEGISandData/COVID-19"
+      icon_url: "http://www.google.com/s2/favicons?domain_url=http://www.jhu.edu"
+    }
   }
   measure: sum_deaths_new {
     group_label: "New"
@@ -1080,6 +1110,16 @@ view: kpis_by_entity_by_date_core {
     type: sum
     sql: ${deaths_new} ;;
     value_format_name: decimal_0
+    link: {
+      label: "Data Source - NYT County Data"
+      url: "https://github.com/nytimes/covid-19-data"
+      icon_url: "http://www.google.com/s2/favicons?domain_url=http://www.nytimes.com"
+    }
+    link: {
+      label: "Data Source - Johns Hopkins State & Country Data"
+      url: "https://github.com/CSSEGISandData/COVID-19"
+      icon_url: "http://www.google.com/s2/favicons?domain_url=http://www.jhu.edu"
+    }
   }
   measure: sum_deaths_new_per_million {
     group_label: "New"
@@ -1087,6 +1127,16 @@ view: kpis_by_entity_by_date_core {
     type: sum
     sql: ${deaths_new_per_million} ;;
     value_format_name: decimal_0
+    link: {
+      label: "Data Source - NYT County Data"
+      url: "https://github.com/nytimes/covid-19-data"
+      icon_url: "http://www.google.com/s2/favicons?domain_url=http://www.nytimes.com"
+    }
+    link: {
+      label: "Data Source - Johns Hopkins State & Country Data"
+      url: "https://github.com/CSSEGISandData/COVID-19"
+      icon_url: "http://www.google.com/s2/favicons?domain_url=http://www.jhu.edu"
+    }
   }
   measure: sum_confirmed_running_total {
     group_label: "Running Total"
@@ -1094,6 +1144,16 @@ view: kpis_by_entity_by_date_core {
     type: sum
     sql: ${confirmed_running_total} ;;
     value_format_name: decimal_0
+    link: {
+      label: "Data Source - NYT County Data"
+      url: "https://github.com/nytimes/covid-19-data"
+      icon_url: "http://www.google.com/s2/favicons?domain_url=http://www.nytimes.com"
+    }
+    link: {
+      label: "Data Source - Johns Hopkins State & Country Data"
+      url: "https://github.com/CSSEGISandData/COVID-19"
+      icon_url: "http://www.google.com/s2/favicons?domain_url=http://www.jhu.edu"
+    }
   }
   measure: sum_confirmed_running_total_per_million {
     group_label: "Running Total"
@@ -1101,21 +1161,54 @@ view: kpis_by_entity_by_date_core {
     type: sum
     sql: ${confirmed_running_total_per_million} ;;
     value_format_name: decimal_0
+    link: {
+      label: "Data Source - NYT County Data"
+      url: "https://github.com/nytimes/covid-19-data"
+      icon_url: "http://www.google.com/s2/favicons?domain_url=http://www.nytimes.com"
+    }
+    link: {
+      label: "Data Source - Johns Hopkins State & Country Data"
+      url: "https://github.com/CSSEGISandData/COVID-19"
+      icon_url: "http://www.google.com/s2/favicons?domain_url=http://www.jhu.edu"
+    }
   }
+
   measure: sum_deaths_running_total {
     group_label: "Running Total"
     label: "Deaths (Running Total)"
     type: sum
     sql: ${deaths_running_total} ;;
     value_format_name: decimal_0
+    link: {
+      label: "Data Source - NYT County Data"
+      url: "https://github.com/nytimes/covid-19-data"
+      icon_url: "http://www.google.com/s2/favicons?domain_url=http://www.nytimes.com"
+    }
+    link: {
+      label: "Data Source - Johns Hopkins State & Country Data"
+      url: "https://github.com/CSSEGISandData/COVID-19"
+      icon_url: "http://www.google.com/s2/favicons?domain_url=http://www.jhu.edu"
+    }
   }
+
   measure: sum_deaths_running_total_per_million {
     group_label: "Running Total"
     label: "Deaths (Running Total) (Per Million)"
     type: sum
     sql: ${deaths_running_total_per_million} ;;
     value_format_name: decimal_0
+    link: {
+      label: "Data Source - NYT County Data"
+      url: "https://github.com/nytimes/covid-19-data"
+      icon_url: "http://www.google.com/s2/favicons?domain_url=http://www.nytimes.com"
+    }
+    link: {
+      label: "Data Source - Johns Hopkins State & Country Data"
+      url: "https://github.com/CSSEGISandData/COVID-19"
+      icon_url: "http://www.google.com/s2/favicons?domain_url=http://www.jhu.edu"
+    }
   }
+
   measure: sum_doubling_time_confirmed_cases_new_per_million {
     group_label: "New"
     label: "Days to double Confirmed Cases (New)"
@@ -1123,7 +1216,18 @@ view: kpis_by_entity_by_date_core {
     sql: ${doubling_time_confirmed_cases_new_per_million} ;;
     value_format_name: decimal_1
     html: {{rendered_value}} Day(s) ;;
+    link: {
+      label: "Data Source - NYT County Data"
+      url: "https://github.com/nytimes/covid-19-data"
+      icon_url: "http://www.google.com/s2/favicons?domain_url=http://www.nytimes.com"
+    }
+    link: {
+      label: "Data Source - Johns Hopkins State & Country Data"
+      url: "https://github.com/CSSEGISandData/COVID-19"
+      icon_url: "http://www.google.com/s2/favicons?domain_url=http://www.jhu.edu"
+    }
   }
+
   measure: sum_doubling_time_confirmed_cases_rolling_total_per_million {
     group_label: "Running Total"
     label: "Days to double Confirmed Cases (Rolling Total)"
@@ -1131,7 +1235,18 @@ view: kpis_by_entity_by_date_core {
     sql: ${doubling_time_confirmed_cases_rolling_total_per_million} ;;
     value_format_name: decimal_1
     html: {{rendered_value}} Day(s) ;;
+    link: {
+      label: "Data Source - NYT County Data"
+      url: "https://github.com/nytimes/covid-19-data"
+      icon_url: "http://www.google.com/s2/favicons?domain_url=http://www.nytimes.com"
+    }
+    link: {
+      label: "Data Source - Johns Hopkins State & Country Data"
+      url: "https://github.com/CSSEGISandData/COVID-19"
+      icon_url: "http://www.google.com/s2/favicons?domain_url=http://www.jhu.edu"
+    }
   }
+
   measure: sum_doubling_time_deaths_new_per_million {
     group_label: "New"
     label: "Days to double Deaths (New)"
@@ -1139,7 +1254,18 @@ view: kpis_by_entity_by_date_core {
     sql: ${doubling_time_deaths_new_per_million} ;;
     value_format_name: decimal_1
     html: {{rendered_value}} Day(s) ;;
+    link: {
+      label: "Data Source - NYT County Data"
+      url: "https://github.com/nytimes/covid-19-data"
+      icon_url: "http://www.google.com/s2/favicons?domain_url=http://www.nytimes.com"
+    }
+    link: {
+      label: "Data Source - Johns Hopkins State & Country Data"
+      url: "https://github.com/CSSEGISandData/COVID-19"
+      icon_url: "http://www.google.com/s2/favicons?domain_url=http://www.jhu.edu"
+    }
   }
+
   measure: sum_doubling_time_deaths_rolling_total_per_million {
     group_label: "Running Total"
     label: "Days to double Deaths (Rolling Total)"
@@ -1147,5 +1273,15 @@ view: kpis_by_entity_by_date_core {
     sql: ${doubling_time_deaths_rolling_total_per_million} ;;
     value_format_name: decimal_1
     html: {{rendered_value}} Day(s) ;;
+    link: {
+      label: "Data Source - NYT County Data"
+      url: "https://github.com/nytimes/covid-19-data"
+      icon_url: "http://www.google.com/s2/favicons?domain_url=http://www.nytimes.com"
+    }
+    link: {
+      label: "Data Source - Johns Hopkins State & Country Data"
+      url: "https://github.com/CSSEGISandData/COVID-19"
+      icon_url: "http://www.google.com/s2/favicons?domain_url=http://www.jhu.edu"
+    }
   }
 }
