@@ -139,7 +139,7 @@ view: covid_combined_core {
     sql: ${TABLE}.county ;;
     link: {
       label: "Filter on County - {{ value }}"
-      url: "/dashboards/covid::state_cases__policy_response?County={{ value }}&State={{ province_state._value }}"
+      url: "/embed/dashboards-next/39?County={{ value }}&State={{ province_state._value }}"
       icon_url: "https://looker.com/favicon.ico"
     }
     link: {
@@ -191,7 +191,7 @@ view: covid_combined_core {
     drill_fields: [county]
     link: {
       label: "{{ value }} - State Deep Dive"
-      url: "/dashboards/covid::state_cases__policy_response?State={{ value }}"
+      url: "/embed/dashboards-next/39?State={{ value }}"
       icon_url: "https://looker.com/favicon.ico"
     }
     link: {
@@ -344,7 +344,7 @@ view: covid_combined_core {
     sql: case when ${state_rank.rank} <= {% parameter show_top_x_values %} then ${province_state} else ' Other' end ;;
     link: {
       label: "{{ value }} - State Deep Dive"
-      url: "/dashboards/covid::state_cases__policy_response?State={{ value }}"
+      url: "/embed/dashboards-next/39?State={{ value }}"
       icon_url: "https://looker.com/favicon.ico"
     }
   }
@@ -357,7 +357,7 @@ view: covid_combined_core {
     sql: case when ${fips_rank.rank} <= {% parameter show_top_x_values %} then ${county} else ' Other' end ;;
     link: {
       label: "Filter to County - {{ value }}"
-      url: "/dashboards/covid::state_cases__policy_response?County={{ value }}&State={{ state_top_x._value }}"
+      url: "/embed/dashboards-next/39?County={{ value }}&State={{ state_top_x._value }}"
       icon_url: "https://looker.com/favicon.ico"
     }
   }
