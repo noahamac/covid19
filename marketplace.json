@@ -2,7 +2,7 @@
   "label": "Covid-19",
   "category_label": "Models",
   "branding": {
-    "image_uri": "https://marketplace-api.looker.com/block-icons/covid_icon.jpg",
+    "image_uri": "https://marketplace-api.looker.com/block-icons/covid_icon.png",
     "tagline": "Explore Public COVID-19 Datasets."
   },
 
