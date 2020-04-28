@@ -45,7 +45,7 @@ view: covid_combined_core {
          )  ORDER BY date ASC),0) as deaths_new_cases
         --a.daily_deaths as deaths_new_cases
       FROM ${nyt_data.SQL_TABLE_NAME} as a
-      LEFT JOIN (SELECT fips, latitude, longitude, count(*) as count FROM `bigquery-public-data.covid19_jhu_csse.summary` WHERE fips is not null GROUP BY 1,2,3) as b
+      LEFT JOIN (SELECT fips, max(latitude) as latitude, max(longitude) as longitude, count(*) as count FROM `bigquery-public-data.covid19_jhu_csse.summary` WHERE fips is not null GROUP BY 1) as b
         ON cast(a.fips as int64) = cast(b.fips as int64)
 
       UNION ALL
