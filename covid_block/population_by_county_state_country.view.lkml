@@ -16,7 +16,11 @@ view: population_by_county_state_country_core {
       FROM
       (
          SELECT * FROM `lookerdata.covid19_block.population_by_county_state_country` WHERE county <> 'New York City' UNION ALL
-         SELECT * FROM `lookerdata.covid19_block.population_by_county_state_country` WHERE country_region <> 'US' UNION ALL
+         SELECT * FROM `lookerdata.covid19_block.population_by_county_state_country` WHERE country_region <> 'US'
+          and not (country_region = 'France' and province_state is not null)
+          and not (country_region = 'United Kingdom' and province_state is not null)
+          and not (country_region = 'Netherlands' and province_state is not null)
+          UNION ALL
          SELECT 36125 as fips,'New York City' as county,'New York' as province_state,'US' as country_region,8343000 as population, 1 as count
       ) a
       LEFT JOIN
@@ -32,7 +36,9 @@ view: population_by_county_state_country_core {
     primary_key: yes
     hidden: yes
     type: string
-    sql: concat(coalesce(${county},''), coalesce(${province_state},''), coalesce(${country_region},'')) ;;
+    sql: case when ${country_region} = 'United Kingdom' then
+                concat(coalesce(${county},''), coalesce(${province_state},''), 'UK')
+                else concat(coalesce(${county},''), coalesce(${province_state},''), coalesce(${country_region},'')) end;;
   }
 
   dimension: count2 {
